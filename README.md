@@ -40,6 +40,7 @@ Feel free to comment your feedback! ;)
 - Calendar views
 - Token generation
 - Plugin access
+- "Lawand's Mockups"
 
 ### Clemens Gugerbauer
 
@@ -52,5 +53,6 @@ Feel free to comment your feedback! ;)
 - Settings & Profile
 - Plugin store
 - Login and Sign up
+- "Clemens's Mockups"
 
 
