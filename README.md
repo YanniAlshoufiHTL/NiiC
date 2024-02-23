@@ -3,7 +3,7 @@ A modular calendar for features beyond iCal.
 
 ## Usecase diagram
 
-![](images/usecase-diagram.png)
+![](diagrams/usecase-diagram.png)
 
 ## Mockups
 

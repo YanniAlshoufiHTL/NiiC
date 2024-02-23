@@ -104,7 +104,7 @@ expandable. Here is a concrete feature set.
 
 ### 3.1. Use Case Überblick
 
-![](images/usecase-diagram.png)
+![](diagrams/usecase-diagram.png)
 
 ### 3.2. Accessing Landing Page |Yanni
 
@@ -487,8 +487,11 @@ die nötige Performance zu erzielen, ist ein Mengengerüst zu erstellen. Möglic
   Datenbank).
 - Beispiel:
 
-<img src="./Architektur.jpg">
+<img src="diagrams/DeploymentDiagram.svg">
 
 ### 6.2 Datenmodell
 
-- Wahlweise ER-Diagramm oder objekt-orientiertes Klassendiagramm
+- Relational database
+- We implemented valid tokens like this so we don't have to iterate through the modules which takes longer.
+
+![](diagrams/MVP_ERD.drawio.svg)
