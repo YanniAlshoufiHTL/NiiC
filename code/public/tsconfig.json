@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "commonjs",
+        "rootDir": "./webcomps-src",
+        "outDir": "./webcomps-out",
+        "esModuleInterop": true,
+        "strict": true,
+        "skipLibCheck": true
+    }
+}
