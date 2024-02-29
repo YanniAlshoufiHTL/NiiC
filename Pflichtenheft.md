@@ -492,6 +492,4 @@ die nötige Performance zu erzielen, ist ein Mengengerüst zu erstellen. Möglic
 ### 6.2 Datenmodell
 
 - Relational database
-- We implemented valid tokens like this so we don't have to iterate through the modules which takes longer.
-
 ![](diagrams/MVP_ERD.drawio.svg)
