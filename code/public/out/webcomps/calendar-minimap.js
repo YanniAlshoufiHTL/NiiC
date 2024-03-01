@@ -8,13 +8,18 @@ class CalendarMinimap extends HTMLElement {
     }
     getPs() {
         const firstDay = this.dataset.firstDay;
+        const month = this.dataset.month;
+        const monthPattern = /^[0-9]|(1[01])$/;
         if (!firstDay) {
             return "";
         }
         const date = new Date(Date.parse(firstDay));
         const htmlTagTexts = [];
         for (let i = 0; i < 42; i++) {
-            htmlTagTexts.push(`<p>${date.getDate()}</p>`);
+            const monthString = month && monthPattern.test(month) && +month === date.getMonth()
+                ? ``
+                : `niic-calendar-minimap-gray`;
+            htmlTagTexts.push(`<p class="${monthString}">${date.getDate()}</p>`);
             date.setDate(date.getDate() + 1);
         }
         return htmlTagTexts.join('\n');
@@ -70,7 +75,12 @@ class CalendarMinimap extends HTMLElement {
                    > b {
                        margin-bottom: 5px;
                    }
+                   
+                   .niic-calendar-minimap-gray {
+                       color: #D9D9D9;
+                   }
                }
+              
             </style>
         `;
     }
