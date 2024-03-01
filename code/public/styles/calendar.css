@@ -1,5 +1,5 @@
 :root {
-    --niic-calendar-body-height: calc(100dvh - 234px);
+    --niic-calendar-body-height: calc(100dvh - 130px);
     --niic-calendar-aside-width: 296px;
 }
 
@@ -46,11 +46,6 @@
 
 .niic-calendar-day-times {
     width: 20px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-
     font-family: system-ui, sans-serif;
 }
 
@@ -69,5 +64,31 @@
         &:last-child {
             border-right: none;
         }
+    }
+}
+
+.niic-calendar-aet-zone {
+    height: var(--niic-calendar-body-height);
+
+    max-width: 400px;
+
+    &> * {
+        display: block;
+
+        min-width: 10px;
+
+        /*box-sizing: border-box;*/
+        padding: 15px;
+
+        background: lightseagreen;
+        color: white;
+        border: 1px solid darkcyan;
+        border-radius: 5px;
+
+        font-family: system-ui, sans-serif;
+        font-size: 1.1rem;
+
+        overflow-y: auto;
+        word-wrap: break-word;
     }
 }

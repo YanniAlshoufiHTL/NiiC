@@ -26,7 +26,7 @@ class HeaderBar extends HTMLElement {
                     left: 0;
                     
                     width: var(--max-width);
-                    height: 234px;
+                    height: 130px;
 
                     background: linear-gradient(271.46deg, #0B00CC -83.97%, #32A38E 95.81%);
                     box-shadow: 0 4px 11px rgba(0, 0, 0, 0.25);
