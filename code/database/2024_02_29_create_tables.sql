@@ -1,22 +1,23 @@
-CREATE TABLE USER
+DROP TABLE valiidtoken;
+CREATE TABLE niiicuser
 (
     username TEXT unique PRIMARY KEY
 );
 
-CREATE TABLE CALENDER
+CREATE TABLE calender
 (
-    id       INTEGER unique PRIMARY KEY,
+    id       serial,
     username TEXT,
-    FOREIGN KEY (username) REFERENCES USER (username)
+    FOREIGN KEY (username) REFERENCES niiicuser (username)
 );
 
 CREATE TABLE AET
 (
-    id         INTEGER PRIMARY KEY,
+    id         serial,
     name       TEXT,
-    begin      time,
-    end        time,
-    calenderid INTEGER,
+    begin      text,
+    enddd      text,
+    calenderid  serial,
     FOREIGN KEY (calenderid) REFERENCES CALENDER (id)
 );
 
