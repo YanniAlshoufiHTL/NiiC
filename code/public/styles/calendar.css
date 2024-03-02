@@ -24,7 +24,7 @@
     flex-direction: column;
     align-items: center;
 
-    .niic-calendar-aside-minimap {
+    .niic-cal-minimap {
         width: 100%;
         background: white;
         padding: 30px;
@@ -80,9 +80,7 @@
         /*box-sizing: border-box;*/
         padding: 15px;
 
-        background: lightseagreen;
         color: white;
-        border: 1px solid darkcyan;
         border-radius: 5px;
 
         font-family: system-ui, sans-serif;

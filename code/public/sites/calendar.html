@@ -7,9 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>NiiC – Calendar</title>
     <script src="../out/fe-models/NiicAet.js"></script>
-    <script src="../out/fe-models/NiicAppointment.js"></script>
-    <script src="../out/fe-models/NiicEvent.js"></script>
-    <script src="../out/fe-models/NiicTask.js"></script>
     <script src="../out/webcomps/header-bar.js" defer></script>
     <script src="../out/webcomps/side-bar.js" defer></script>
     <script src="../out/webcomps/calendar-minimap.js" defer></script>
@@ -20,22 +17,73 @@
     <link rel="stylesheet" href="../styles/calendar.css">
 
     <script>
-        /** @type {NiicAppointment[]} */
-        const appointments = [
-            new NiicAppointment("Do something", 15, 20, ""), // , new Date("2024-02-08")
-            new NiicAppointment("Do something else", 20, 21),
-            new NiicAppointment("An appointment with a long name.", 2, 9),
-        ];
+        let currentId = 1;
+        const nextId = () => currentId++;
 
-        /** @type {NiicEvent[]} */
-        const events = [
-            new NiicEvent("An event with a very very long name.", 5, 14, "Do something"),
-        ];
+        /** @type {NiicAet[]} */
+        const aets = [
+            {
+                type: "appointment",
+                id: nextId(),
+                title: "Do something",
+                description: "",
+                startTime: 15,
+                endTime: 20,
+                date: new Date(Date.now()),
+                color: "#abc",
+            },
+            {
+                type: "appointment",
+                id: nextId(),
+                title: "Do something else",
+                description: "",
+                startTime: 20,
+                endTime: 21,
+                date: new Date(Date.parse("2024-03-06")),
+                color: "#bca",
+            },
+            {
+                type: "appointment",
+                id: nextId(),
+                title: "An appointment with a long name.",
+                description: "",
+                startTime: 2,
+                endTime: 9,
+                date: new Date(Date.parse("2024-03-07")),
+                color: "#f00",
+            },
 
-        /** @type {NiicTask[]} */
-        const tasks = [
-            new NiicTask("Hi", 3, 10, "Do something"),
-            new NiicTask("Hi", 3, 10, "Do something", new Date(Date.parse("2024-03-08"))),
+            {
+                type: "event",
+                id: nextId(),
+                title: "An event with a very very long name.",
+                description: "",
+                startTime: 5,
+                endTime: 14,
+                date: new Date(Date.parse("2024-03-09")),
+                color: "#aaa",
+            },
+
+            {
+                type: "task",
+                id: nextId(),
+                title: "Hi",
+                description: "",
+                startTime: 3,
+                endTime: 10,
+                date: new Date(Date.now()),
+                color: "#aed",
+            },
+            {
+                type: "task",
+                id: nextId(),
+                title: "Hi",
+                description: "",
+                startTime: 3,
+                endTime: 10,
+                date: new Date(Date.parse("2024-03-08")),
+                color: "#a77",
+            },
         ];
     </script>
 
@@ -106,19 +154,22 @@
                 // clear any existent AETs
                 zone.innerHTML = ``;
 
-                const aps = appointments.filter(x => x.date.toDateString() === tmpDate.toDateString())
-                const evs = events.filter(x => x.date.toDateString() === tmpDate.toDateString())
-                const tks = tasks.filter(x => x.date.toDateString() === tmpDate.toDateString())
-
-                const aets = [...aps, ...evs, ...tks];
-
-                aets.forEach(aet => {
-                    const div = document.createElement("div");
-                    div.style.marginTop = `calc(${window.innerHeight - 130}px * ${aet.startTime} / 23)`;
-                    div.style.height = `calc(${aet.endTime - aet.startTime + 1} * 100% / 23)`
-                    div.innerText = aet.title;
-                    zone.appendChild(div);
-                });
+                aets
+                    .filter(x => x.date.toDateString() === tmpDate.toDateString())
+                    .forEach(aet => {
+                        const div = document.createElement("div");
+                        div.style.marginTop = `calc(${window.innerHeight - 130}px * ${aet.startTime} / 23)`;
+                        div.style.height = `calc(${aet.endTime - aet.startTime + 1} * 100% / 23)`
+                        div.innerText = aet.title;
+                        div.draggable = true;
+                        div.id = `niic-calendar-aet-${aet.id}`;
+                        div.style.background = aet.color;
+                        div.style.border = `1px solid color-mix(in srgb, ${aet.color}, #333333)`;
+                        div.ondragstart = ev => {
+                            ev.dataTransfer.setData("Title", ev.target.id);
+                        }
+                        zone.appendChild(div);
+                    });
 
                 tmpDate.setDate(tmpDate.getDate() + 1);
 
@@ -170,8 +221,7 @@
 <section class="niic-calendar-main-section">
 
     <aside class="niic-calendar-aside">
-        <div class="niic-calendar-aside-minimap">
-            <niic-calendar-minimap class="niic-cal-minimap"></niic-calendar-minimap>
+        <niic-calendar-minimap class="niic-cal-minimap"></niic-calendar-minimap>
         </div>
 
         <div class="niic-calendar-aside-aet-lists">
@@ -194,7 +244,37 @@
             const els = [];
 
             for (let i = 0; i < 7; i++) {
-                els.push(`<div class="niic-calendar-aet-zone niic-calendar-aet-zone-${i}"></div>`);
+                els.push(`
+                    <div class="niic-calendar-aet-zone niic-calendar-aet-zone-${i}"
+                        ondragover="allowDrop(event)"
+                        ondrop="drop(event)"
+                        id="niic-calendar-aet-zone-${i}"
+                    ></div>
+                `);
+            }
+
+            function allowDrop(ev) {
+                ev.preventDefault();
+            }
+
+            function drop(ev) {
+                const data = ev.dataTransfer.getData("Title");
+                const el = document.getElementById(data);
+                ev.target.appendChild(el);
+
+                const splitId = ev.target.id.split("-");
+                const idx = +splitId[splitId.length - 1];
+
+                const tmpDate = new Date(date.toDateString());
+                tmpDate.setDate(tmpDate.getDate() + idx);
+
+                const idSplit = el.id.split("-");
+                const id = +idSplit[idSplit.length - 1];
+                aets
+                    .filter(x => x.id === id)
+                    .forEach(x => x.date = tmpDate);
+
+                ev.preventDefault();
             }
 
             document.querySelector(".niic-calendar-main").innerHTML = els.join("\n");
@@ -207,9 +287,12 @@
     const getItemsHtml = (arr) =>
         arr.map(x => `<li>${x.title}</li>`).join("\n");
 
-    document.querySelector(".niic-calendar-aside-list-tasks").innerHTML = getItemsHtml(tasks);
-    document.querySelector(".niic-calendar-aside-list-events").innerHTML = getItemsHtml(events);
-    document.querySelector(".niic-calendar-aside-list-appointments").innerHTML = getItemsHtml(appointments);
+    document.querySelector(".niic-calendar-aside-list-tasks").innerHTML =
+        getItemsHtml(aets.filter(x => x.type === "task"));
+    document.querySelector(".niic-calendar-aside-list-events").innerHTML =
+        getItemsHtml(aets.filter(x => x.type === "event"));
+    document.querySelector(".niic-calendar-aside-list-appointments").innerHTML =
+        getItemsHtml(aets.filter(x => x.type === "appointment"));
 </script>
 
 </body>
