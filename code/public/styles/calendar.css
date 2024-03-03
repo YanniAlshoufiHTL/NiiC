@@ -77,7 +77,6 @@
 
         min-width: 10px;
 
-        /*box-sizing: border-box;*/
         padding: 15px;
 
         color: white;
@@ -88,5 +87,7 @@
 
         overflow-y: auto;
         word-wrap: break-word;
+
+        cursor: pointer;
     }
 }

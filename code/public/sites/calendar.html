@@ -6,100 +6,45 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>NiiC – Calendar</title>
+
+    <script src="../out/fe-repos/date.js"></script>
+
     <script src="../out/fe-models/NiicAet.js"></script>
+    <script src="../out/fe-repos/aets.js"></script>
+
+
     <script src="../out/webcomps/header-bar.js" defer></script>
     <script src="../out/webcomps/side-bar.js" defer></script>
     <script src="../out/webcomps/calendar-minimap.js" defer></script>
     <script src="../out/webcomps/calendar-view.js" defer></script>
     <script src="../out/webcomps/titled-search-list.js" defer></script>
 
+    <script src="../out/global-update-calendar.js" defer></script>
+
     <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/calendar.css">
 
-    <script>
-        let currentId = 1;
-        const nextId = () => currentId++;
 
-        /** @type {NiicAet[]} */
-        const aets = [
-            {
-                type: "appointment",
-                id: nextId(),
-                title: "Do something",
-                description: "",
-                startTime: 15,
-                endTime: 20,
-                date: new Date(Date.now()),
-                color: "#abc",
-            },
-            {
-                type: "appointment",
-                id: nextId(),
-                title: "Do something else",
-                description: "",
-                startTime: 20,
-                endTime: 21,
-                date: new Date(Date.parse("2024-03-06")),
-                color: "#bca",
-            },
-            {
-                type: "appointment",
-                id: nextId(),
-                title: "An appointment with a long name.",
-                description: "",
-                startTime: 2,
-                endTime: 9,
-                date: new Date(Date.parse("2024-03-07")),
-                color: "#f00",
-            },
+    <link rel="stylesheet" href="../styles/aet-prompt.css">
+    <script src="../out/aet-prompt.js" defer></script>
 
-            {
-                type: "event",
-                id: nextId(),
-                title: "An event with a very very long name.",
-                description: "",
-                startTime: 5,
-                endTime: 14,
-                date: new Date(Date.parse("2024-03-09")),
-                color: "#aaa",
-            },
-
-            {
-                type: "task",
-                id: nextId(),
-                title: "Hi",
-                description: "",
-                startTime: 3,
-                endTime: 10,
-                date: new Date(Date.now()),
-                color: "#aed",
-            },
-            {
-                type: "task",
-                id: nextId(),
-                title: "Hi",
-                description: "",
-                startTime: 3,
-                endTime: 10,
-                date: new Date(Date.parse("2024-03-08")),
-                color: "#a77",
-            },
-        ];
-    </script>
-
+    <script src="../out/calendar-dropping.js" defer></script>
 </head>
 <body>
 <niic-sidebar></niic-sidebar>
 
 <script>
-    let date = new Date(Date.now());
 </script>
 
 <niic-header-bar>
+    <script src="../out/global-update-calendar.js" defer></script>
+
     <div class="niic-header-list">
-        <button class="niic-date-left-arrow" onclick="date.setDate(date.getDate() - 1); update();"><</button>
-        <button class="niic-date-btn" onclick="date = new Date(Date.now()); update();"></button>
-        <button class="niic-date-right-arrow" onclick="date.setDate(date.getDate() + 1); update();">></button>
+        <button style="margin-right: 200px;" onclick="showAetInputPrompt()">+</button>
+
+        <button class="niic-date-left-arrow" onclick="date.setDate(date.getDate() - 1); globalUpdateCalendar();"><</button>
+        <button class="niic-date-btn" onclick="date = new Date(Date.now()); globalUpdateCalendar();"></button>
+        <button class="niic-date-right-arrow" onclick="date.setDate(date.getDate() + 1); globalUpdateCalendar();">></button>
     </div>
 
     <div class="niic-calendar-header-days">
@@ -111,83 +56,6 @@
         <p class="niic-calendar-header-days-5"></p>
         <p class="niic-calendar-header-days-6"></p>
     </div>
-
-    <script>
-        function update() {
-            // Btn Header
-            document.querySelector(".niic-date-btn").innerHTML = date.toDateString();
-
-            // Header days
-            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-            const dateTmp = new Date(date.toDateString());
-            for (let i = 0; i < 7; i++) {
-                const el = document.querySelector(`.niic-calendar-header-days-${i}`);
-                el.innerHTML = `${days[dateTmp.getDay()]}<br>${dateTmp.getDate()}`;
-                dateTmp.setDate(dateTmp.getDate() + 1);
-            }
-
-            // Calendar Minimap
-            const calMinimap = document.querySelector(".niic-cal-minimap");
-            calMinimap.dataset.firstDay = date.toDateString();
-            calMinimap.dataset.month = date.getMonth().toString();
-            if (calMinimap.setFirstDay) {
-                calMinimap.setFirstDay(date.toDateString());
-            }
-
-            // Calendar Times
-            const timesDiv = document.querySelector(".niic-calendar-day-times");
-
-            for (let i = 1; i < 24; i++) {
-                const p = document.createElement("p");
-                p.style.position = "absolute";
-                p.style.marginTop = `calc(${window.innerHeight - 130}px * ${i} / 23)`;
-                p.textContent = `${i}`.padStart(2, '0');
-                timesDiv.appendChild(p);
-            }
-
-            // AETs
-            let tmpDate = new Date(date.toDateString());
-            for (let i = 0; i < 7; i++) {
-                /** @type {HTMLDivElement} */
-                const zone = document.querySelector(`.niic-calendar-aet-zone-${i}`);
-                // clear any existent AETs
-                zone.innerHTML = ``;
-
-                aets
-                    .filter(x => x.date.toDateString() === tmpDate.toDateString())
-                    .forEach(aet => {
-                        const div = document.createElement("div");
-                        div.style.marginTop = `calc(${window.innerHeight - 130}px * ${aet.startTime} / 23)`;
-                        div.style.height = `calc(${aet.endTime - aet.startTime + 1} * 100% / 23)`
-                        div.innerText = aet.title;
-                        div.draggable = true;
-                        div.id = `niic-calendar-aet-${aet.id}`;
-                        div.style.background = aet.color;
-                        div.style.border = `1px solid color-mix(in srgb, ${aet.color}, #333333)`;
-                        div.ondragstart = ev => {
-                            ev.dataTransfer.setData("Title", ev.target.id);
-                        }
-                        zone.appendChild(div);
-                    });
-
-                tmpDate.setDate(tmpDate.getDate() + 1);
-
-                // Change widths of headers
-                for (let i = 0; i < 7; i++) {
-                    const zone = document.querySelector(`.niic-calendar-aet-zone-${i}`);
-                    const el = document.querySelector(`.niic-calendar-header-days-${i}`);
-                    el.style.width = `${zone.clientWidth}px`;
-                }
-            }
-        }
-
-        setTimeout(() => {
-            update();
-        }, 0);
-
-        window.addEventListener("resize", update);
-    </script>
 
     <style>
         .niic-header-list {
@@ -222,7 +90,6 @@
 
     <aside class="niic-calendar-aside">
         <niic-calendar-minimap class="niic-cal-minimap"></niic-calendar-minimap>
-        </div>
 
         <div class="niic-calendar-aside-aet-lists">
             <niic-titled-search-list data-title="Tasks" class="niic-calendar-aside-list-tasks">
@@ -240,60 +107,69 @@
     <div class="niic-calendar-day-times"></div>
 
     <main class="niic-calendar-main">
-        <script>
-            const els = [];
-
-            for (let i = 0; i < 7; i++) {
-                els.push(`
-                    <div class="niic-calendar-aet-zone niic-calendar-aet-zone-${i}"
-                        ondragover="allowDrop(event)"
-                        ondrop="drop(event)"
-                        id="niic-calendar-aet-zone-${i}"
-                    ></div>
-                `);
-            }
-
-            function allowDrop(ev) {
-                ev.preventDefault();
-            }
-
-            function drop(ev) {
-                const data = ev.dataTransfer.getData("Title");
-                const el = document.getElementById(data);
-                ev.target.appendChild(el);
-
-                const splitId = ev.target.id.split("-");
-                const idx = +splitId[splitId.length - 1];
-
-                const tmpDate = new Date(date.toDateString());
-                tmpDate.setDate(tmpDate.getDate() + idx);
-
-                const idSplit = el.id.split("-");
-                const id = +idSplit[idSplit.length - 1];
-                aets
-                    .filter(x => x.id === id)
-                    .forEach(x => x.date = tmpDate);
-
-                ev.preventDefault();
-            }
-
-            document.querySelector(".niic-calendar-main").innerHTML = els.join("\n");
-        </script>
     </main>
 </section>
 
+<!-- region ** AET Input Prompt ** -->
 
-<script>
-    const getItemsHtml = (arr) =>
-        arr.map(x => `<li>${x.title}</li>`).join("\n");
+<section class="niic-aet-input-prompt-container hidden">
+    <form class="niic-aet-input-prompt" onsubmit="submitAetInputPrompt(event)" action="#">
+        <button class="niic-aet-input-prompt-exit" onclick="hideAetInputPrompt()">x</button>
 
-    document.querySelector(".niic-calendar-aside-list-tasks").innerHTML =
-        getItemsHtml(aets.filter(x => x.type === "task"));
-    document.querySelector(".niic-calendar-aside-list-events").innerHTML =
-        getItemsHtml(aets.filter(x => x.type === "event"));
-    document.querySelector(".niic-calendar-aside-list-appointments").innerHTML =
-        getItemsHtml(aets.filter(x => x.type === "appointment"));
-</script>
+        <label>
+            <input class="niic-aet-input-prompt-title"
+                   value="Programmiertest" required/>
+        </label>
+
+        <label class="niic-aet-input-prompt-description">
+            Description
+            <textarea class="niic-aet-input-prompt-description-textarea">
+                Grundlagen – Reflections
+            </textarea>
+        </label>
+
+        <div>
+            <label>
+                Time
+
+                <button class="niic-aet-choice-right niic-aet-btn-time"
+                        onclick="promptTimeChange()">01:00 - 15:00</button>
+            </label>
+
+            <label>
+                Date
+
+                <input
+                        name="date"
+                        type="date"
+                        class="niic-aet-choice-right niic-aet-input-date"
+                        placeholder=""
+                        required>
+            </label>
+
+            <label>
+                AET Type
+                <select class="niic-aet-choice-right niic-aet-type-select"
+                        name="aet-type"
+                        required>
+
+                    <option value="appointment">Appointment</option>
+                    <option value="event" selected>Event</option>
+                    <option value="task">Task</option>
+                </select>
+            </label>
+
+            <label class="niic-color-btn-container">
+                Color
+                <input type="color" class="niic-aet-choice-right niic-color-btn"/>
+            </label>
+        </div>
+
+        <input type="submit" value="Save">
+    </form>
+</section>
+
+<!-- endregion -->
 
 </body>
 </html>

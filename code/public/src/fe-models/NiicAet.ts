@@ -12,3 +12,8 @@ interface NiicAet {
 
     color: string;
 }
+
+let currentGlobalId = 0;
+function nextGlobalId() {
+    return currentGlobalId++;
+}
