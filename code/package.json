@@ -1,0 +1,22 @@
+{
+  "name": "niic",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "server-dev": "npx nodemon --exec npx tsx ./src/app.ts",
+    "client-dev": "npx tsc --watch --project public",
+    "prestart": "npx tsc",
+    "start": "node ./out/app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "express": "^4.18.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "tsx": "^4.7.1"
+  }
+}
