@@ -1,54 +1,37 @@
-CREATE TABLE USER
-(
-    username TEXT unique PRIMARY KEY
-) STRICT;
 
-CREATE TABLE CALENDER
+CREATE TABLE niicuser
 (
-    id       INTEGER unique PRIMARY KEY,
-    username TEXT,
-    FOREIGN KEY (username) REFERENCES USER (username)
-) STRICT;
+    id       SERIAL PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL
+);
 
-CREATE TABLE AET
+CREATE TABLE calendar
 (
-    id         INTEGER PRIMARY KEY,
-    name       TEXT,
-    begin      DATETIME,
-    end        DATETIME,
-    calenderid INTEGER,
-    FOREIGN KEY (calenderid) REFERENCES CALENDER (id)
-) STRICT;
+    id       SERIAL PRIMARY KEY,
+    usernameid BIGINT NOT NULL REFERENCES niicuser
+);
 
-CREATE TABLE BlOCKMODULE
+CREATE TABLE aet
 (
-    id          INTEGER primary key,
-    token       TEXT, -- from valid token
-    title       TEXT,
+    id          SERIAL PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    description TEXT         NOT NULL,
+    date        DATE         NOT NULL,
+    type        varchar(40)  NOT NULL CHECK ( type = 'appointment' OR type = 'event' OR type = 'task' ),
+    tsbegin     TIMESTAMP    NOT NULL,
+    tsend       TIMESTAMP    NOT NULL,
+    color       VARCHAR(7) NOT NULL CHECK (color ~* '^#[a-f0-9]{6}$') DEFAULT '#23414b',
+    calenderid  BIGINT REFERENCES calendar
+);
+
+CREATE TABLE blockmodule
+(
+    id          SERIAL PRIMARY KEY,
+    token       VARCHAR(40) UNIQUE,
+    title       VARCHAR(255),
     description TEXT,
     html        TEXT,
     css         TEXT,
-    js          TEXT,
-    FOREIGN KEY (token) REFERENCES validToken (token)
-
+    js          TEXT
 );
 
-CREATE TABLE VALIIDTOKEN
-(
-    token varchar(20) primary key
-) ;
-
-INSERT INTO USER (username)
-VALUES ('Yanni'),
-       ('Clemens'),
-       ('Lawand'),
-       ('t1'),
-       ('t2'),
-       ('t3');
-INSERT INTO CALENDER (id, username)
-VALUES (1, 'Yanni'),
-       (2, 'Clemens'),
-       (3, 'Lawand'),
-       (4, 't1'),
-       (5, 't2'),
-       (6, 't3');
