@@ -1,31 +1,33 @@
 
-CREATE TABLE niicuser --- mistake with spelling niicuser, tablename should be in lowercase because sql syntax
+CREATE TABLE niicuser
 (
     id       SERIAL PRIMARY KEY,
-    username TEXT UNIQUE
+    username VARCHAR(255) UNIQUE NOT NULL
 );
 
-CREATE TABLE calendar ---had mistake with spelling calendar
+CREATE TABLE calendar
 (
-    id       SERIAL PRIMARY KEY ,
-    username VARCHAR(255),
-    FOREIGN KEY (username) REFERENCES niicuser (username)
+    id       SERIAL PRIMARY KEY,
+    usernameid BIGINT NOT NULL REFERENCES niicuser
 );
 
 CREATE TABLE aet
 (
-    id         SERIAL PRIMARY KEY , -- ids should be primary keys because it is a constraint attribute
-    name       VARCHAR(255),
-    tsbegin    TIMESTAMP,        -- timestamp because tsbegin is the time when the aet begins
-    tsend      TIMESTAMP,        -- the same goes for here tsend is the time when the aet ends
-    calenderid  SERIAL,
-    FOREIGN KEY (calenderid) REFERENCES calendar(id)
+    id          SERIAL PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    description TEXT         NOT NULL,
+    date        DATE         NOT NULL,
+    type        varchar(40)  NOT NULL CHECK ( type = 'appointment' OR type = 'event' OR type = 'task' ),
+    tsbegin     TIMESTAMP    NOT NULL,
+    tsend       TIMESTAMP    NOT NULL,
+    color       VARCHAR(7) NOT NULL CHECK (color ~* '^#[a-f0-9]{6}$') DEFAULT '#23414b',
+    calenderid  BIGINT REFERENCES calendar
 );
 
 CREATE TABLE blockmodule
 (
-    id          SERIAL PRIMARY KEY, --Serial because it generates ids automatically(incrementing)
-    token       VARCHAR(40) UNIQUE, -- two blockmodule shouldn't habe the same token
+    id          SERIAL PRIMARY KEY,
+    token       VARCHAR(40) UNIQUE,
     title       VARCHAR(255),
     description TEXT,
     html        TEXT,
@@ -33,5 +35,3 @@ CREATE TABLE blockmodule
     js          TEXT
 );
 
---We do not need the validtoken table because the token is supposed to be unique
--- so it would be useless to check it with an extra tble
