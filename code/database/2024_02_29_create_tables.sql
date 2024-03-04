@@ -21,7 +21,7 @@ CREATE TABLE aet
     tsbegin     TIMESTAMP    NOT NULL,
     tsend       TIMESTAMP    NOT NULL,
     color       VARCHAR(7) NOT NULL CHECK (color ~* '^#[a-f0-9]{6}$') DEFAULT '#23414b',
-    calenderid  BIGINT REFERENCES calendar
+    calenderid  BIGINT NOT NULL REFERENCES calendar
 );
 
 CREATE TABLE blockmodule
