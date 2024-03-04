@@ -27,8 +27,8 @@ CREATE TABLE aet
 CREATE TABLE blockmodule
 (
     id          SERIAL PRIMARY KEY,
-    token       VARCHAR(40) UNIQUE,
-    title       VARCHAR(255),
+    token       VARCHAR(40) UNIQUE NOT NULL ,
+    title       VARCHAR(255) NOT NULL ,
     description TEXT,
     html        TEXT,
     css         TEXT,
