@@ -1,0 +1,96 @@
+:root {
+    --niic-calendar-body-height: calc(100dvh - 130px);
+    --niic-calendar-aside-width: 296px;
+}
+
+.niic-calendar-main-section {
+    height: var(--niic-calendar-body-height);
+    width: var(--max-width);
+
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+.niic-calendar-aside {
+    width: var(--niic-calendar-aside-width);
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .niic-cal-minimap {
+        width: 100%;
+        background: white;
+        padding: 30px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .niic-calendar-aside-aet-lists {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+
+        overflow: auto;
+        padding-bottom: 30px;
+    }
+}
+
+.niic-calendar-day-times {
+    margin: 0;
+    padding: 0;
+    height: var(--niic-calendar-body-height);
+    width: 20px;
+    font-family: system-ui, sans-serif;
+}
+
+.niic-calendar-main {
+    width: calc(100vw - 81px - 296px);
+
+    display: flex;
+
+    &> * {
+        flex: 1;
+
+        display: flex;
+        justify-content: center;
+        border-right: 1px black solid;
+
+        &:last-child {
+            border-right: none;
+        }
+    }
+}
+
+.niic-calendar-aet-zone {
+    height: var(--niic-calendar-body-height);
+
+    max-width: 400px;
+
+    &> * {
+        display: block;
+
+        min-width: 10px;
+
+        padding: 15px;
+
+        color: white;
+        border-radius: 5px;
+
+        font-family: system-ui, sans-serif;
+        font-size: 1.1rem;
+
+        overflow-y: auto;
+        word-wrap: break-word;
+
+        cursor: pointer;
+    }
+}
