@@ -1,5 +1,3 @@
 node_modules/
 vars/.env
 **/*/out
-**/*/.idea
-**/*/.DS_Store
