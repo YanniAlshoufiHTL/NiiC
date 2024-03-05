@@ -1,5 +1,5 @@
 "use strict";
-let currentGlobalId = 0;
+let currentGlobalId = 1;
 function nextGlobalId() {
     return currentGlobalId++;
 }

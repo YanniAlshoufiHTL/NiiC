@@ -5,7 +5,7 @@ const aets: NiicAet[] = [
         title: "Do something",
         description: "",
         startTime: 15,
-        endTime: 20,
+        endTime: 24,
         date: new Date(Date.now()),
         color: "#abc",
     },

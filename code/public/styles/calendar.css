@@ -45,6 +45,9 @@
 }
 
 .niic-calendar-day-times {
+    margin: 0;
+    padding: 0;
+    height: var(--niic-calendar-body-height);
     width: 20px;
     font-family: system-ui, sans-serif;
 }

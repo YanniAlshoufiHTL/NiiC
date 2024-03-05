@@ -13,11 +13,11 @@
     <script src="../out/fe-repos/aets.js"></script>
 
 
-    <script src="../out/webcomps/header-bar.js" defer></script>
-    <script src="../out/webcomps/side-bar.js" defer></script>
-    <script src="../out/webcomps/calendar-minimap.js" defer></script>
-    <script src="../out/webcomps/calendar-view.js" defer></script>
-    <script src="../out/webcomps/titled-search-list.js" defer></script>
+    <script src="../out/webcomps/HeaderBar.js" defer></script>
+    <script src="../out/webcomps/SideBar.js" defer></script>
+    <script src="../out/webcomps/CalendarMinimap.js" defer></script>
+    <script src="../out/webcomps/CalendarView.js" defer></script>
+    <script src="../out/webcomps/TitledSearchList.js" defer></script>
 
     <script src="../out/global-update-calendar.js" defer></script>
 
@@ -42,9 +42,11 @@
     <div class="niic-header-list">
         <button style="margin-right: 200px;" onclick="showAetInputPrompt()">+</button>
 
-        <button class="niic-date-left-arrow" onclick="date.setDate(date.getDate() - 1); globalUpdateCalendar();"><</button>
+        <button class="niic-date-left-arrow" onclick="date.setDate(date.getDate() - 1); globalUpdateCalendar();"><
+        </button>
         <button class="niic-date-btn" onclick="date = new Date(Date.now()); globalUpdateCalendar();"></button>
-        <button class="niic-date-right-arrow" onclick="date.setDate(date.getDate() + 1); globalUpdateCalendar();">></button>
+        <button class="niic-date-right-arrow" onclick="date.setDate(date.getDate() + 1); globalUpdateCalendar();">>
+        </button>
     </div>
 
     <div class="niic-calendar-header-days">
@@ -118,22 +120,22 @@
 
         <label>
             <input class="niic-aet-input-prompt-title"
-                   value="Programmiertest" required/>
+                   value="No Title" required/>
         </label>
 
         <label class="niic-aet-input-prompt-description">
             Description
-            <textarea class="niic-aet-input-prompt-description-textarea">
-                Grundlagen – Reflections
-            </textarea>
+            <textarea class="niic-aet-input-prompt-description-textarea"></textarea>
         </label>
 
         <div>
             <label>
                 Time
 
-                <button class="niic-aet-choice-right niic-aet-btn-time"
-                        onclick="promptTimeChange()">01:00 - 15:00</button>
+                <button type="button"
+                        class="niic-aet-choice-right niic-aet-btn-time"
+                        onclick="promptTimeChange()">00:00 - 00:00
+                </button>
             </label>
 
             <label>

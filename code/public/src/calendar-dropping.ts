@@ -11,7 +11,10 @@ for (let i = 0; i < 7; i++) {
 }
 
 function allowDrop(ev: DragEvent) {
-    ev.preventDefault();
+    // The if statement prevents drag-and-drop on other elements (e. g. other AETs)
+    if (ev.target instanceof HTMLElement && ev.target.classList.contains("niic-calendar-aet-zone")) {
+        ev.preventDefault();
+    }
 }
 
 function drop(ev: DragEvent) {

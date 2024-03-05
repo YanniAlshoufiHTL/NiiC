@@ -28,15 +28,21 @@ function globalUpdateCalendar() {
     }
 
     // Calendar Times
-    const timesDiv = document.querySelector(".niic-calendar-day-times");
+    const timesDiv: HTMLDivElement | null = document.querySelector(".niic-calendar-day-times");
+    let timeHeight: string | undefined = undefined;
 
     if (timesDiv) {
-        for (let i = 1; i < 24; i++) {
+        timesDiv.innerHTML = "";
+
+        for (let i = 0; i < 24; i++) {
             const p = document.createElement("p");
-            p.style.position = "absolute";
-            p.style.marginTop = `calc(${window.innerHeight - 130}px * ${i} / 23)`;
+
+            p.style.height = `calc(${window.innerHeight - 130}px / 23)`;
             p.textContent = `${i}`.padStart(2, '0');
+
             timesDiv.appendChild(p);
+
+            timeHeight = p.style.height;
         }
     }
 
@@ -52,8 +58,9 @@ function globalUpdateCalendar() {
                 .filter(x => x.date.toDateString() === tmpDate.toDateString())
                 .forEach(aet => {
                     const div: HTMLDivElement = document.createElement("div");
-                    div.style.marginTop = `calc(${window.innerHeight - 130}px * ${aet.startTime} / 23)`;
-                    div.style.height = `calc(${aet.endTime - aet.startTime + 1} * 100% / 23)`
+                    div.style.position = "relative";
+                    div.style.top = `calc(${aet.startTime} * ${timeHeight})`;
+                    div.style.height = `calc(${aet.endTime - aet.startTime - 1} * ${timeHeight} + ${timeHeight} / 5)`;
                     div.innerText = aet.title;
                     div.draggable = true;
                     div.id = `niic-calendar-aet-${aet.id}`;
@@ -70,6 +77,7 @@ function globalUpdateCalendar() {
 
         }
 
+
         tmpDate.setDate(tmpDate.getDate() + 1);
 
         // Change widths of headers
@@ -83,7 +91,7 @@ function globalUpdateCalendar() {
 
         // Update lists
         const getItemsHtml = (arr: NiicAet[]) =>
-            arr.map(x => `<li>${x.title}</li>`).join("\n");
+            arr.map(x => `<li onclick="showAetEditPrompt(${x.id})">${x.title}</li>`).join("\n");
 
         const listTasks: TitledSearchList | null = document.querySelector(".niic-calendar-aside-list-tasks");
         if (listTasks) {
