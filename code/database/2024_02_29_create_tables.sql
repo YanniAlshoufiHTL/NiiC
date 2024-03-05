@@ -7,7 +7,7 @@ CREATE TABLE niicuser
 CREATE TABLE calendar
 (
     id         SERIAL PRIMARY KEY,
-    usernameid BIGINT NOT NULL REFERENCES niicuser
+    niicuserid BIGINT NOT NULL REFERENCES niicuser
 );
 
 CREATE TABLE aet
@@ -17,9 +17,9 @@ CREATE TABLE aet
     description TEXT         NOT NULL,
     date        DATE         NOT NULL,
     type        varchar(40)  NOT NULL CHECK ( type = 'appointment' OR type = 'event' OR type = 'task' ),
-    tsbegin     TIMESTAMP    NOT NULL,
-    tsend       TIMESTAMP    NOT NULL,
-    color       VARCHAR(7)   NOT NULL CHECK (color ~* '^#[a-f0-9]{6}$') DEFAULT '#23414b',
+    timebegin   NUMERIC      NOT NULL CHECK ( timebegin >= 0 AND timebegin <= 24 AND timebegin <= timeend ),
+    timeend     NUMERIC      NOT NULL CHECK ( timeend >= 0 AND timeend <= 24 AND timebegin <= timeend ),
+    color       VARCHAR(7)   NOT NULL CHECK ( color ~* '^#[a-f0-9]{6}$' ) DEFAULT '#23414b',
     calenderid  BIGINT       NOT NULL REFERENCES calendar
 );
 
