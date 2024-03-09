@@ -12,8 +12,8 @@ app.use("/", express.static("public"));
 
 app.use("/api/tokens", tokensRouter);
 app.use("/api/users", usersRouter);
-app.use("/api/cal", calRouter);
-app.use("/api/aet", aetRouter);
+app.use("/api/cals", calRouter);
+app.use("/api/aets", aetRouter);
 app.use("/api/store", storeRouter);
 
 const port = 3000;

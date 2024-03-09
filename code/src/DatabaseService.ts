@@ -1,8 +1,9 @@
 import { Client } from "pg";
-import { NiicAet } from "./be-models/NiicAet";
+import NiicAet from "./be-models/NiicAet";
 import * as dotenv from "dotenv";
+import NiicAetNoId from "./be-models/NiicAetNoId";
 
-dotenv.config({ path: __dirname + "/../vars/.env" });
+dotenv.config({path: __dirname + "/../vars/.env"});
 
 /**
  * Service for interacting with the database.
@@ -39,7 +40,8 @@ export class DatabaseService {
         return this._instance;
     }
 
-    private constructor() {}
+    private constructor() {
+    }
 
     // endregion
 
@@ -89,33 +91,28 @@ export class DatabaseService {
         type: "appointment" | "event" | "task",
         color: string,
     ): Promise<number | undefined> {
-        try {
-            const client = await this.client();
-            const res = await client.query(`
-                INSERT INTO aet (name, description, date, timebegin, timeend, type, color, calenderid)
-                VALUES ($1::varchar(255), $2::text, $3::date, $4::numeric, $5::numeric, $6::varchar(40), $7::varchar(7),
-                        (SELECT id
-                         FROM calendar
-                         WHERE niicuserid = $8::bigint))
-                RETURNING id;
-            `, [title, description, date, startTime, endTime, type, color, calendarId]);
-            const id = +res.rows[0].id;
-            await this.setAets();
-            this._aets!.push({
-                id,
-                title,
-                description,
-                date,
-                startTime,
-                endTime,
-                type,
-                color,
-            });
-            return id;
-        } catch (e) {
-            console.error(e);
-            return undefined;
-        }
+        const client = await this.client();
+        const res = await client.query(`
+            INSERT INTO aet (name, description, date, timebegin, timeend, type, color, calenderid)
+            VALUES ($1::varchar(255), $2::text, $3::date, $4::numeric, $5::numeric, $6::varchar(40), $7::varchar(7),
+                    (SELECT id
+                     FROM calendar
+                     WHERE niicuserid = $8::bigint))
+            RETURNING id;
+        `, [title, description, date, startTime, endTime, type, color, calendarId]);
+        const id = +res.rows[0].id;
+        await this.setAets();
+        this._aets!.push({
+            id,
+            title,
+            description,
+            date,
+            startTime,
+            endTime,
+            type,
+            color,
+        });
+        return id;
     }
 
     /**
@@ -123,43 +120,50 @@ export class DatabaseService {
      * @param {number} id The ID of the AET to remove.
      */
     public async removeAet(id: number) {
-        try {
-            const client = await this.client();
-            await client.query("DELETE FROM aet WHERE id = $1::bigint", [id]);
-            await this.setAets();
-            const idx = this._aets!.findIndex(aet => aet.id === id);
-            this._aets!.splice(idx, 1);
-        } catch (e) {
-            console.error(e);
-        }
+        const client = await this.client();
+        await client.query("DELETE FROM aet WHERE id = $1::bigint", [id]);
+        await this.setAets();
+        const idx = this._aets!.findIndex(aet => aet.id === id);
+        this._aets!.splice(idx, 1);
     }
 
     /**
      * Updates an AET in the database.
-     * `id` field of aet is ignored.
+     * Also updates the local cache.
      * @param {number} id The ID of the AET to update.
-     * @param {NiicAet} aet The AET to update. Its `id` field is ignored.
+     * @param {NiicAetNoId} aetNoId The AET to update.
      */
-    public async updateAet(id: number, aet: NiicAet) {
-        try {
-            const client = await this.client();
-            await client.query(`
-                UPDATE aet
-                SET name = $1::varchar(255),
-                    description = $2::text,
-                    date = $3::date,
-                    timebegin = $4::numeric,
-                    timeend = $5::numeric,
-                    type = $6::varchar(40),
-                    color = $7::varchar(7)
-                WHERE id = $8::bigint;
-            `, [aet.title, aet.description, aet.date, aet.startTime, aet.endTime, aet.type, aet.color, id]);
-            await this.setAets();
-            const idx = this._aets!.findIndex(a => a.id === id);
-            this._aets![idx] = aet;
-        } catch (e) {
-            console.error(e);
+    public async updateAet(id: number, aetNoId: NiicAetNoId) {
+        const client = await this.client();
+        await client.query(`
+            UPDATE aet
+            SET name        = $1::varchar(255),
+                description = $2::text,
+                date        = $3::date,
+                timebegin   = $4::numeric,
+                timeend     = $5::numeric,
+                type        = $6::varchar(40),
+                color       = $7::varchar(7)
+            WHERE id = $8::bigint;
+        `, [aetNoId.title, aetNoId.description, aetNoId.date, aetNoId.startTime, aetNoId.endTime, aetNoId.type, aetNoId.color, id]);
+        await this.setAets();
+        const idx = this._aets!.findIndex(a => a.id === id);
+        this._aets![idx] = {
+            id,
+            ...aetNoId,
+        };
+    }
+
+    /**
+     * Returns a copy of all AETs in the database.
+     */
+    public async getAets(): Promise<NiicAet[]> {
+        await this.setAets();
+        const aets = [];
+        for (const aet of this._aets!) {
+            aets.push({...aet});
         }
+        return aets;
     }
 
     /**

@@ -1,6 +1,4 @@
-export default interface NiicAet {
-    id: number;
-
+export default interface NiicAetNoId {
     title: string;
     description: string;
     date: Date;
