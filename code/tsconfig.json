@@ -1,4 +1,5 @@
 {
+    "exclude": ["public"],
     "compilerOptions": {
         "target": "ESNext",
         "module": "NodeNext",
