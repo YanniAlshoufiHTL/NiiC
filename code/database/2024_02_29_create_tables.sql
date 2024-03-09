@@ -16,7 +16,7 @@ CREATE TABLE aet
     name        VARCHAR(255) NOT NULL,
     description TEXT         NOT NULL,
     date        DATE         NOT NULL,
-    type        varchar(40)  NOT NULL CHECK ( type = 'appointment' OR type = 'event' OR type = 'task' ),
+    type        varchar(40)  NOT NULL CHECK ( type IN ('appointment', 'event', 'task') ),
     timebegin   NUMERIC      NOT NULL CHECK ( timebegin >= 0 AND timebegin <= 24 AND timebegin <= timeend ),
     timeend     NUMERIC      NOT NULL CHECK ( timeend >= 0 AND timeend <= 24 AND timebegin <= timeend ),
     color       VARCHAR(7)   NOT NULL CHECK ( color ~* '^#[a-f0-9]{6}$' ) DEFAULT '#23414b',
