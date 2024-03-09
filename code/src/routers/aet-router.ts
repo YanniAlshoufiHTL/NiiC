@@ -29,10 +29,10 @@ aetRouter.put("/:id", async (req, res) => {
         return;
     }
 
-    const aet: NiicAetNoId = aetInp;
+    const aetNoId: NiicAetNoId = aetInp;
 
     try {
-        await DatabaseService.instance().updateAet(id, aet);
+        await DatabaseService.instance().updateAet(id, aetNoId);
         res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (e) {
         res.sendStatus(StatusCodes.BAD_REQUEST);
