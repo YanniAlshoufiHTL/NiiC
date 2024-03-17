@@ -1,9 +1,8 @@
 import express from "express";
-import { StatusCodes } from "http-status-codes";
-import {Client } from 'pg';
-import { DatabaseService } from "../DatabaseService";
+import {StatusCodes} from "http-status-codes";
+import {Client} from 'pg';
+import {DatabaseService} from "../DatabaseService";
 import NiicAetNoId from "../be-models/NiicAetNoId";
-import NiicAet from "../be-models/NiicAet";
 
 const client = new Client({
     database: process.env.DB_DB,
@@ -14,6 +13,7 @@ const client = new Client({
     ssl: true,
 });
 let connected = false;
+
 async function getClient() {
     if (!connected) {
         await client.connect();
@@ -72,6 +72,41 @@ aetRouter.delete("/:id", async (req, res) => {
         return;
     }
 });
+
+
+aetRouter.post('/', async (req, res) => {
+    let cl;
+    try {
+        cl = await getClient();
+    }catch (e){
+        res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+        return;
+    }
+    try {
+        const aet: NiicAetNoId = {
+            title: req.body.title,
+            description: req.body.description,
+            date: new Date(req.body.date),
+            startTime: +req.body.startTime,
+            endTime: +req.body.endTime,
+            type: req.body.type,
+            color: req.body.color,
+        }
+        const result = await cl.query(
+            `
+                INSERT INTO aet (name, description, date, type, timebegin, timeend, color, calenderid)
+                VALUES ($1::varchar, $2::text, $3::date, $4::varchar, $5::numeric, $6::numeric, $7::varchar, $8::bigint)
+                RETURNING aet.id
+            `,
+            [aet.title, aet.description, aet.date, aet.type, aet.startTime, aet.endTime, aet.color, +req.body.calenderid]
+        );
+        res.status(StatusCodes.CREATED).send({id: +result.rows[0].id});
+    } catch (e) {
+        res.sendStatus(StatusCodes.BAD_REQUEST);
+    }
+
+
+})
 
 /**
  * Returns the ID from the given string or -1 if invalid.
