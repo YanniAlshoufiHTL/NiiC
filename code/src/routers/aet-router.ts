@@ -1,4 +1,5 @@
 import express from "express";
+
 import {StatusCodes} from "http-status-codes";
 import {Client} from 'pg';
 import {DatabaseService} from "../DatabaseService";
@@ -21,7 +22,6 @@ async function getClient() {
     }
     return client;
 }
-
 export const aetRouter = express.Router();
 
 aetRouter.get("/", async (_, res) => {
@@ -64,6 +64,7 @@ aetRouter.delete("/:id", async (req, res) => {
         res.sendStatus(StatusCodes.BAD_REQUEST);
         return;
     }
+
     try {
         await DatabaseService.instance().removeAet(id);
         res.sendStatus(StatusCodes.NO_CONTENT);
@@ -72,7 +73,6 @@ aetRouter.delete("/:id", async (req, res) => {
         return;
     }
 });
-
 
 aetRouter.post('/', async (req, res) => {
     let cl;
