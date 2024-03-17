@@ -1,10 +1,11 @@
 import express from "express";
-import {Client } from 'pg';
+import { Client } from 'pg';
 import NiicAet from "../be-models/NiicAet";
 import * as dotenv from "dotenv";
+import { StatusCodes } from "http-status-codes";
 
+dotenv.config({path: __dirname + "/../../vars/.env"});
 
-dotenv.config({path: __dirname + "/../vars/.env"});
 const client = new Client({
     database: process.env.DB_DB,
     user: process.env.DB_USER,
@@ -13,6 +14,7 @@ const client = new Client({
     port: +(process.env.DB_PORT ?? 5432),
     ssl: true,
 });
+
 let connected = false;
 async function getClient() {
     if (!connected) {
@@ -23,15 +25,16 @@ async function getClient() {
 }
 
 export const usersRouter = express.Router();
-usersRouter.get('/',async (req, res) => {
+
+usersRouter.get('/', async (req, res) => {
     const username = req.body.username;
-    const client= await getClient();
-    const user = await client.query('SELECT * FROM niicuser WHERE username = $1::varchar', [ username ]);
+    const client = await getClient();
+    const user = await client.query('SELECT * FROM niicuser WHERE username = $1::varchar', [username]);
 
     if (user.rows.length > 0) {
-        const id= user.rows[0].id;
-        const aets = await client.query('SELECT * FROM aet WHERE calenderid = $1::serial',[id])
-        const aet:NiicAet[]= aets.rows.map(rows=>({
+        const id = user.rows[0].id;
+        const aets = await client.query('SELECT * FROM aet WHERE calenderid = $1::bigint', [id])
+        const aet: NiicAet[] = aets.rows.map(rows => ({
             id: rows.id,
             title: rows.title,
             description: rows.description,
@@ -44,9 +47,11 @@ usersRouter.get('/',async (req, res) => {
 
             color: rows.color
         }))
-        res.json({username,aet});
-        res.sendStatus(200)
-    }else {
-      res.sendStatus(400);
+
+        res
+            .status(StatusCodes.OK)
+            .json({username, aet});
+    } else {
+        res.sendStatus(StatusCodes.BAD_REQUEST);
     }
 })
