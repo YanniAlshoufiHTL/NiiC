@@ -1,0 +1,5 @@
+DB_HOST=ep-morning-voice-44914977.eu-central-1.aws.neon.tech
+DB_PORT=5432
+DB_USER=niic-user
+DB_PASS=ZCvjQsxy63EM
+DB_DB=niic-db

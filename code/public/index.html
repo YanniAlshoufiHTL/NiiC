@@ -5,12 +5,32 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="../out/webcomps/side-bar.js" defer></script>
     <title>NiiC – Home</title>
+    <script src="./out/webcomps/SideBar.js" defer type="module"></script>
+    <script src="./out/login/loginSubmit.js" defer></script>
+
+    <style>
+        .center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+    </style>
 
 </head>
 <body>
-<niic-sidebar></niic-sidebar>
-<h1>Home</h1>
+
+    <niic-sidebar></niic-sidebar>
+
+    <div class="center">
+        <form onsubmit="onLoginSubmit(event);">
+            <input class="niic-login-form-name" type="text" id="username" username="username"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
 </body>
 </html>
