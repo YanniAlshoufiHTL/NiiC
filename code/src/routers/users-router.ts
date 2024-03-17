@@ -26,7 +26,7 @@ async function getClient() {
 
 export const usersRouter = express.Router();
 
-usersRouter.get('/', async (req, res) => {
+usersRouter.get('/login', async (req, res) => {
     const username = req.body.username;
     const client = await getClient();
     const user = await client.query('SELECT * FROM niicuser WHERE username = $1::varchar', [username]);
