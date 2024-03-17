@@ -1,19 +1,32 @@
 async function onLoginSubmit(event: Event) {
     event.preventDefault();
-    const nameInput : HTMLInputElement | null = document.querySelector(".niic-login-form-name");
-    if(!nameInput || nameInput.value.trim() === ""){
+
+    const nameInput: HTMLInputElement | null = document.querySelector(".niic-login-form-name");
+
+    if (!nameInput || nameInput.value.trim() === "") {
         alert("Please enter a valid input");
+        return;
     }
+
     const response = await fetch("/api/users/login", {
         method: "POST",
-        body: nameInput?.value
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({"username": nameInput.value.trim()})
     });
 
-    if(response.status != 200) {
+    if (response.status != 200) {
         alert("User could not be logged in");
+        return;
     }
 
-    //safe AETs in globale variable
+    const body: {
+        username: string,
+        aets: NiicAet[]
+    } = await response.json();
 
-    //window.open('/sites/calendar.html', '_self');
+    localStorage.setItem("aets", JSON.stringify(body.aets));
+
+    window.open('/sites/calendar.html', '_self');
 }

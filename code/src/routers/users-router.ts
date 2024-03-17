@@ -26,22 +26,22 @@ async function getClient() {
 
 export const usersRouter = express.Router();
 
-usersRouter.get('/login', async (req, res) => {
+usersRouter.post('/login', async (req, res) => {
     const username = req.body.username;
     const client = await getClient();
     const user = await client.query('SELECT * FROM niicuser WHERE username = $1::varchar', [username]);
 
     if (user.rows.length > 0) {
         const id = user.rows[0].id;
-        const aets = await client.query('SELECT * FROM aet WHERE calenderid = $1::bigint', [id])
-        const aet: NiicAet[] = aets.rows.map(rows => ({
+        const aetQuery = await client.query('SELECT * FROM aet WHERE calenderid = $1::bigint', [id])
+        const aets: NiicAet[] = aetQuery.rows.map(rows => ({
             id: rows.id,
-            title: rows.title,
+            title: rows.name,
             description: rows.description,
-            date: rows.date,
+            date: new Date(rows.date),
 
-            startTime: rows.startTime,
-            endTime: rows.endTime,
+            startTime: +rows.timebegin,
+            endTime: +rows.timeend,
 
             type: rows.type,
 
@@ -50,7 +50,7 @@ usersRouter.get('/login', async (req, res) => {
 
         res
             .status(StatusCodes.OK)
-            .json({username, aet});
+            .json({username, aets});
     } else {
         res.sendStatus(StatusCodes.BAD_REQUEST);
     }

@@ -6,7 +6,7 @@
 @baseUsers = {{pref}}/users
 
 ### get aet
-GET {{baseUsers}}/login
+POST {{baseUsers}}/login
 Content-Type: application/json
 
 {
