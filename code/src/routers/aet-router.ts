@@ -1,7 +1,26 @@
 import express from "express";
 import { StatusCodes } from "http-status-codes";
+import {Client } from 'pg';
 import { DatabaseService } from "../DatabaseService";
 import NiicAetNoId from "../be-models/NiicAetNoId";
+import NiicAet from "../be-models/NiicAet";
+
+const client = new Client({
+    database: process.env.DB_DB,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    host: process.env.DB_HOST,
+    port: +(process.env.DB_PORT ?? 5432),
+    ssl: true,
+});
+let connected = false;
+async function getClient() {
+    if (!connected) {
+        await client.connect();
+        connected = true;
+    }
+    return client;
+}
 
 export const aetRouter = express.Router();
 
@@ -45,7 +64,6 @@ aetRouter.delete("/:id", async (req, res) => {
         res.sendStatus(StatusCodes.BAD_REQUEST);
         return;
     }
-
     try {
         await DatabaseService.instance().removeAet(id);
         res.sendStatus(StatusCodes.NO_CONTENT);

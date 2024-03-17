@@ -1,0 +1,14 @@
+@domain=localhost
+@port=3000
+@host={{domain}}:{{port}}
+@pref=http://{{host}}/api
+
+@baseUsers = {{pref}}/users
+
+### get aet
+GET {{baseUsers}}/login
+Content-Type: application/json
+
+{
+  "username": "ok"
+}

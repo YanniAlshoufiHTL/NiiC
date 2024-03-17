@@ -13,8 +13,10 @@ app.use("/", express.static("public"));
 app.use("/api/tokens", tokensRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/cals", calRouter);
+app.use("/api/users/login",usersRouter);
 app.use("/api/aets", aetRouter);
 app.use("/api/store", storeRouter);
+
 
 const port = 3000;
 app.listen(port, () => console.log(`Listening on port: ${port}`));
