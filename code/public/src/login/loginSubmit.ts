@@ -8,7 +8,7 @@ async function onLoginSubmit(event: Event) {
         return;
     }
 
-    const response = await fetch("/api/users/login", {
+    const response = await fetch("/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
