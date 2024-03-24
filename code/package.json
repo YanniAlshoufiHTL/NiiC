@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "server-dev": "npx nodemon --exec npx tsx ./src/app.ts",
+    "server-dev": "npx nodemon --ignore ./out/ --exec npm run start",
     "client-dev": "npx tsc --watch --project public",
     "prestart": "npx tsc",
     "start": "node ./out/app.js"

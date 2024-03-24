@@ -1,0 +1,37 @@
+@domain=localhost
+@port=3000
+@host={{domain}}:{{port}}
+@pref=http://{{host}}/api
+
+@baseModule = {{pref}}/modules
+
+### create module
+POST {{baseModule}}
+Content-Type: application/json
+
+{
+    "token": "tmp-token",
+    "title": "My title",
+    "description": null,
+    "html": "<!DOCTYPE html><html><head></head><body><h1>Hello World</h1></body></html>",
+    "css": null,
+    "js": null
+}
+
+
+### edit module
+PUT {{baseModule}}
+Content-Type: application/json
+
+{
+    "token": "tmp-token",
+    "title": "My title 2",
+    "description": null,
+    "html": "<!DOCTYPE html><html><head></head><body><h1>Hello World</h1></body></html>",
+    "css": null,
+    "js": null
+}
+
+
+### delete module
+DELETE {{baseModule}}/tmp-token
