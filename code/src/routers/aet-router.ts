@@ -1,9 +1,9 @@
 import express from "express";
 
-import {StatusCodes} from "http-status-codes";
-import {Client} from 'pg';
-import {DatabaseService} from "../DatabaseService";
+import { StatusCodes } from "http-status-codes";
+import { Client } from 'pg';
 import NiicAetNoId from "../be-models/NiicAetNoId";
+import { DatabaseService } from "../DatabaseService";
 
 const client = new Client({
     database: process.env.DB_DB,
@@ -22,6 +22,7 @@ async function getClient() {
     }
     return client;
 }
+
 export const aetRouter = express.Router();
 
 aetRouter.get("/", async (_, res) => {
@@ -78,7 +79,7 @@ aetRouter.post('/', async (req, res) => {
     let cl;
     try {
         cl = await getClient();
-    }catch (e){
+    } catch (e) {
         res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
         return;
     }
