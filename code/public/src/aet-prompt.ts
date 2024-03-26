@@ -135,8 +135,7 @@ function showAetEditPrompt(id: number) {
     colorEl!!.value = color;
 }
 
-
-function submitAetInputPrompt(ev: SubmitEvent) {
+async function submitAetInputPrompt(ev: SubmitEvent) {
     ev.preventDefault();
 
     const promptEl: HTMLElement | null = document.querySelector(".niic-aet-input-prompt");
@@ -191,32 +190,49 @@ function submitAetInputPrompt(ev: SubmitEvent) {
 
     const startTime = +splitStartTime[0] + +splitStartTime[1] / 60;
     const endTime = +splitEndTime[0] + +splitEndTime[1] / 60;
-
-    const aet: NiicAet = {
-        type,
-        id: id ? id : nextGlobalId(),
-        title,
-        description,
-        startTime,
-        endTime,
-        date,
-        color,
-    };
-
-    if (id) {
-        const idx = aets.findIndex(x => x.id === id);
-
-        if (idx !== -1) {
-            aets[idx] = aet;
-
-        } else {
-            aets.push(aet)
+    if (!id) {
+        const aetNoId: NiicAetNoId = {
+            type,
+            title,
+            description,
+            startTime,
+            endTime,
+            date,
+            color,
         }
-    } else {
+        const id = await addAetAndGetId_http(aetNoId);
+        const aet: NiicAet = {
+            id,
+            ...aetNoId
+        }
         aets.push(aet);
+        localStorage.setItem("aets", JSON.stringify(aets));
+    } else {
+        console.log("HERE")
+        const aet: NiicAet = {
+            id,
+            type,
+            title,
+            description,
+            startTime,
+            endTime,
+            date,
+            color,
+        }
+        const idx = aets.findIndex(aet => aet.id === id);
+        aets[idx] = aet;
+        await updateAet_http(aet);
+        localStorage.setItem("aets", JSON.stringify(aets));
     }
 
-    globalUpdateCalendar();
+    setAets();
 
+    globalUpdateCalendar();
     hideAetInputPrompt();
+}
+
+
+function removeAetIdFromInputPrompt() {
+    const promptEl: HTMLElement | null = document.querySelector(".niic-aet-input-prompt");
+    promptEl?.setAttribute("data-id", "");
 }

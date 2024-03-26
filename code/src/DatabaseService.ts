@@ -128,11 +128,8 @@ export class DatabaseService {
     ): Promise<number | undefined> {
         const client = await this.client();
         const res = await client.query(`
-            INSERT INTO aet (name, description, date, timebegin, timeend, type, color, calenderid)
-            VALUES ($1::varchar(255), $2::text, $3::date, $4::numeric, $5::numeric, $6::varchar(40), $7::varchar(7),
-                    (SELECT id
-                     FROM calendar
-                     WHERE niicuserid = $8::bigint))
+            INSERT INTO aet (name, description, date, timebegin, timeend, type, color, calendarid)
+            VALUES ($1::varchar, $2::text, $3::date, $4::numeric, $5::numeric, $6::varchar, $7::varchar, $8::bigint)
             RETURNING id;
         `, [title, description, date, startTime, endTime, type, color, calendarId]);
         const id = +res.rows[0].id;

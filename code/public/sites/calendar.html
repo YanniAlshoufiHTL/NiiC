@@ -9,6 +9,7 @@
 
     <script src="../out/fe-repos/date.js"></script>
 
+    <script src="../out/fe-models/NiicAetNoId.js"></script>
     <script src="../out/fe-models/NiicAet.js"></script>
     <script src="../out/fe-repos/aets.js"></script>
 
@@ -24,6 +25,9 @@
     <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/calendar.css">
 
+    <script src="../out/aetRequests_http/addAet_http.js"></script>
+    <script src="../out/aetRequests_http/updateAet_http.js"></script>
+    <script src="../out/aetRequests_http/deleteAet_http.js"></script>
 
     <link rel="stylesheet" href="../styles/aet-prompt.css">
     <script src="../out/aet-prompt.js" defer></script>
@@ -40,7 +44,7 @@
     <script src="../out/global-update-calendar.js" defer></script>
 
     <div class="niic-header-list">
-        <button style="margin-right: 200px;" onclick="showAetInputPrompt()">+</button>
+        <button style="margin-right: 200px;" type="button" onclick="removeAetIdFromInputPrompt(); showAetInputPrompt()">+</button>
 
         <button class="niic-date-left-arrow" onclick="date.setDate(date.getDate() - 1); globalUpdateCalendar();"><
         </button>
@@ -116,7 +120,7 @@
 
 <section class="niic-aet-input-prompt-container hidden">
     <form class="niic-aet-input-prompt" onsubmit="submitAetInputPrompt(event)" action="#">
-        <button class="niic-aet-input-prompt-exit" onclick="hideAetInputPrompt()">x</button>
+        <button class="niic-aet-input-prompt-exit" type="button" onclick="hideAetInputPrompt()">x</button>
 
         <label>
             <input class="niic-aet-input-prompt-title"
@@ -167,7 +171,10 @@
             </label>
         </div>
 
+
         <input type="submit" value="Save">
+        <input type="button" onclick="deleteAet()" value="Delete">
+
     </form>
 </section>
 

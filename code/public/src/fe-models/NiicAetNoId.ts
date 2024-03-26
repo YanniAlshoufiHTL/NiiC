@@ -1,6 +1,4 @@
-interface NiicAet {
-    id: number;
-
+interface NiicAetNoId {
     title: string;
     description: string;
     date: Date;

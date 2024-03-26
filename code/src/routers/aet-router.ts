@@ -35,7 +35,37 @@ aetRouter.get("/", async (_, res) => {
     }
 });
 
+aetRouter.post("/", async (req, res) => {
+    try {
+        const {title, description, date, startTime, endTime, type, color, calendarId} = req.body;
+
+        const result = await DatabaseService.instance().addAet(
+            calendarId,
+            title,
+            description,
+            new Date(date),
+            +startTime,
+            +endTime,
+            type,
+            color
+        )
+
+        if (!result) {
+            res.sendStatus(StatusCodes.BAD_REQUEST);
+            return;
+        }
+
+        res.status(StatusCodes.CREATED).send({id: result});
+    } catch (e) {
+        console.error("Error while adding AET:", e);
+        res.sendStatus(StatusCodes.BAD_REQUEST);
+    }
+});
+
+
 aetRouter.put("/:id", async (req, res) => {
+    console.log(new Date(req.body.date));
+
     const id = getId(req.params.id);
     if (id === -1) {
         res.sendStatus(StatusCodes.BAD_REQUEST);
