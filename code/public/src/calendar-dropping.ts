@@ -17,13 +17,12 @@ function allowDrop(ev: DragEvent) {
     }
 }
 
-function drop(ev: DragEvent) {
+async function drop(ev: DragEvent) {
     const data = ev.dataTransfer?.getData("Title");
     if (data) {
         const el: HTMLElement | null = document.getElementById(data);
 
         if (el && ev.target && ev.target instanceof HTMLElement) {
-
             ev.target.appendChild(el);
 
             const splitId = ev.target.id.split("-");
@@ -31,12 +30,15 @@ function drop(ev: DragEvent) {
 
             const tmpDate = new Date(date.toDateString());
             tmpDate.setDate(tmpDate.getDate() + idx);
+            tmpDate.setTime(tmpDate.getTime() + (1 /*hours*/) * 60 * 60 * 1000);
 
             const idSplit = el.id.split("-");
             const id = +idSplit[idSplit.length - 1];
-            aets
-                .filter(x => x.id === id)
-                .forEach(x => x.date = tmpDate);
+
+            const aetIdx = aets.findIndex(x => x.id === id);
+            aets[aetIdx].date = tmpDate;
+            await updateAet_http(aets[aetIdx]);
+            localStorage.setItem("aets", JSON.stringify(aets));
         }
     }
     ev.preventDefault();

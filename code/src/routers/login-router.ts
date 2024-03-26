@@ -33,7 +33,7 @@ loginRouter.post('/', async (req, res) => {
 
     if (user.rows.length > 0) {
         const id = user.rows[0].id;
-        const aetQuery = await client.query('SELECT * FROM aet WHERE calenderid = $1::bigint', [id])
+        const aetQuery = await client.query('SELECT * FROM aet WHERE calendarid = $1::bigint', [id])
         const aets: NiicAet[] = aetQuery.rows.map(rows => ({
             id: rows.id,
             title: rows.name,
