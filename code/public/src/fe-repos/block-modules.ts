@@ -1,3 +1,26 @@
+// let blockModules: NiicBlockModule[];
+//
+// function setBlockModules() {
+//     blockModules = JSON.parse(localStorage.getItem("blockModules") ?? "[]")
+//         .map((x: NiicBlockModule) => {
+//             const tmp: NiicBlockModule = {
+//                 id: +x.id,
+//                 title: x.title,
+//                 description: x.description,
+//                 type: x.type,
+//                 html: x.html,
+//                 css: x.css,
+//                 js: x.js,
+//             };
+//             return tmp;
+//         });
+// }
+//
+// getModulesAndSetInLocalStorage_http()
+//     .then(_ => {
+//         setBlockModules();
+//     });
+
 const blockModules: NiicBlockModule[] = [
     {
         id: 1,
@@ -19,29 +42,29 @@ const blockModules: NiicBlockModule[] = [
                 height: 100vh;
                 background-color: #145369;
                 color: white;
-                
+
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                
+
                 text-align: center;
-                
+
                 padding: 20px;
                 box-sizing: border-box;
-                
+
                 font-family: Arial, sans-serif;
                 font-size: 2rem;
             }
         `,
         js: `
-        async function setQuote() { 
+        async function setQuote() {
             console.log("hi");
             const el = document.querySelector('div');
             const res = await fetch('https://type.fit/api/quotes');
             const quotes = await res.json();
             const randomIdx = Math.floor(Math.random() * quotes.length);
-            el.innerText = quotes[randomIdx].text 
-        } 
+            el.innerText = quotes[randomIdx].text
+        }
         setQuote();`,
         type: 'blm',
     },
