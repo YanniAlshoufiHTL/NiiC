@@ -11,14 +11,17 @@
 
     <script src="../out/fe-models/NiicAetNoId.js"></script>
     <script src="../out/fe-models/NiicAet.js"></script>
+    <script src="../out/fe-models/NiicBlockModuleNoId.js"></script>
+    <script src="../out/fe-models/NiicBlockModule.js"></script>
     <script src="../out/fe-repos/aets.js"></script>
-
+    <script src="../out/fe-repos/block-modules.js"></script>
 
     <script src="../out/webcomps/HeaderBar.js" defer></script>
     <script src="../out/webcomps/SideBar.js" defer></script>
     <script src="../out/webcomps/CalendarMinimap.js" defer></script>
     <script src="../out/webcomps/CalendarView.js" defer></script>
     <script src="../out/webcomps/TitledSearchList.js" defer></script>
+    <script src="../out/webcomps/BlockModuleArea.js" defer></script>
 
     <script src="../out/global-update-calendar.js" defer></script>
 
@@ -33,9 +36,12 @@
     <script src="../out/aet-prompt.js" defer></script>
 
     <script src="../out/calendar-dropping.js" defer></script>
+
 </head>
 <body>
 <niic-sidebar></niic-sidebar>
+<niic-block-module-area data-hidden="hidden"></niic-block-module-area>
+<!--<niic-block-module-area></niic-block-module-area>-->
 
 <script>
 </script>
@@ -48,9 +54,13 @@
 
         <button class="niic-date-left-arrow" onclick="date.setDate(date.getDate() - 1); globalUpdateCalendar();"><
         </button>
+
         <button class="niic-date-btn" onclick="date = new Date(Date.now()); globalUpdateCalendar();"></button>
+
         <button class="niic-date-right-arrow" onclick="date.setDate(date.getDate() + 1); globalUpdateCalendar();">>
         </button>
+
+        <button class="niic-block-module-btn" onclick="document.querySelector('.niic-block-module-area')?.classList.remove('niic-block-module-area-hidden')">Block Modules</button>
     </div>
 
     <div class="niic-calendar-header-days">
@@ -88,6 +98,10 @@
                 font-size: 1.3rem;
                 color: white;
             }
+        }
+
+        .niic-block-module-btn {
+            margin-left: 200px;
         }
     </style>
 </niic-header-bar>
