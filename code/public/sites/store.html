@@ -10,6 +10,8 @@
     <script src="../out/webcomps/SideBar.js" defer></script>
     <script src="../out/webcomps/PluginListing.js" defer></script>
 
+    <script src="../out/fe-repos/block-modules.js"></script>
+
     <title>NiiC – Store</title>
 </head>
 <body>
@@ -47,71 +49,30 @@
         </div>
 
 
-        <niic-plugin-listing></niic-plugin-listing>
+        <script>
+            const pluginListing = document.createElement('niic-plugin-listing');
 
+            const storeMods = blockModules
+                .map(mod => {
+                    const techs = [
+                        mod.html ? "HTML" : "",
+                        mod.css ? "CSS" : "",
+                        mod.js ? "JS" : "",
+                    ].filter(x => x !== "");
 
-<!--        <div class="niic-plugin-store-items-container">-->
-<!--            <div class="niic-plugins-store-item">-->
-<!--                <p class="plugin-name">Todos</p>-->
-<!--                <p class="creator">by you, lawandibo123, and 2 others</p>-->
-<!--                <p class="description">A simple plugin for creating and mana…</p>-->
-<!--                <button class="type">Block Module</button>-->
-<!--                <button class="download-button">-->
-<!--                    <img class="niic-plugin-store-item-download-btn-image" src="../img/download.png" alt="">-->
-<!--                    Code-->
-<!--                </button>-->
-<!--                <img class="show-image" src="../img/show.png">-->
-<!--            </div>-->
+                    return {
+                        title: mod.title,
+                        description: mod.description,
+                        additionalText: techs.join(" + "),
+                        type: mod.type,
+                    };
+                })
 
-<!--            <div class="niic-plugins-store-item">-->
-<!--                <p class="plugin-name">Todos</p>-->
-<!--                <p class="creator">by you, lawandibo123, and 2 others</p>-->
-<!--                <p class="description">A simple plugin for creating and mana…</p>-->
-<!--                <button class="type">Block Module</button>-->
-<!--                <button class="download-button">-->
-<!--                    <img class="niic-plugin-store-item-download-btn-image" src="../img/download.png" alt="">-->
-<!--                    Code-->
-<!--                </button>-->
-<!--                <img class="show-image" src="../img/show.png">-->
-<!--            </div>-->
-
-<!--            <div class="niic-plugins-store-item">-->
-<!--                <p class="plugin-name">Todos</p>-->
-<!--                <p class="creator">by you, lawandibo123, and 2 others</p>-->
-<!--                <p class="description">A simple plugin for creating and mana…</p>-->
-<!--                <button class="type">Block Module</button>-->
-<!--                <button class="download-button">-->
-<!--                    <img class="niic-plugin-store-item-download-btn-image" src="../img/download.png" alt="">-->
-<!--                    Code-->
-<!--                </button>-->
-<!--                <img class="show-image" src="../img/show.png">-->
-<!--            </div>-->
-
-<!--            <div class="niic-plugins-store-item">-->
-<!--                <p class="plugin-name">Todos</p>-->
-<!--                <p class="creator">by you, lawandibo123, and 2 others</p>-->
-<!--                <p class="description">A simple plugin for creating and mana…</p>-->
-<!--                <button class="type">Block Module</button>-->
-<!--                <button class="download-button">-->
-<!--                    <img class="niic-plugin-store-item-download-btn-image" src="../img/download.png" alt="">-->
-<!--                    Code-->
-<!--                </button>-->
-<!--                <img class="show-image" src="../img/show.png">-->
-<!--            </div>-->
-
-<!--            <div class="niic-plugins-store-item">-->
-<!--                <p class="plugin-name">Todos</p>-->
-<!--                <p class="creator">by you, lawandibo123, and 2 others</p>-->
-<!--                <p class="description">A simple plugin for creating and mana…</p>-->
-<!--                <button class="type">Block Module</button>-->
-<!--                <button class="download-button">-->
-<!--                    <img class="niic-plugin-store-item-download-btn-image" src="../img/download.png" alt="">-->
-<!--                    Code-->
-<!--                </button>-->
-<!--                <img class="show-image" src="../img/show.png">-->
-<!--            </div>-->
-
-<!--        </div>-->
+            pluginListing.setAttribute('data-mods', JSON.stringify(storeMods));
+            document
+                .querySelector(".niic-plugin-store-content-container")
+                ?.appendChild(pluginListing);
+        </script>
     </div>
 </div>
 

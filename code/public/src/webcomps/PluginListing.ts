@@ -4,49 +4,24 @@ class PluginListing extends HTMLElement {
     }
 
     connectedCallback() {
-        const mods = [
-            {
-                title: "Clock Widget",
-                description: "A clock widget that shows the current time in a set timezone.",
-                additionalText: "by you, yanni, and 2 others",
-                type: "blm",
-            },
-            {
-                title: "Catputccin Theme",
-                description: null,
-                additionalText: "by you, ibo, and 2 others",
-                type: "bgm",
-            },
-            {
-                title: "Category Option",
-                description: null,
-                additionalText: "by you, gugi, and 2 others",
-                type: "dtm",
-            },
-            {
-                title: "Moodle Kit",
-                description: null,
-                additionalText: "by you, gugi, and 2 others",
-                type: "mbn",
-            },
-            {
-                title: "Todo List Widget",
-                description: "A simple plugin for creating and managing a todo list in a widget.",
-                additionalText: "by you, yanni, and 2 others",
-                type: "blm",
-            },
-        ];
+        type modType = {
+            title: string,
+            additionalText: string,
+            description: string,
+            type: "blm" | "bgm" | "dtm" | "mbl",
+        };
 
-        const modsHtml = mods
-            .map(mod => `
+        const mods: modType[] = JSON.parse(this.dataset.mods!);
+
+        const modsHtml = mods.map(mod => `
                 <div class="niic-plugin-item">
                     <p class="niic-plugin-item-name">${mod.title}</p>
                     <p class="niic-plugin-item-creator">${mod.additionalText}</p>
                     <p class="niic-plugin-item-description">${mod.description ? mod.description : "No description."}</p>
-                    <button class="niic-plugin-item-module-type">${mod.type === "blm" ? "Block Module" :  
-                                                                   mod.type === "bgm" ? "Block Module" :
-                                                                   mod.type === "dtm" ? "Data Module" :
-                                                                   "Module Bundle"}</button>
+                    <button class="niic-plugin-item-module-type">${mod.type === "blm" ? "Block Module" :
+            mod.type === "bgm" ? "Block Module" :
+                mod.type === "dtm" ? "Data Module" :
+                    "Module Bundle"}</button>
                     <button class="niic-plugin-item-download-button">
                         <img class="niic-plugin-item-download-btn-image" src="/img/download.png" alt="">
                         Code
