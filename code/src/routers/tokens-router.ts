@@ -42,11 +42,11 @@ function generateToken(token: TokenGenerationReq): string {
 
 function generateTokenString(token: TokenGenerationReq, randomNumber: number): string {
     return token.type +
-        "-R-" + replaceAllCommasWithHypen(token.read.toString()) +
-        "-W-" + replaceAllCommasWithHypen(token.write.toString()) +
+        "-R-" + replaceAllCommasWithHyphen(token.read.toString()) +
+        "-W-" + replaceAllCommasWithHyphen(token.write.toString()) +
         "-" + randomNumber.toString();
 }
 
-function replaceAllCommasWithHypen(str: string): string {
+function replaceAllCommasWithHyphen(str: string): string {
     return str.replace(",", "-");
 }

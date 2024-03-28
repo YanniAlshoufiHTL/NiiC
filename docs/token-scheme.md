@@ -1,6 +1,7 @@
 # Token-Scheme
 
-A token consists of 4 parts.
+A token consists of 5 parts.
+
 1. The type of module
 2. The id of the author
 3. The read access
