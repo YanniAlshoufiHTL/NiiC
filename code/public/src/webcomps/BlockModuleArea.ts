@@ -161,27 +161,28 @@ const modulesElement = document.querySelector(".niic-block-module-area-modules")
 
 if (modulesElement) {
     for (const mod of blockModules) {
-        if (mod.type !== "blm" || !mod.html) {
-            console.log(mod)
-            continue;
-        }
-
-
-        const moduleElement = document.createElement("div");
-        moduleElement.classList.add("niic-block-module-area-module");
-
-        const iframeElement = document.createElement("iframe");
-        iframeElement.srcdoc = `${mod.html}
-                                <style>*{margin: 0;padding: 0;}${mod.css ? mod.css : ""}</style>
-                                ${mod.js ? "<script>" + mod.js + "</script>" : ""}`;
-        iframeElement.classList.add("niic-block-module-area-module-iframe");
-
-        moduleElement.innerHTML = `
-            <h3 class="niic-block-module-area-module-title">${mod.title}</h3>
-            ${iframeElement.outerHTML}
-        `;
-
-        modulesElement.append(moduleElement);
+        // TODO
+        // if (mod.type !== "blm" || !mod.html) {
+        //     console.log(mod)
+        //     continue;
+        // }
+        //
+        //
+        // const moduleElement = document.createElement("div");
+        // moduleElement.classList.add("niic-block-module-area-module");
+        //
+        // const iframeElement = document.createElement("iframe");
+        // iframeElement.srcdoc = `${mod.html}
+        //                         <style>*{margin: 0;padding: 0;}${mod.css ? mod.css : ""}</style>
+        //                         ${mod.js ? "<script>" + mod.js + "</script>" : ""}`;
+        // iframeElement.classList.add("niic-block-module-area-module-iframe");
+        //
+        // moduleElement.innerHTML = `
+        //     <h3 class="niic-block-module-area-module-title">${mod.title}</h3>
+        //     ${iframeElement.outerHTML}
+        // `;
+        //
+        // modulesElement.append(moduleElement);
     }
 }
 

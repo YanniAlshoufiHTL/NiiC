@@ -18,6 +18,7 @@ tokensRouter.put("/", async (req, res) => {
                 js: null,
                 css: null,
                 description: null,
+                published: false,
             })
 
             res.status(StatusCodes.CREATED).send(token);
