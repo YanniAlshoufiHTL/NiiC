@@ -77,14 +77,34 @@ modulesRouter.put('/', async (req, res) => {
         res.sendStatus(StatusCodes.BAD_REQUEST);
     }
 });
-modulesRouter.get("/",async (req, res) => {
+
+// Get all block modules
+modulesRouter.get("/", async (_, res) => {
     const client = await getClient();
-    const blockmodules= await client.query('SELECT title,description from blockmodule');
-    const plugin = blockmodules.rows.map(module=>({
-        title: module.title,
-        description: module.description
+    const blockModules = await client.query(`
+        SELECT id, title, description, html, css, js
+        FROM blockmodule
+        WHERE published = true
+    `);
+
+    const plugin = blockModules.rows.map(mod => ({
+        id: +mod.id,
+        title: mod.title,
+        description: mod.description,
+        type: "blm",
+        additionalInformation:
+            [
+                mod.html ? "HTML" : null,
+                mod.css ? "CSS" : null,
+                mod.js ? "JS" : null,
+            ]
+                .filter(x => x !== null)
+                .join(" + "),
     }))
-    res.json(plugin)
+
+    res
+        .status(StatusCodes.OK)
+        .json(plugin)
 })
 
 
@@ -93,8 +113,7 @@ modulesRouter.delete('/:token', async (req, res) => {
     const token: string = req.params.token;
 
     try {
-        await
-            DatabaseService.instance().removeMod(token);
+        await DatabaseService.instance().removeMod(token);
 
         res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (e) {
@@ -103,56 +122,99 @@ modulesRouter.delete('/:token', async (req, res) => {
     }
 });
 
-modulesRouter.put("/:blockmoduleid/:userid",async (req, res) => {
-    const client=await getClient();
+// Install plugin
+modulesRouter.put("/:blockmoduleid/:userid", async (req, res) => {
+    const client = await getClient();
     try {
-        const blockmodule = await client.query('SELECT id FROM blockmodule WHERE id=$1::BIGINT',[req.params.blockmoduleid]);
-        const user= await client.query('SELECT id FROM niicuser WHERE id=$1::BIGINT',[req.params.userid]);
+        const blockmodule = await client.query(
+            'SELECT id FROM blockmodule WHERE id=$1::BIGINT',
+            [req.params.blockmoduleid]
+        );
+        const user = await client.query(
+            'SELECT id FROM niicuser WHERE id=$1::BIGINT',
+            [req.params.userid]
+        );
+
         await client.query(
             `
-                INSERT INTO installedplugins (niicuserdid, blockmoduleid)
-                VALUES ($1::BIGINT,$2::BIGINT)
-               
+                INSERT INTO installedplugin (niicuserdid, blockmoduleid)
+                VALUES ($1::BIGINT, $2::BIGINT)
             `,
-            [user.rows[0].id,blockmodule.rows[0].id]
-        );
-         res.sendStatus(StatusCodes.ACCEPTED);
-    }catch (e) {
-        console.error("Error occurred:", e);
-        res.sendStatus(StatusCodes.BAD_REQUEST)
-    }
-
-})
-modulesRouter.delete('/:blockmoduleid/:userid',async (req, res) => {
-    const client= await getClient();
-    try {
-        const blockmodule = await client.query('SELECT id FROM blockmodule WHERE id=$1::BIGINT',[req.params.blockmoduleid]);
-        const user= await client.query('SELECT id FROM niicuser WHERE id=$1::BIGINT',[req.params.userid]);
-
-        await client.query( `
-            DELETE FROM installedplugins 
-            WHERE niicuserdid = $1::BIGINT AND blockmoduleid = $2::BIGINT
-        `,
             [user.rows[0].id, blockmodule.rows[0].id]
         );
-        res.sendStatus(StatusCodes.ACCEPTED);
-    }catch (e) {
+        res.sendStatus(StatusCodes.NO_CONTENT);
+    } catch (e) {
+        console.error(e);
+        res.sendStatus(StatusCodes.BAD_REQUEST)
+    }
+});
+
+// Uninstall plugin
+modulesRouter.delete('/:blockmoduleid/:userid', async (req, res) => {
+    const client = await getClient();
+
+    try {
+        const blockmodule = await client.query(
+            'SELECT id FROM blockmodule WHERE id=$1::BIGINT',
+            [req.params.blockmoduleid]
+        );
+        const user = await client.query(
+            'SELECT id FROM niicuser WHERE id=$1::BIGINT',
+            [req.params.userid]
+        );
+
+        await client.query(`
+                    DELETE
+                    FROM installedplugin
+                    WHERE niicuserdid = $1::BIGINT
+                      AND blockmoduleid = $2::BIGINT
+            `,
+            [user.rows[0].id, blockmodule.rows[0].id]
+        );
+        res.sendStatus(StatusCodes.NO_CONTENT);
+    } catch (e) {
+        console.error(e);
         res.sendStatus(StatusCodes.BAD_REQUEST);
     }
+});
 
-})
+// Publish plugin
+modulesRouter.put("/publish", async (req, res) => {
+    try {
+        const token: string = req.body.token;
+        const client = await getClient();
 
-modulesRouter.put("/publish",async (req, res) => {
-    const token:string = req.body.token;
-    const client=await getClient();
-    const searchedBlockmodule = await client.query('SELECT * FROM blockmodule WHERE token = $1::varchar(40)',[token]);
-    await client.query('UPDATE blockmodule SET published = true WHERE token = $1::varchar(40)',[token])
-    res.send(searchedBlockmodule.rows[0]);
-})
-modulesRouter.put("/unpublish",async (req, res) => {
-    const token:string = req.body.token;
-    const client=await getClient();
-    const searchedBlockmodule = await client.query('SELECT * FROM blockmodule WHERE token = $1::varchar(40)',[token]);
-    await client.query('UPDATE blockmodule SET published = false WHERE token = $1::varchar(40)',[token])
-    res.send(searchedBlockmodule.rows[0]);
-})
+        await client.query(`
+                    UPDATE blockmodule
+                    SET published = true
+                    WHERE token = $1::varchar(40)
+            `,
+            [token]
+        );
+
+        res.sendStatus(StatusCodes.NO_CONTENT);
+    } catch (e) {
+        console.error(e);
+        res.sendStatus(StatusCodes.BAD_REQUEST);
+    }
+});
+
+// Unpulbish plugin
+modulesRouter.put("/unpublish", async (req, res) => {
+    try {
+        const token: string = req.body.token;
+        const client = await getClient();
+        await client.query(`
+                    UPDATE blockmodule
+                    SET published = false
+                    WHERE token = $1::varchar(40)
+            `,
+            [token]
+        );
+
+        res.sendStatus(StatusCodes.NO_CONTENT);
+    } catch (e) {
+        console.error(e);
+        res.sendStatus(StatusCodes.BAD_REQUEST);
+    }
+});

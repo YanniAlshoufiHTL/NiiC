@@ -36,6 +36,7 @@ Content-Type: application/json
 ### delete module
 DELETE {{baseModule}}/tmp-token
 
+
 ### publish modules
 PUT {{baseModule}}/publish
 Content-Type: application/json
@@ -44,8 +45,8 @@ Content-Type: application/json
    "token": "okokokokokok"
 }
 
-### unpublish modules
 
+### unpublish modules
 PUT {{baseModule}}/unpublish
 Content-Type: application/json
 
@@ -54,12 +55,11 @@ Content-Type: application/json
 }
 
 ### get modules
-
 GET {{baseModule}}
 
-### download plugin
+### install plugin
 PUT {{baseModule}}/4/1
 
-### delete plugin
+### uninstall plugin
 DELETE {{baseModule}}/4/1
 
