@@ -100,6 +100,7 @@ export class DatabaseService {
                     html: row.html,
                     css: row.css,
                     js: row.js,
+                    published: row.published
                 });
             });
         }
@@ -160,11 +161,11 @@ export class DatabaseService {
             case "blm":
                 const res = await client.query(
                     `
-                        INSERT INTO blockmodule (token, title, description, html, css, js)
-                        VALUES ($1::varchar, $2::varchar, $3::text, $4::text, $5::text, $6::text)
+                        INSERT INTO blockmodule (token, title, description, html, css, js,published)
+                        VALUES ($1::varchar, $2::varchar, $3::text, $4::text, $5::text, $6::text,7::bool)
                         RETURNING id;
                     `,
-                    [mod.token, mod.title, mod.description, mod.html, mod.css, mod.js]
+                    [mod.token, mod.title, mod.description, mod.html, mod.css, mod.js,mod.published]
                 );
 
                 const id: number = +res.rows[0].id;
@@ -259,7 +260,7 @@ export class DatabaseService {
         const idx = this._mods!.findIndex(m => m.token === moduleNoId.token);
         this._mods![idx] = {
             id: +res.rows[0].id,
-            ...moduleNoId,
+            ...moduleNoId
         }
     }
 

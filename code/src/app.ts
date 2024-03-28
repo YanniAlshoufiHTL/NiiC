@@ -13,13 +13,14 @@ app.use(express.json());
 app.use("/", express.static("public"));
 
 app.use("/login", loginRouter);
-
 app.use("/api/tokens", tokensRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/cals", calRouter);
 app.use("/api/aets", aetRouter);
 app.use("/api/store", storeRouter);
 app.use("/api/modules", modulesRouter);
+app.use("/api/modules/publish", modulesRouter);
+app.use("/api/modules/unpublish", modulesRouter);
 
 
 const port = 3000;
