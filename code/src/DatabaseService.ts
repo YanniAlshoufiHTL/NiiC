@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import NiicAetNoId from "./be-models/NiicAetNoId";
 import NiicBlockModule from "./be-models/NiicBlockModule";
 import NiicBlockModuleNoId from "./be-models/NiicBlockModuleNoId";
+import TokenGenerationReq from "./be-models/TokenGenerationReq";
 
 dotenv.config({path: __dirname + "/../vars/.env"});
 
@@ -235,6 +236,7 @@ export class DatabaseService {
         };
     }
 
+
     /**
      * Updates a module in the database.
      * Also updates the local cache.
@@ -260,6 +262,27 @@ export class DatabaseService {
             id: +res.rows[0].id,
             ...moduleNoId
         }
+    }
+
+    /**
+     * Updates module token in the database.
+     * Also updates the local cache.
+     * @param oldToken previous token of module.
+     * @param newToken new token of module.
+     */
+    public async updateModToken(oldToken: string, newToken: string) {
+        const client = await this.client();
+        const res = await client.query(`
+                    UPDATE blockmodule
+                    SET token = $2::varchar
+                    WHERE token = $1::varchar
+                    RETURNING id
+            `,
+            [oldToken, newToken]
+        );
+        await this.setMods();
+        const idx = this._mods!.findIndex(m => m.token === oldToken);
+        this._mods![idx].token = newToken;
     }
 
     /**
