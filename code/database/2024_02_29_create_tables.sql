@@ -19,7 +19,8 @@ CREATE TABLE aet
     type        varchar(40)  NOT NULL CHECK ( type IN ('appointment', 'event', 'task') ),
     timebegin   NUMERIC      NOT NULL CHECK ( timebegin >= 0 AND timebegin <= 24 AND timebegin <= timeend ),
     timeend     NUMERIC      NOT NULL CHECK ( timeend >= 0 AND timeend <= 24 AND timebegin <= timeend ),
-    color       VARCHAR(7)   NOT NULL CHECK ( color ~* '^#[a-f0-9]{6}$' ) DEFAULT '#23414b',
+    color       VARCHAR(7)   NOT NULL CHECK ( color ~* '^#[a-f0-9]{6}$'
+) DEFAULT '#23414b',
     calenderid  BIGINT       NOT NULL REFERENCES calendar
 );
 
@@ -31,6 +32,13 @@ CREATE TABLE blockmodule
     description TEXT,
     html        TEXT,
     css         TEXT,
-    js          TEXT
+    js          TEXT,
+    published   bool         NOT NULL default false
 );
 
+CREATE TABLE installedplugin
+(
+    niicuserdid   BIGINT NOT NULL REFERENCES niicuser,
+    blockmoduleid BIGINT NOT NULL REFERENCES blockmodule,
+    PRIMARY KEY (niicuserdid, blockmoduleid)
+)
