@@ -125,7 +125,7 @@ aetRouter.post('/', async (req, res) => {
         }
         const result = await cl.query(
             `
-                INSERT INTO aet (name, description, date, type, timebegin, timeend, color, calenderid)
+                INSERT INTO aet (name, description, date, type, timebegin, timeend, color, calendarid)
                 VALUES ($1::varchar, $2::text, $3::date, $4::varchar, $5::numeric, $6::numeric, $7::varchar, $8::bigint)
                 RETURNING aet.id
             `,

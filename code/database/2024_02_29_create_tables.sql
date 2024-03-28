@@ -1,3 +1,4 @@
+
 CREATE TABLE niicuser
 (
     id       SERIAL PRIMARY KEY,
@@ -31,6 +32,12 @@ CREATE TABLE blockmodule
     description TEXT,
     html        TEXT,
     css         TEXT,
-    js          TEXT
+    js          TEXT,
+    published bool NOT NULL default false
 );
 
+CREATE TABLE installedplugins(
+    niicuserdid   BIGINT not null,
+    blockmoduleid BIGINT not null,
+    primary key(niicuserdid,blockmoduleid)
+)
