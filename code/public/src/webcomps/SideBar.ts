@@ -10,19 +10,19 @@ class SideBar extends HTMLElement {
                     <img src="/img/home.svg" alt="Home Icon">
                     <h1>Home</h1>
                 </span>
-                <span class="niic-icon-container" onclick="window.open('/sites/docs', '_parent')">
+                <span class="niic-icon-container" onclick="window.open('/sites/docs.html', '_parent')">
                     <img src="/img/docs.svg" alt="Docs Icon">
                     <h1>Docs</h1>
                 </span>
-                <span class="niic-icon-container" onclick="window.open('/sites/store', '_parent')">
+                <span class="niic-icon-container" onclick="window.open('/sites/store.html', '_parent')">
                     <img src="/img/store.svg" alt="Store Icon">
                     <h1>Store</h1>
                 </span>
-                <span class="niic-icon-container" onclick="window.open('/sites/calendar', '_parent')">
+                <span class="niic-icon-container" onclick="window.open('/sites/calendar.html', '_parent')">
                     <img src="/img/calendar.svg" alt="Calendar Icon">
                     <h1>Calendar</h1>
                 </span>
-                <span class="niic-icon-container niic-profile-icon-container" onclick="window.open('/sites/profile', '_parent')">
+                <span class="niic-icon-container niic-profile-icon-container" onclick="window.open('/sites/profile.html', '_parent')">
                     <img src="/img/profile.svg" alt="Profile Icon">
                     <h1>Profile</h1>
                 </span>

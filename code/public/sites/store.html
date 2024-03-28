@@ -4,47 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="../styles/pluginstore.css">
+    <link rel="stylesheet" href="../styles/plugin-store.css">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="../out/webcomps/SideBar.js" defer></script>
-    <title>NiiC – Store</title>
 
+    <script src="../out/webcomps/SideBar.js" defer></script>
+    <script src="../out/webcomps/PluginListing.js" defer></script>
+
+    <script src="../out/fe-repos/block-modules.js"></script>
+
+    <title>NiiC – Store</title>
 </head>
 <body>
 <niic-sidebar id="sidebar"></niic-sidebar>
-<div id="background">
-    <p id="pulgin-store">Plugin store</p>
 
+<div class="niic-plugin-store-bg-gradient-shadow"></div>
+
+<div class="niic-plugin-store-navigation">
+    <p class="niic-plugin-store-go-back-label">&#8592; Go back</p>
+
+    <div class="niic-plugin-store-inner-navigation">
+        <p class="niic-plugin-store-sidebar-option">Plugin Store</p>
+        <p class="niic-plugin-store-installed-plugins-label">Installed Plugins</p>
+    </div>
 </div>
-<div id="shadow">
-    <p id="go-back">&#8592; Go back</p>
 
-</div>
-<p id="installed-plugins">installed plugins</p></div>
-<div id="main-container">
-    <img id="background-1" src="../img/background1.png" alt="">
+<div class="niic-plugin-store-main-container">
+    <img class="niic-plugin-store-bg-image" src="/img/niic-bg-block-module-area.png" alt="Background">
 
-    <div id="content-container-1">
-        <h1 id="header">
-                <span id="underlined-header" >
+    <div class="niic-plugin-store-content-container">
+        <h1 class="niic-plugin-store-title">
+                <span id="underlined-header">
                     Plugins Store
                 </span>
         </h1>
-        <button id="filter">Filter</button>
-        <button id="date">Date <img id="arrow" src="../img/ok.png" alt=""></button>
-        <input id="searchbar" type="text" name="q" placeholder="Search">
-        <img id="search-icon" src="../img/search.png" alt="">
-        <div class="info-box" id="info-box-1"><p class="plugin-name">Todos</p><p class="creator">by you, lawandibo123, and 2 others</p><p class="description">A simple plugin for creating and mana…</p><button class="type">Block Module</button> <button class="download-button"> <img class="download" src="../img/download.png" alt=""> Code</button> <img class="show-image" src="../img/show.png"></div>
-        <div class="info-box" id="info-box-2"><p class="plugin-name">Todos</p><p class="creator">by you, lawandibo123, and 2 others</p><p class="description">A simple plugin for creating and mana…</p><button class="type">Block Module</button> <button class="download-button"><img class="download" src="../img/download.png" alt=""> Code</button><img class="show-image" src="../img/show.png"></div>
-        <div class="info-box" id="info-box-3"><p class="plugin-name">Todos</p><p class="creator">by you, lawandibo123, and 2 others</p><p class="description">A simple plugin for creating and mana…</p><button class="type">Block Module</button> <button class="download-button"><img class="download" src="../img/download.png" alt=""> Code</button><img class="show-image" src="../img/show.png"></div>
 
-    </div>
-    <div id="content-container-2">
-        <img id="background-2" src="../img/background2.png" alt="">
+        <div class="niic-plugin-store-controls-container">
+            <label class="niic-plugin-store-search-label">
+                <input class="niic-plugin-store-search" type="text" placeholder="Search">
+                <img class="niic-plugin-store-search-icon" src="../img/search.png" alt="">
+            </label>
 
-        <div class="info-box" id="info-box-4"><p class="plugin-name">Todos</p><p class="creator">by you, lawandibo123, and 2 others</p><p class="description">A simple plugin for creating and mana…</p><button class="type">Block Module</button> <button class="download-button-2"><img class="download" src="../img/download.png" alt=""> Code</button><img class="show-image" src="../img/show.png"></div>
-        <div class="info-box" id="info-box-5"><p class="plugin-name">Todos</p><p class="creator">by you, lawandibo123, and 2 others</p><p class="description">A simple plugin for creating and mana…</p><button class="type">Block Module</button> <button class="download-button-2"><img class="download" src="../img/download.png" alt=""> Code</button><img class="show-image" src="../img/show.png"></div>
-        <div class="info-box" id="info-box-6"><p class="plugin-name">Todos</p><p class="creator">by you, lawandibo123, and 2 others</p><p class="description">A simple plugin for creating and mana…</p><button class="type">Block Module</button> <button class="download-button-2"><img class="download" src="../img/download.png" alt=""> Code</button><img class="show-image" src="../img/show.png"></div>
+            <button class="niic-plugin-store-navigation-btn">Filter</button>
+            <button class="niic-plugin-store-navigation-btn">Date</button>
+        </div>
+
+
+        <script>
+            const pluginListing = document.createElement('niic-plugin-listing');
+
+            const storeMods = blockModules
+                .map(mod => {
+                    const techs = [
+                        mod.html ? "HTML" : "",
+                        mod.css ? "CSS" : "",
+                        mod.js ? "JS" : "",
+                    ].filter(x => x !== "");
+
+                    return {
+                        title: mod.title,
+                        description: mod.description,
+                        additionalText: techs.join(" + "),
+                        type: mod.type,
+                    };
+                })
+
+            pluginListing.setAttribute('data-mods', JSON.stringify(storeMods));
+            document
+                .querySelector(".niic-plugin-store-content-container")
+                ?.appendChild(pluginListing);
+        </script>
     </div>
 </div>
 
