@@ -42,7 +42,7 @@ PUT {{baseModule}}/publish
 Content-Type: application/json
 
 {
-   "token": "okokokokokok"
+   "token": "blm-R--W--531014"
 }
 
 
@@ -58,7 +58,7 @@ Content-Type: application/json
 GET {{baseModule}}
 
 ### install plugin
-PUT {{baseModule}}/4/1
+PUT {{baseModule}}/6/1
 
 ### uninstall plugin
 DELETE {{baseModule}}/4/1

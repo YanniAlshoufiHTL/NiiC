@@ -15,8 +15,8 @@ class SideBar extends HTMLElement {
                     <h1>Docs</h1>
                 </span>
                 <span class="niic-icon-container" onclick="window.open('/sites/store.html', '_parent')">
-                    <img src="/img/store.svg" alt="Store Icon">
-                    <h1>Store</h1>
+                    <img src="/img/store.svg" alt="Plugins Icon">
+                    <h1>Plugins</h1>
                 </span>
                 <span class="niic-icon-container" onclick="window.open('/sites/calendar.html', '_parent')">
                     <img src="/img/calendar.svg" alt="Calendar Icon">

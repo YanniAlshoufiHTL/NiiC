@@ -13,5 +13,5 @@ Content-Type: application/json
   "type": "blm",
   "write": [],
   "read": [],
-  "oldToken": "blm-R--W--538276"
+  "oldToken": null
 }

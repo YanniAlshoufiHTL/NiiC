@@ -22,11 +22,11 @@ class PluginListing extends HTMLElement {
             mod.type === "bgm" ? "Block Module" :
                 mod.type === "dtm" ? "Data Module" :
                     "Module Bundle"}</button>
-                    <button class="niic-plugin-item-download-button">
-                        <img class="niic-plugin-item-download-btn-image" src="/img/download.png" alt="">
-                        Code
+                    <button class="niic-plugin-item-action-button">
+                        <img class="niic-plugin-item-action-btn-image" src="/img/download.png" alt="">
+                        Install
                     </button>
-                    <img class="niic-plugin-item-show-image" src="/img/show.png" alt="show item image">
+<!--                    <img class="niic-plugin-item-show-image" src="/img/show.png" alt="show item image">-->
                 </div>
             `)
             .join("");
@@ -108,20 +108,26 @@ class PluginListing extends HTMLElement {
                             border: 1px solid #18333E;
                         }
 
-                        .niic-plugin-item-download-button {
+                        .niic-plugin-item-action-button {
                             margin-top: 15px;
 
-                            width: 90px;
+                            width: 100%;
                             height: 35px;
 
                             color: white;
                             background: #18333E;
                             border-radius: 5px;
                             border: 1px solid #18333E;
+                            
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            
+                            gap: 10px;
 
-                            .niic-plugin-item-download-btn-image {
-                                width: 20px;
-                                height: 20px;
+                            .niic-plugin-item-action-btn-image {
+                                width: 15px;
+                                height: 15px;
                             }
                         }
 

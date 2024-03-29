@@ -87,7 +87,10 @@ export class DatabaseService {
     private async setMods() {
         if (this._mods === undefined) {
             const client = await this.client();
-            const res = await client.query("SELECT * FROM blockmodule");
+            const res = await client.query(`
+                SELECT id, token, title, description, html, css, js, published
+                FROM blockmodule
+            `);
 
             this._mods = [];
             res.rows.forEach(row => {
@@ -162,10 +165,10 @@ export class DatabaseService {
                 const res = await client.query(
                     `
                         INSERT INTO blockmodule (token, title, description, html, css, js,published)
-                        VALUES ($1::varchar, $2::varchar, $3::text, $4::text, $5::text, $6::text,7::bool)
+                        VALUES ($1::varchar, $2::varchar, $3::text, $4::text, $5::text, $6::text, $7::bool)
                         RETURNING id;
                     `,
-                    [mod.token, mod.title, mod.description, mod.html, mod.css, mod.js,mod.published]
+                    [mod.token, mod.title, mod.description, mod.html, mod.css, mod.js, mod.published]
                 );
 
                 const id: number = +res.rows[0].id;
@@ -276,12 +279,15 @@ export class DatabaseService {
                     UPDATE blockmodule
                     SET token = $2::varchar
                     WHERE token = $1::varchar
-                    RETURNING id
+                    RETURNING *
             `,
             [oldToken, newToken]
         );
+        console.log(res.rows);
+
+        const id: number = +res.rows[0].id;
         await this.setMods();
-        const idx = this._mods!.findIndex(m => m.token === oldToken);
+        const idx = this._mods!.findIndex(m => m.id === id);
         this._mods![idx].token = newToken;
     }
 

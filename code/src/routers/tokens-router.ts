@@ -9,7 +9,7 @@ tokensRouter.put("/", async (req, res) => {
     const body: TokenGenerationReq = req.body;
     const token: string = generateToken(body);
     try {
-        if (body.oldToken === null) {
+        if (body.oldToken === null || body.oldToken === undefined || body.oldToken.length === 0) {
             await DatabaseService.instance().addMod({
                 token,
                 title: "",
@@ -33,7 +33,7 @@ tokensRouter.put("/", async (req, res) => {
 
     } catch (e) {
         console.error(e);
-        res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+        res.sendStatus(StatusCodes.BAD_REQUEST);
     }
 });
 
