@@ -4,7 +4,8 @@ import * as dotenv from "dotenv";
 import NiicAetNoId from "./be-models/NiicAetNoId";
 import NiicBlockModule from "./be-models/NiicBlockModule";
 import NiicBlockModuleNoId from "./be-models/NiicBlockModuleNoId";
-import TokenGenerationReq from "./be-models/TokenGenerationReq";
+import NiicPublishedModule from "./be-models/NiicPublishedModule";
+import NiicBlockModuleFe from "./be-models/NiicBlockModuleFe";
 
 dotenv.config({path: __dirname + "/../vars/.env"});
 
@@ -88,7 +89,14 @@ export class DatabaseService {
         if (this._mods === undefined) {
             const client = await this.client();
             const res = await client.query(`
-                SELECT id, token, title, description, html, css, js, published
+                SELECT id,
+                       token,
+                       title,
+                       description,
+                       html,
+                       css,
+                       js,
+                       published
                 FROM blockmodule
             `);
 
@@ -164,7 +172,7 @@ export class DatabaseService {
             case "blm":
                 const res = await client.query(
                     `
-                        INSERT INTO blockmodule (token, title, description, html, css, js,published)
+                        INSERT INTO blockmodule (token, title, description, html, css, js, published)
                         VALUES ($1::varchar, $2::varchar, $3::text, $4::text, $5::text, $6::text, $7::bool)
                         RETURNING id;
                     `,
@@ -283,12 +291,73 @@ export class DatabaseService {
             `,
             [oldToken, newToken]
         );
-        console.log(res.rows);
-
         const id: number = +res.rows[0].id;
         await this.setMods();
         const idx = this._mods!.findIndex(m => m.id === id);
         this._mods![idx].token = newToken;
+    }
+
+    /**
+     * Gets all published modules.
+     */
+    public async getPublishedMods(): Promise<NiicPublishedModule[]> {
+        const client = await this.client();
+        const res = await client.query(`
+            SELECT id,
+                   title,
+                   description,
+                   html,
+                   css,
+                   js,
+                   'blm' AS type
+            FROM blockmodule
+            where published = true
+        `);
+
+        return res.rows
+            .map<NiicPublishedModule>(mod => {
+                return {
+                    additionalInformation:
+                        [
+                            mod.html ? "HTML" : null,
+                            mod.css ? "JS" : null,
+                            mod.js ? "CSS" : null,
+                        ]
+                            .filter(x => x !== null)
+                            .join(" + "),
+                    ...mod
+                };
+            });
+    }
+
+    /**
+     * Gets all installed plugins for user.
+     * @param userId
+     */
+    public async getInstalledMods(userId: number): Promise<NiicBlockModuleFe[]> {
+        const client = await this.client();
+        const res = await client.query(
+            `
+                SELECT id,
+                       title,
+                       description,
+                       html,
+                       css,
+                       js,
+                       'blm' AS type
+                FROM blockmodule
+                WHERE published = true
+                  AND id IN (SELECT blockmoduleid FROM installedplugin WHERE niicuserdid = $1::bigint)
+            `,
+            [userId]
+        );
+
+        return res.rows
+            .map<NiicBlockModuleFe>(mod => {
+                return {
+                    ...mod
+                };
+            });
     }
 
     /**
