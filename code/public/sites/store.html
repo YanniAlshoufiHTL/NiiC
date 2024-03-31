@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="../styles/plugins.css">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script src="../out/moduleRequests_http/getModules_http.js"></script>
+    <script src="../out/fe-repos/block-modules.js"></script>
+
+    <script src="../out/webcomps/SideBar.js" defer></script>
+    <script src="../out/webcomps/PluginListing.js" defer></script>
+
+    <title>NiiC – Store</title>
+</head>
+<body>
+<niic-sidebar id="sidebar"></niic-sidebar>
+
+<div class="niic-plugin-store-bg-gradient-shadow"></div>
+
+<div class="niic-plugin-store-navigation">
+    <p class="niic-plugin-store-go-back-label">&#8592; Go back</p>
+
+    <div class="niic-plugin-store-inner-navigation">
+        <p class="niic-plugin-store-sidebar-option
+                  niic-plugins-sidebar-emphasis">
+            Plugin Store
+        </p>
+        <p class="niic-plugin-store-installed-plugins-label"
+           onclick="window.open('/sites/installed-plugins.html', '_self')">
+
+            Installed Plugins
+        </p>
+    </div>
+</div>
+
+<div class="niic-plugin-store-main-container">
+    <img class="niic-plugin-store-bg-image" src="/img/niic-bg-block-module-area.png" alt="Background">
+
+    <div class="niic-plugin-store-content-container">
+        <h1 class="niic-plugin-store-title">
+                <span id="underlined-header">
+                    Plugins Store
+                </span>
+        </h1>
+
+        <div class="niic-plugin-store-controls-container">
+            <label class="niic-plugin-store-search-label">
+                <input class="niic-plugin-store-search" type="text" placeholder="Search">
+                <img class="niic-plugin-store-search-icon" src="../img/search.png" alt="">
+            </label>
+
+            <button class="niic-plugin-store-navigation-btn">Filter</button>
+            <button class="niic-plugin-store-navigation-btn">Date</button>
+        </div>
+
+
+        <script>
+            onModulesLoaded(() => {
+                const pluginListing = document.createElement('niic-plugin-listing');
+
+                const storeMods = blockModules
+                    .map(mod => {
+                        return {
+                            title: mod.title ? mod.title : "No title",
+                            description: mod.description,
+                            additionalText: mod.additionalInformation ? mod.additionalInformation : "No additional information",
+                            type: mod.type,
+                        };
+                    })
+
+                pluginListing.setAttribute('data-mods', JSON.stringify(storeMods));
+                document
+                    .querySelector(".niic-plugin-store-content-container")
+                    ?.appendChild(pluginListing);
+            });
+        </script>
+    </div>
+</div>
+
+
+</body>
+</html>

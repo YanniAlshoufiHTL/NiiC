@@ -1,0 +1,8 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --max-width: calc(100% - 81px);
+}

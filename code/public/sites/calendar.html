@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>NiiC – Calendar</title>
+
+    <script src="../out/moduleRequests_http/getModules_http.js"></script>
+    <script src="../out/fe-repos/date.js"></script>
+
+    <script src="../out/fe-models/NiicAetNoId.js"></script>
+    <script src="../out/fe-models/NiicAet.js"></script>
+    <script src="../out/fe-models/NiicBlockModuleNoId.js"></script>
+    <script src="../out/fe-models/NiicBlockModule.js"></script>
+    <script src="../out/fe-models/NiicPublishedModule.js"></script>
+
+
+    <script src="../out/fe-repos/aets.js"></script>
+    <script src="../out/fe-repos/block-modules.js"></script>
+
+    <script src="../out/webcomps/HeaderBar.js" defer></script>
+    <script src="../out/webcomps/SideBar.js" defer></script>
+    <script src="../out/webcomps/CalendarMinimap.js" defer></script>
+    <script src="../out/webcomps/CalendarView.js" defer></script>
+    <script src="../out/webcomps/TitledSearchList.js" defer></script>
+    <script src="../out/webcomps/BlockModuleArea.js" defer></script>
+
+    <script src="../out/global-update-calendar.js" defer></script>
+
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/calendar.css">
+
+    <script src="../out/aetRequests_http/addAet_http.js"></script>
+    <script src="../out/aetRequests_http/updateAet_http.js"></script>
+    <script src="../out/aetRequests_http/deleteAet_http.js"></script>
+
+    <script src="../out/moduleRequests_http/getModules_http.js"></script>
+
+    <link rel="stylesheet" href="../styles/aet-prompt.css">
+    <script src="../out/aet-prompt.js" defer></script>
+
+    <script src="../out/calendar-dropping.js" defer></script>
+
+</head>
+<body>
+<niic-sidebar></niic-sidebar>
+<niic-block-module-area data-hidden="hidden"></niic-block-module-area>
+
+<script>
+</script>
+
+<niic-header-bar>
+    <script src="../out/global-update-calendar.js" defer></script>
+
+    <div class="niic-header-list">
+        <button style="margin-right: 200px;" type="button" onclick="removeAetIdFromInputPrompt(); showAetInputPrompt()">+</button>
+
+        <button class="niic-date-left-arrow" onclick="date.setDate(date.getDate() - 1); globalUpdateCalendar();"><
+        </button>
+
+        <button class="niic-date-btn" onclick="date = new Date(Date.now()); globalUpdateCalendar();"></button>
+
+        <button class="niic-date-right-arrow" onclick="date.setDate(date.getDate() + 1); globalUpdateCalendar();">>
+        </button>
+
+        <button class="niic-block-module-btn" onclick="document.querySelector('.niic-block-module-area')?.classList.remove('niic-block-module-area-hidden')">Block Modules</button>
+    </div>
+
+    <div class="niic-calendar-header-days">
+        <p class="niic-calendar-header-days-0"></p>
+        <p class="niic-calendar-header-days-1"></p>
+        <p class="niic-calendar-header-days-2"></p>
+        <p class="niic-calendar-header-days-3"></p>
+        <p class="niic-calendar-header-days-4"></p>
+        <p class="niic-calendar-header-days-5"></p>
+        <p class="niic-calendar-header-days-6"></p>
+    </div>
+
+    <style>
+        .niic-header-list {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 10px;
+            box-sizing: border-box;
+            gap: 5px;
+        }
+
+        .niic-calendar-header-days {
+            position: absolute;
+            top: 70px;
+            right: 0;
+            display: flex;
+            width: calc(100vw - 81px - 296px);
+
+            > p {
+                text-align: center;
+                font-family: system-ui, sans-serif;
+                font-size: 1.3rem;
+                color: white;
+            }
+        }
+
+        .niic-block-module-btn {
+            margin-left: 200px;
+        }
+    </style>
+</niic-header-bar>
+
+<section class="niic-calendar-main-section">
+
+    <aside class="niic-calendar-aside">
+        <niic-calendar-minimap class="niic-cal-minimap"></niic-calendar-minimap>
+
+        <div class="niic-calendar-aside-aet-lists">
+            <niic-titled-search-list data-title="Tasks" class="niic-calendar-aside-list-tasks">
+            </niic-titled-search-list>
+
+            <niic-titled-search-list data-title="Events" class="niic-calendar-aside-list-events">
+            </niic-titled-search-list>
+
+            <niic-titled-search-list data-title="Appointments" class="niic-calendar-aside-list-appointments">
+            </niic-titled-search-list>
+
+        </div>
+    </aside>
+
+    <div class="niic-calendar-day-times"></div>
+
+    <main class="niic-calendar-main">
+    </main>
+</section>
+
+<!-- region ** AET Input Prompt ** -->
+
+<section class="niic-aet-input-prompt-container hidden">
+    <form class="niic-aet-input-prompt" onsubmit="submitAetInputPrompt(event)" action="#">
+        <button class="niic-aet-input-prompt-exit" type="button" onclick="hideAetInputPrompt()">x</button>
+
+        <label>
+            <input class="niic-aet-input-prompt-title"
+                   value="No Title" required/>
+        </label>
+
+        <label class="niic-aet-input-prompt-description">
+            Description
+            <textarea class="niic-aet-input-prompt-description-textarea"></textarea>
+        </label>
+
+        <div>
+            <label>
+                Time
+
+                <button type="button"
+                        class="niic-aet-choice-right niic-aet-btn-time"
+                        onclick="promptTimeChange()">00:00 - 00:00
+                </button>
+            </label>
+
+            <label>
+                Date
+
+                <input
+                        name="date"
+                        type="date"
+                        class="niic-aet-choice-right niic-aet-input-date"
+                        placeholder=""
+                        required>
+            </label>
+
+            <label>
+                AET Type
+                <select class="niic-aet-choice-right niic-aet-type-select"
+                        name="aet-type"
+                        required>
+
+                    <option value="appointment">Appointment</option>
+                    <option value="event" selected>Event</option>
+                    <option value="task">Task</option>
+                </select>
+            </label>
+
+            <label class="niic-color-btn-container">
+                Color
+                <input type="color" class="niic-aet-choice-right niic-color-btn"/>
+            </label>
+        </div>
+
+
+        <input type="submit" value="Save">
+        <input type="button" onclick="deleteAet_http()" value="Delete">
+
+    </form>
+</section>
+
+<!-- endregion -->
+
+</body>
+</html>

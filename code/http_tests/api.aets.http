@@ -1,0 +1,41 @@
+@domain=localhost
+@port=3000
+@host={{domain}}:{{port}}
+@pref=http://{{host}}/api
+
+@baseAet = {{pref}}/aets
+
+### get all AETs
+GET {{baseAet}}
+
+### edit AET
+PUT {{baseAet}}/32
+Content-Type: application/json
+
+{
+    "title": "Do something else",
+    "description": "",
+    "date": "2024-03-05T23:00:00.000Z",
+    "startTime": 20,
+    "endTime": 21,
+    "type": "event",
+    "color": "#bbcc3a"
+}
+
+### delete AET
+DELETE {{baseAet}}/32
+
+### add AET
+POST {{baseAet}}/
+Content-Type: application/json
+
+{
+  "title": "Do something important",
+  "description": "",
+  "date": "2024-03-05T23:00:00.000Z",
+  "startTime": 20,
+  "endTime": 21,
+  "type": "event",
+  "color": "#bbcc3a",
+  "calenderId": 2
+}
