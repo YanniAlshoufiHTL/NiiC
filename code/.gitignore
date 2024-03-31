@@ -1,6 +1,0 @@
-node_modules/
-vars/.env
-out/
-./**/out/
-.DS_Store
-.idea
