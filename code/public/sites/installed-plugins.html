@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="../styles/plugins.css">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <script src="../out/moduleRequests_http/getModules_http.js"></script>
-    <script src="../out/fe-repos/block-modules.js"></script>
+    <script src="../out/moduleRequests_http/getInstalledModulesAndSetInLocalStorage_http.js"></script>
+    <script src="../out/moduleRequests_http/uninstallModule_http.js"></script>
+
+    <script src="../out/fe-repos/installed-modules.js"></script>
 
     <script src="../out/webcomps/SideBar.js" defer></script>
     <script src="../out/webcomps/PluginListing.js" defer></script>
@@ -58,20 +60,29 @@
 
 
         <script>
-            onModulesLoaded(() => {
+            onInstalledModulesLoaded(() => {
                 const pluginListing = document.createElement('niic-plugin-listing');
 
-                const storeMods = blockModules
+                const storeMods = installedBlockModules
                     .map(mod => {
                         return {
+                            id: mod.id,
                             title: mod.title ? mod.title : "No title",
-                            description: mod.description,
-                            additionalText: mod.additionalInformation ? mod.additionalInformation : "No additional information",
+                            description: mod.description  ? mod.description : "No description",
+                            additionalText: [
+                                mod.html ? "HTML" : null,
+                                mod.css ? "CSS" : null,
+                                mod.js ? "JS" : null,
+                            ]
+                                .filter(text => text !== null)
+                                .join(" + "),
                             type: mod.type,
                         };
                     })
 
                 pluginListing.setAttribute('data-mods', JSON.stringify(storeMods));
+                pluginListing.setAttribute('data-mode', 'uninstall');
+
                 document
                     .querySelector(".niic-plugin-store-content-container")
                     ?.appendChild(pluginListing);

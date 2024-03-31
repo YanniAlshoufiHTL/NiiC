@@ -173,10 +173,10 @@ export class DatabaseService {
                 const res = await client.query(
                     `
                         INSERT INTO blockmodule (token, title, description, html, css, js, published)
-                        VALUES ($1::varchar, $2::varchar, $3::text, $4::text, $5::text, $6::text, $7::bool)
+                        VALUES ($1::varchar, $2::varchar, $3::text, $4::text, $5::text, $6::text, false)
                         RETURNING id;
                     `,
-                    [mod.token, mod.title, mod.description, mod.html, mod.css, mod.js, mod.published]
+                    [mod.token, mod.title, mod.description, mod.html, mod.css, mod.js]
                 );
 
                 const id: number = +res.rows[0].id;
