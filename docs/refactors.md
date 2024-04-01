@@ -1,9 +1,5 @@
 # Refactors 
 
-## database
-
-The SQL code seems to be fine.
-
 ## http_tests
 
 Code duplication in every file from line 1-4.
