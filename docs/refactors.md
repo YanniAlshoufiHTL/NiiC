@@ -18,8 +18,6 @@ have a .css file but the code and the naming seems to be OK.
 
 There is no naming again the css code seems to be solid and yeah we do not care if it is responsive.
 
-## /public/src/aetRequests_http
-
 ## /public/src/aetRequests_httpa/deleteAet_http:
 
 Make a function `isStringANumber(str: String): bool`.
@@ -49,7 +47,7 @@ The function is too long => more complexity but no code duplication and I am OK 
 
 The function should be split into more functions
 
-### ALL Routers
+## ALL Routers
 
 Expand `DatabaseService` and remove duplicate clients. 
 
