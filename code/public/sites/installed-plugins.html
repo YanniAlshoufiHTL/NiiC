@@ -7,11 +7,9 @@
     <link rel="stylesheet" href="../styles/plugins.css">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <script src="../out/moduleRequests_http/getModules_http.js"></script>
     <script src="../out/moduleRequests_http/getInstalledModulesAndSetInLocalStorage_http.js"></script>
-    <script src="../out/moduleRequests_http/installModule_http.js"></script>
+    <script src="../out/moduleRequests_http/uninstallModule_http.js"></script>
 
-    <script src="../out/fe-repos/block-modules.js"></script>
     <script src="../out/fe-repos/installed-modules.js"></script>
 
     <script src="../out/webcomps/SideBar.js" defer></script>
@@ -28,13 +26,13 @@
     <p class="niic-plugin-store-go-back-label">&#8592; Go back</p>
 
     <div class="niic-plugin-store-inner-navigation">
-        <p class="niic-plugin-store-sidebar-option
-                  niic-plugins-sidebar-emphasis">
+        <p class="niic-plugin-store-sidebar-option"
+           onclick="window.open('/sites/store.html', '_self')">
+
             Plugin Store
         </p>
-        <p class="niic-plugin-store-installed-plugins-label"
-           onclick="window.open('/sites/installed-plugins.html', '_self')">
-
+        <p class="niic-plugin-store-installed-plugins-label
+                  niic-plugins-sidebar-emphasis">
             Installed Plugins
         </p>
     </div>
@@ -46,7 +44,7 @@
     <div class="niic-plugin-store-content-container">
         <h1 class="niic-plugin-store-title">
                 <span id="underlined-header">
-                    Plugins Store
+                    Installed Plugins
                 </span>
         </h1>
 
@@ -62,31 +60,32 @@
 
 
         <script>
-            onModulesLoaded(() => {
+            onInstalledModulesLoaded(() => {
                 const pluginListing = document.createElement('niic-plugin-listing');
 
-                const installedModulesLoadedTmpInterval = setInterval(() => {
-                    if (installedModulesLoaded) {
-                        const storeMods = blockModules
-                            .filter(mod => !installedBlockModules.some(innerMod => innerMod.id === mod.id))
-                            .map(mod => {
-                                return {
-                                    id: +mod.id,
-                                    title: mod.title ? mod.title : "No title",
-                                    description: mod.description,
-                                    additionalText: mod.additionalInformation ? mod.additionalInformation : "No additional information",
-                                    type: mod.type,
-                                };
-                            })
+                const storeMods = installedBlockModules
+                    .map(mod => {
+                        return {
+                            id: mod.id,
+                            title: mod.title ? mod.title : "No title",
+                            description: mod.description  ? mod.description : "No description",
+                            additionalText: [
+                                mod.html ? "HTML" : null,
+                                mod.css ? "CSS" : null,
+                                mod.js ? "JS" : null,
+                            ]
+                                .filter(text => text !== null)
+                                .join(" + "),
+                            type: mod.type,
+                        };
+                    })
 
-                        pluginListing.setAttribute('data-mods', JSON.stringify(storeMods));
-                        document
-                            .querySelector(".niic-plugin-store-content-container")
-                            ?.appendChild(pluginListing);
+                pluginListing.setAttribute('data-mods', JSON.stringify(storeMods));
+                pluginListing.setAttribute('data-mode', 'uninstall');
 
-                        clearInterval(installedModulesLoadedTmpInterval);
-                    }
-                }, 100);
+                document
+                    .querySelector(".niic-plugin-store-content-container")
+                    ?.appendChild(pluginListing);
             });
         </script>
     </div>

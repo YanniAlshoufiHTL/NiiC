@@ -4,14 +4,20 @@ class PluginListing extends HTMLElement {
     }
 
     connectedCallback() {
-        type modType = {
+        type ModType = {
+            id: number,
             title: string,
             additionalText: string,
             description: string,
             type: "blm" | "bgm" | "dtm" | "mbl",
         };
 
-        const mods: modType[] = JSON.parse(this.dataset.mods!);
+        const mods: ModType[] = JSON.parse(this.dataset.mods!);
+
+        const mode: "Uninstall" | "Install" =
+            this.dataset.mode && this.dataset.mode === "uninstall"
+            ? "Uninstall"
+            : "Install";
 
         const modsHtml = mods.map(mod => `
                 <div class="niic-plugin-item">
@@ -19,12 +25,12 @@ class PluginListing extends HTMLElement {
                     <p class="niic-plugin-item-creator">${mod.additionalText}</p>
                     <p class="niic-plugin-item-description">${mod.description ? mod.description : "No description."}</p>
                     <button class="niic-plugin-item-module-type">${mod.type === "blm" ? "Block Module" :
-            mod.type === "bgm" ? "Block Module" :
-                mod.type === "dtm" ? "Data Module" :
-                    "Module Bundle"}</button>
-                    <button class="niic-plugin-item-action-button">
-                        <img class="niic-plugin-item-action-btn-image" src="/img/download.png" alt="">
-                        Install
+                        mod.type === "bgm" ? "Block Module" :
+                        mod.type === "dtm" ? "Data Module" :
+                            "Module Bundle"}
+                    </button>
+                    <button class="niic-plugin-item-action-button" onclick="${ mode === 'Install' ? 'installModule(' : 'uninstallModule(' }${mod.id})">
+                        ${mode}
                     </button>
 <!--                    <img class="niic-plugin-item-show-image" src="/img/show.png" alt="show item image">-->
                 </div>
@@ -124,6 +130,8 @@ class PluginListing extends HTMLElement {
                             align-items: center;
                             
                             gap: 10px;
+                            
+                            cursor: pointer;
 
                             .niic-plugin-item-action-btn-image {
                                 width: 15px;
@@ -146,3 +154,14 @@ class PluginListing extends HTMLElement {
 }
 
 customElements.define('niic-plugin-listing', PluginListing);
+
+
+async function installModule(modId: number) {
+    await installModule_http(modId);
+    location.reload();
+}
+
+async function uninstallModule(modId: number) {
+    await uninstallModule_http(modId);
+    location.reload();
+}

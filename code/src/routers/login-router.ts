@@ -32,10 +32,10 @@ loginRouter.post('/', async (req, res) => {
     const user = await client.query('SELECT * FROM niicuser WHERE username = $1::varchar', [username]);
 
     if (user.rows.length > 0) {
-        const id = user.rows[0].id;
+        const id = +user.rows[0].id;
         const aetQuery = await client.query('SELECT * FROM aet WHERE calendarid = $1::bigint', [id])
         const aets: NiicAet[] = aetQuery.rows.map(rows => ({
-            id: rows.id,
+            id: +rows.id,
             title: rows.name,
             description: rows.description,
             date: new Date(rows.date),
@@ -50,7 +50,7 @@ loginRouter.post('/', async (req, res) => {
 
         res
             .status(StatusCodes.OK)
-            .json({username, aets});
+            .json({id, username, aets});
     } else {
         res.sendStatus(StatusCodes.BAD_REQUEST);
     }

@@ -38,7 +38,7 @@ CREATE TABLE blockmodule
 
 CREATE TABLE installedplugin
 (
-    niicuserdid   BIGINT NOT NULL REFERENCES niicuser,
-    blockmoduleid BIGINT NOT NULL REFERENCES blockmodule,
+    niicuserdid   BIGINT NOT NULL REFERENCES niicuser ON DELETE CASCADE,
+    blockmoduleid BIGINT NOT NULL REFERENCES blockmodule ON DELETE CASCADE,
     PRIMARY KEY (niicuserdid, blockmoduleid)
 )
