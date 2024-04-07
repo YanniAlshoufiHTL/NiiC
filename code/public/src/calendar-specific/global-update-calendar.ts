@@ -77,7 +77,6 @@ function globalUpdateCalendar() {
 
         }
 
-
         tmpDate.setDate(tmpDate.getDate() + 1);
 
         // Change widths of headers

@@ -57,29 +57,34 @@ function promptTimeChange() {
             .filter(x => x.length === 5)
         ?? ['00:00', '00:00'];
 
-    let from;
-    do {
-        from = prompt("From:", times[0]) ?? "";
-    } while (!(/^(((0[0-9])|(1[0-9])|(2[0-3])):[0-5][0-9])|(24:00)$/.test(from)));
+    const timeFrom = promptForTimeWithCheck("From:", times[0]);
+    const timeTo = promptForTimeWithCheck("To:", times[1]);
 
-    let to;
-    do {
-        to = prompt("To:", times[1]) ?? "";
-    } while (!(/^(((0[0-9])|(1[0-9])|(2[0-3])):[0-5][0-9])|(24:00)$/.test(to)));
-
-    const splitFrom = from.split(":");
-    const splitTo = to.split(":");
+    const splitFrom = timeFrom.split(":");
+    const splitTo = timeTo.split(":");
 
     const stampFrom = +splitFrom[0] * 60 + +splitFrom[1];
     const stampTo = +splitTo[0] * 60 + +splitTo[1];
 
     if (stampFrom <= stampTo) {
-        btn.textContent = `${from} – ${to}`;
+        btn.textContent = `${timeFrom} – ${timeTo}`;
     } else {
         promptTimeChange();
     }
 }
 
+function promptForTimeWithCheck(message: string, defaultTime: string, falseTriesCount: number = 0): string {
+    const isTimePattern = /^((([01][0-9])|(2[0-3])):[0-5][0-9])$|^24:00$/;
+
+    if (falseTriesCount === 1) {
+        message = `Please format the time correctly. (HH:MM)\n${message}`;
+    }
+
+    const time = prompt(message, defaultTime) ?? "";
+    return isTimePattern.test(time)
+        ? time
+        : promptForTimeWithCheck(message, defaultTime, falseTriesCount + 1);
+}
 
 function showAetEditPrompt(id: number) {
     const aetInputPromptBg = document.querySelector(".niic-aet-input-prompt-container");
@@ -117,8 +122,8 @@ function showAetEditPrompt(id: number) {
     descriptionEl!!.textContent = aet.description;
 
     const timeBtnEl: HTMLButtonElement | null = document.querySelector(".niic-aet-btn-time");
-    const timeToStr = (time: number) =>
-        `${(Math.floor(time).toString()).padStart(2, "0")}:${(((time - Math.floor(time)) * 60)).toString().padStart(2, "0")}`;
+    const timeFormat = (time: number) => Math.floor(time).toString().padStart(2, "0");
+    const timeToStr = (time: number) => `${timeFormat(time)}:${timeFormat((time - Math.floor(time)) * 60)}`;
     timeBtnEl!!.innerText = `${timeToStr(aet.startTime)} - ${timeToStr(aet.endTime)}`;
 
     const dateEl: HTMLInputElement | null = document.querySelector(".niic-aet-input-date");
@@ -132,7 +137,7 @@ function showAetEditPrompt(id: number) {
     if (color.length === 4) { // Changing #ab3 to #aabb33 so HTML understands it
         color = `#${color[1]}${color[1]}${color[2]}${color[2]}${color[3]}${color[3]}`
     }
-    colorEl!!.value = color;
+    colorEl!.value = color;
 }
 
 async function submitAetInputPrompt(ev: SubmitEvent) {
@@ -144,14 +149,15 @@ async function submitAetInputPrompt(ev: SubmitEvent) {
         : false;
 
     const title = (document.querySelector(".niic-aet-input-prompt-title") as HTMLInputElement | null)?.value;
-    const description = document.querySelector(".niic-aet-input-prompt-description-textarea")?.textContent;
+    const description = (document.querySelector(".niic-aet-input-prompt-description-textarea") as HTMLTextAreaElement | null)?.value;
     const date = (document.querySelector(".niic-aet-input-date") as HTMLInputElement | null)?.valueAsDate;
     const timeStr = document.querySelector(".niic-aet-btn-time")?.textContent?.trim();
     const type: "appointment" | "event" | "task" | string | undefined =
         (document.querySelector(".niic-aet-type-select") as HTMLSelectElement | null)?.value;
     const color = (document.querySelector(".niic-color-btn") as HTMLInputElement | null)?.value;
 
-    if (!title || description === undefined || description === null || !date || !timeStr || !type || !color ||
+    if (!title || description === undefined || description === null ||
+        !date || !timeStr || !type || !color ||
         type !== "appointment" && type !== "event" && type !== "task") {
 
         console.table([
@@ -200,6 +206,7 @@ async function submitAetInputPrompt(ev: SubmitEvent) {
             date,
             color,
         }
+
         const id = await addAetAndGetId_http(aetNoId);
         const aet: NiicAet = {
             id,
@@ -208,7 +215,6 @@ async function submitAetInputPrompt(ev: SubmitEvent) {
         aets.push(aet);
         localStorage.setItem("aets", JSON.stringify(aets));
     } else {
-        console.log("HERE")
         const aet: NiicAet = {
             id,
             type,

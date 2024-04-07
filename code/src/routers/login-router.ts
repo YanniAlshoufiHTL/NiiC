@@ -16,6 +16,7 @@ const client = new Client({
 });
 
 let connected = false;
+
 async function getClient() {
     if (!connected) {
         await client.connect();
@@ -29,11 +30,41 @@ export const loginRouter = express.Router();
 loginRouter.post('/', async (req, res) => {
     const username = req.body.username;
     const client = await getClient();
-    const user = await client.query('SELECT * FROM niicuser WHERE username = $1::varchar', [username]);
+    const user = await client.query('SELECT id, username FROM niicuser WHERE username = $1::varchar', [username]);
 
     if (user.rows.length > 0) {
         const id = +user.rows[0].id;
-        const aetQuery = await client.query('SELECT * FROM aet WHERE calendarid = $1::bigint', [id])
+
+        const calendarIdQuery = await client.query(
+            `
+                SELECT id
+                FROM calendar
+                WHERE niicuserid = $1::bigint
+            `,
+            [id]
+        );
+
+        const calendarId = calendarIdQuery.rows[0].id;
+
+        const aetQuery = await client.query(
+            `
+                SELECT id,
+                       name,
+                       description,
+                       date,
+
+                       timebegin,
+                       timeend,
+
+                       type,
+
+                       color
+                FROM aet
+                WHERE calendarid = $1::bigint
+            `,
+            [calendarId]
+        )
+
         const aets: NiicAet[] = aetQuery.rows.map(rows => ({
             id: +rows.id,
             title: rows.name,

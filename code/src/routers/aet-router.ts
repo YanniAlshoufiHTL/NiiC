@@ -27,9 +27,10 @@ export const aetRouter = express.Router();
 
 aetRouter.get("/", async (_, res) => {
     try {
+        const aets = await DatabaseService.instance().getAets()
         res
             .status(StatusCodes.OK)
-            .send(await DatabaseService.instance().getAets());
+            .send(aets);
     } catch (e) {
         res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
@@ -64,8 +65,6 @@ aetRouter.post("/", async (req, res) => {
 
 
 aetRouter.put("/:id", async (req, res) => {
-    console.log(new Date(req.body.date));
-
     const id = getId(req.params.id);
     if (id === -1) {
         res.sendStatus(StatusCodes.BAD_REQUEST);

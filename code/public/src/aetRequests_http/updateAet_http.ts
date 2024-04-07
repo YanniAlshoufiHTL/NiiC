@@ -1,5 +1,4 @@
 async function updateAet_http(aet: NiicAet) {
-    console.log("updateAet_http: ", aet)
     const response = await fetch(`/api/aets/${aet.id}`, {
         method: "PUT",
         headers: {

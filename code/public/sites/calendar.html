@@ -119,8 +119,7 @@
         <button class="niic-aet-input-prompt-exit" type="button" onclick="hideAetInputPrompt()">x</button>
 
         <label>
-            <input class="niic-aet-input-prompt-title"
-                   value="No Title" required/>
+            <input class="niic-aet-input-prompt-title" value="No Title" required/>
         </label>
 
         <label class="niic-aet-input-prompt-description">
@@ -132,28 +131,22 @@
             <label>
                 Time
 
-                <button type="button"
-                        class="niic-aet-choice-right niic-aet-btn-time"
-                        onclick="promptTimeChange()">00:00 - 00:00
+                <button type="button" class="niic-aet-choice-right niic-aet-btn-time" onclick="promptTimeChange()">
+                    00:00 - 00:00
                 </button>
             </label>
 
             <label>
                 Date
 
-                <input
-                        name="date"
-                        type="date"
-                        class="niic-aet-choice-right niic-aet-input-date"
-                        placeholder=""
-                        required>
+                <input name="date" type="date" placeholder="" required
+                       class="niic-aet-choice-right niic-aet-input-date">
             </label>
 
             <label>
                 AET Type
-                <select class="niic-aet-choice-right niic-aet-type-select"
-                        name="aet-type"
-                        required>
+                <select name="aet-type" required
+                        class="niic-aet-choice-right niic-aet-type-select">
 
                     <option value="appointment">Appointment</option>
                     <option value="event" selected>Event</option>

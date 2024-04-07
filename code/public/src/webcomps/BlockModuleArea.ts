@@ -163,7 +163,6 @@ onInstalledModulesLoaded(() => {
     if (modulesElement) {
         for (const mod of installedBlockModules) {
             if (mod.type !== "blm" || !mod.html) {
-                console.log(mod)
                 continue;
             }
 
