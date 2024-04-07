@@ -1,3 +1,5 @@
+const TimePattern = /^((([01][0-9])|(2[0-3])):[0-5][0-9])$|^24:00$/;
+
 function dateToInputStr(date: Date): string {
     const year = date.getFullYear().toString();
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -74,14 +76,12 @@ function promptTimeChange() {
 }
 
 function promptForTimeWithCheck(message: string, defaultTime: string, falseTriesCount: number = 0): string {
-    const isTimePattern = /^((([01][0-9])|(2[0-3])):[0-5][0-9])$|^24:00$/;
-
     if (falseTriesCount === 1) {
         message = `Please format the time correctly. (HH:MM)\n${message}`;
     }
 
     const time = prompt(message, defaultTime) ?? "";
-    return isTimePattern.test(time)
+    return TimePattern.test(time)
         ? time
         : promptForTimeWithCheck(message, defaultTime, falseTriesCount + 1);
 }
@@ -143,92 +143,19 @@ function showAetEditPrompt(id: number) {
 async function submitAetInputPrompt(ev: SubmitEvent) {
     ev.preventDefault();
 
-    const promptEl: HTMLElement | null = document.querySelector(".niic-aet-input-prompt");
-    const id = promptEl && promptEl.dataset.id && /^\d+$/.test(promptEl.dataset.id)
-        ? +promptEl.dataset.id
-        : false;
+    const id = getIdFromPromptDatasetIfExistent();
 
-    const title = (document.querySelector(".niic-aet-input-prompt-title") as HTMLInputElement | null)?.value;
-    const description = (document.querySelector(".niic-aet-input-prompt-description-textarea") as HTMLTextAreaElement | null)?.value;
-    const date = (document.querySelector(".niic-aet-input-date") as HTMLInputElement | null)?.valueAsDate;
-    const timeStr = document.querySelector(".niic-aet-btn-time")?.textContent?.trim();
-    const type: "appointment" | "event" | "task" | string | undefined =
-        (document.querySelector(".niic-aet-type-select") as HTMLSelectElement | null)?.value;
-    const color = (document.querySelector(".niic-color-btn") as HTMLInputElement | null)?.value;
+    const aetNoId = getAetNoIdFromPrompt();
 
-    if (!title || description === undefined || description === null ||
-        !date || !timeStr || !type || !color ||
-        type !== "appointment" && type !== "event" && type !== "task") {
-
-        console.table([
-            ["title", "description", "date", "timeStr", "type", "color"],
-            [title, description, date, timeStr, type, color]
-        ]);
-
-        alert("Please fill all fields!")
+    if (aetNoId === false) {
+        alert("Please fill all fields!");
         return;
     }
 
-    const timesPattern = /^\d\d:\d\d . \d\d:\d\d$/;
-    const timePattern = /^(((0[0-9])|(1[0-9])|(2[0-3])):[0-5][0-9])|24:00$/;
-
-    if (!timesPattern.test(timeStr)) {
-        alert("The times string provided is not correctly formatted!");
-        return;
-    }
-
-    const times = timeStr.split(" ").filter(x => x.length === 5);
-    const startTimeStr = times[0];
-    const endTimeStr = times[1];
-
-    if (!timePattern.test(startTimeStr) || !timePattern.test(endTimeStr)) {
-        alert("The separate times provided are not correctly formatted!");
-        return;
-    }
-
-    if (startTimeStr > endTimeStr) {
-        alert("The start time cannot be greater than the end time!");
-        return;
-    }
-
-    const splitStartTime = startTimeStr.split(":");
-    const splitEndTime = endTimeStr.split(":");
-
-    const startTime = +splitStartTime[0] + +splitStartTime[1] / 60;
-    const endTime = +splitEndTime[0] + +splitEndTime[1] / 60;
     if (!id) {
-        const aetNoId: NiicAetNoId = {
-            type,
-            title,
-            description,
-            startTime,
-            endTime,
-            date,
-            color,
-        }
-
-        const id = await addAetAndGetId_http(aetNoId);
-        const aet: NiicAet = {
-            id,
-            ...aetNoId
-        }
-        aets.push(aet);
-        localStorage.setItem("aets", JSON.stringify(aets));
+        await addAetLocallyAndOnServer(aetNoId);
     } else {
-        const aet: NiicAet = {
-            id,
-            type,
-            title,
-            description,
-            startTime,
-            endTime,
-            date,
-            color,
-        }
-        const idx = aets.findIndex(aet => aet.id === id);
-        aets[idx] = aet;
-        await updateAet_http(aet);
-        localStorage.setItem("aets", JSON.stringify(aets));
+        await updateAetLocallyAndOnServer({id, ...aetNoId,})
     }
 
     setAets();
@@ -242,3 +169,121 @@ function removeAetIdFromInputPrompt() {
     const promptEl: HTMLElement | null = document.querySelector(".niic-aet-input-prompt");
     promptEl?.setAttribute("data-id", "");
 }
+
+async function addAetLocallyAndOnServer(aetNoId: NiicAetNoId) {
+    const id = await addAetAndGetId_http(aetNoId);
+    const aet: NiicAet = {
+        id,
+        ...aetNoId
+    }
+    aets.push(aet);
+    localStorage.setItem("aets", JSON.stringify(aets));
+}
+
+async function updateAetLocallyAndOnServer(aet: NiicAet) {
+    const id = aet.id;
+    const idx = aets.findIndex(innerAet => innerAet.id === id);
+    aets[idx] = aet;
+    await updateAet_http(aet);
+    localStorage.setItem("aets", JSON.stringify(aets));
+}
+
+function getIdFromPromptDatasetIfExistent(): number | false {
+    const promptEl = getHtmlElement(".niic-aet-input-prompt");
+    return promptEl && promptEl.dataset.id && /^\d+$/.test(promptEl.dataset.id)
+        ? +promptEl.dataset.id
+        : false;
+}
+
+function getAetNoIdFromPrompt(): {
+    title: string,
+    description: string,
+    date: Date,
+    type: "appointment" | "event" | "task",
+    color: string,
+    startTime: number,
+    endTime: number,
+} | false {
+    const {title, description, date, timeStr, type, color} = getRawAetPromptValues();
+
+    if (!title || description === undefined || description === null || !date || !timeStr || !type || !color ||
+        type !== "appointment" && type !== "event" && type !== "task") {
+
+        alert("Sorry, an internal error occurred, please try again or contact us.");
+        return false;
+    }
+
+    const times = extractTimesFromTimesStr(timeStr);
+
+    if (times === false) {
+        alert("The times string provided is not correctly formatted!");
+        return false;
+    }
+
+    const {startTime, endTime} = times;
+
+
+    return {
+        title,
+        description,
+        date,
+        type,
+        color,
+        startTime,
+        endTime,
+    };
+}
+
+function getRawAetPromptValues() {
+    const title = getHtmlElement<HTMLInputElement>(".niic-aet-input-prompt-title")?.value;
+    const description = getHtmlElement<HTMLTextAreaElement>(".niic-aet-input-prompt-description-textarea")?.value;
+    const date = getHtmlElement<HTMLInputElement>(".niic-aet-input-date")?.valueAsDate;
+    const timeStr = getHtmlElement(".niic-aet-btn-time")?.textContent?.trim();
+    const type: "appointment" | "event" | "task" | string | undefined =
+        getHtmlElement<HTMLSelectElement>(".niic-aet-type-select")?.value;
+    const color = getHtmlElement<HTMLInputElement>(".niic-color-btn")?.value;
+
+    return {
+        title,
+        description,
+        date,
+        timeStr,
+        type,
+        color,
+    };
+}
+
+function extractTimesFromTimesStr(timeStr: string) : {
+    startTime: number,
+    endTime: number
+} | false {
+    const timesPattern = /^\d\d:\d\d . \d\d:\d\d$/;
+    if (!timesPattern.test(timeStr)) {
+        return false;
+    }
+
+    const times = timeStr.split(" ").filter(x => x.length === 5);
+    const startTimeStr = times[0];
+    const endTimeStr = times[1];
+
+    if (!TimePattern.test(startTimeStr) || !TimePattern.test(endTimeStr)) {
+        return false;
+    }
+
+    if (startTimeStr > endTimeStr) {
+        return false;
+    }
+
+    const splitStartTime = startTimeStr.split(":");
+    const splitEndTime = endTimeStr.split(":");
+
+    const startTime = +splitStartTime[0] + +splitStartTime[1] / 60;
+    const endTime = +splitEndTime[0] + +splitEndTime[1] / 60;
+
+    return {startTime, endTime}
+}
+
+function getHtmlElement<T extends HTMLElement>(selector: string) {
+    return document.querySelector(selector) as T | null;
+}
+
