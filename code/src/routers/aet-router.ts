@@ -23,7 +23,7 @@ aetRouter.post("/", async (req, res) => {
         const calendarId = getCalendarIdFromBody(req.body);
 
         if (!aetNoId || !calendarId) {
-            console.log("Invalid body: ", req.body)
+            console.error("Invalid body: ", req.body)
             res.sendStatus(StatusCodes.BAD_REQUEST);
             return;
         }
@@ -64,7 +64,7 @@ aetRouter.put("/:id", async (req, res) => {
     const aetNoId = convertBodyToAetNoId(req.body);
 
     if (aetNoId === false) {
-        console.log("Invalid body: ", req.body)
+        console.error("Invalid body: ", req.body)
         res.sendStatus(StatusCodes.BAD_REQUEST);
         return;
     }
@@ -99,7 +99,7 @@ aetRouter.post('/', async (req, res) => {
         const calendarId = getCalendarIdFromBody(req.body);
 
         if (!aetNoId || !calendarId) {
-            console.log("Invalid body: ", req.body)
+            console.error("Invalid body: ", req.body)
             res.sendStatus(StatusCodes.BAD_REQUEST);
             return;
         }
@@ -140,7 +140,7 @@ function getId(id: string): number {
     return pattern.test(id) ? +id : -1;
 }
 
-function getCalendarIdFromBody(body: any): number | false{
+function getCalendarIdFromBody(body: any): number | false {
     if (
         body.calendarid && /^\d+$/.test(body.calendarid.toString()) ||
         body.calendarId && /^\d+$/.test(body.calendarId.toString())
@@ -156,7 +156,6 @@ function getCalendarIdFromBody(body: any): number | false{
 }
 
 function convertBodyToAetNoId(body: any): NiicAetNoId | false {
-    const isNumberString = (str: string) => /^\d+$/.test(str);
     const stringTypeString = "string";
 
     if (
@@ -167,9 +166,6 @@ function convertBodyToAetNoId(body: any): NiicAetNoId | false {
         body.endTime &&
         body.type && typeof body.type === stringTypeString &&
         body.color && typeof body.color === stringTypeString &&
-
-        isNumberString(body.startTime.toString()) &&
-        isNumberString(body.endTime.toString()) &&
 
         !isNaN(Date.parse(body.date)) &&
         (body.type === "event" || body.type === "appointment" || body.type === "task") &&

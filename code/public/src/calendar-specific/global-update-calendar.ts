@@ -12,7 +12,7 @@ setTimeout(() => {
 
 window.addEventListener("resize", globalUpdateCalendar);
 
-function updateHtmlAets(timeHeight: number) {
+function updateHtmlAets(timeHeight: string) {
     let tmpDate = new Date(date.toDateString());
     for (let i = 0; i < 7; i++) {
         const zone: HTMLDivElement | null = document.querySelector(`.niic-calendar-aet-zone-${i}`);
@@ -35,7 +35,7 @@ function updateHtmlAets(timeHeight: number) {
     }
 }
 
-function getAetDiv(aet: NiicAet, timeHeight: number): HTMLDivElement {
+function getAetDiv(aet: NiicAet, timeHeight: string): HTMLDivElement {
     const div: HTMLDivElement = document.createElement("div");
     div.style.position = "relative";
     div.style.top = `calc(${aet.startTime} * ${timeHeight})`;
@@ -118,9 +118,9 @@ function updateMinimapCalendar() {
     }
 }
 
-function updateCalendarTimesAndGetHeightEach(): number {
+function updateCalendarTimesAndGetHeightEach(): string {
     const timesDiv: HTMLDivElement | null = document.querySelector(".niic-calendar-day-times");
-    let timeHeight: number = 0;
+    let timeHeight = "0px";
 
     if (timesDiv) {
         timesDiv.innerHTML = "";
@@ -133,7 +133,7 @@ function updateCalendarTimesAndGetHeightEach(): number {
 
             timesDiv.appendChild(p);
 
-            timeHeight = +p.style.height;
+            timeHeight = p.style.height;
         }
     }
 

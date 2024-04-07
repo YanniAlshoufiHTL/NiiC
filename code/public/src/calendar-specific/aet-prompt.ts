@@ -123,7 +123,7 @@ function showAetEditPrompt(id: number) {
 
     const timeBtnEl: HTMLButtonElement | null = document.querySelector(".niic-aet-btn-time");
     const timeFormat = (time: number) => Math.floor(time).toString().padStart(2, "0");
-    const timeToStr = (time: number) => `${timeFormat(time)}:${timeFormat((time - Math.floor(time)) * 60)}`;
+    const timeToStr = (time: number) => `${timeFormat(time)}:${timeFormat(Math.round((time - Math.floor(time)) * 60))}`;
     timeBtnEl!!.innerText = `${timeToStr(aet.startTime)} - ${timeToStr(aet.endTime)}`;
 
     const dateEl: HTMLInputElement | null = document.querySelector(".niic-aet-input-date");
@@ -253,7 +253,7 @@ function getRawAetPromptValues() {
     };
 }
 
-function extractTimesFromTimesStr(timeStr: string) : {
+function extractTimesFromTimesStr(timeStr: string): {
     startTime: number,
     endTime: number
 } | false {
