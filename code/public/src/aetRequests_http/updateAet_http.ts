@@ -1,5 +1,4 @@
 async function updateAet_http(aet: NiicAet) {
-    console.log("updateAet_http: ", aet)
     const response = await fetch(`/api/aets/${aet.id}`, {
         method: "PUT",
         headers: {
@@ -9,8 +8,8 @@ async function updateAet_http(aet: NiicAet) {
             "title": aet.title,
             "description": aet.description,
             "date": aet.date,
-            "startTime": aet.startTime,
-            "endTime": aet.endTime,
+            "startTime": Math.round(aet.startTime),
+            "endTime": Math.round(aet.endTime),
             "type": aet.type,
             "color": aet.color,
             "calendarId": 1,

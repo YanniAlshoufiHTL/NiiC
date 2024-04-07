@@ -14,7 +14,8 @@ Content-Type: application/json
     "startTime": 20,
     "endTime": 21,
     "type": "event",
-    "color": "#bbcc3a"
+    "color": "#bbcc3a",
+    "calenderId": 1
 }
 
 ### delete AET

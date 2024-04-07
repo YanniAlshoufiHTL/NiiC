@@ -2,28 +2,7 @@ import express from "express";
 import NiicBlockModuleNoId from "../be-models/NiicBlockModuleNoId";
 import { StatusCodes } from "http-status-codes";
 import { DatabaseService } from "../DatabaseService";
-import * as dotenv from "dotenv";
-import { Client } from 'pg';
-
-dotenv.config({path: __dirname + "/../../vars/.env"});
 export const modulesRouter = express.Router();
-const client = new Client({
-    database: process.env.DB_DB,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    host: process.env.DB_HOST,
-    port: +(process.env.DB_PORT ?? 5432),
-    ssl: true,
-});
-let connected = false;
-
-async function getClient() {
-    if (!connected) {
-        await client.connect();
-        connected = true;
-    }
-    return client;
-}
 
 
 // Create new block module
@@ -128,24 +107,14 @@ modulesRouter.delete('/:token', async (req, res) => {
 
 // Install plugin
 modulesRouter.put("/:blockmoduleid/:userid", async (req, res) => {
-    const client = await getClient();
-    try {
-        const blockmodule = await client.query(
-            'SELECT id FROM blockmodule WHERE id=$1::BIGINT',
-            [req.params.blockmoduleid]
-        );
-        const user = await client.query(
-            'SELECT id FROM niicuser WHERE id=$1::BIGINT',
-            [req.params.userid]
-        );
+    const ids = getModIdAndUserId(req.params.blockmoduleid, req.params.userid);
+    if (!ids) {
+        res.sendStatus(StatusCodes.BAD_REQUEST);
+        return;
+    }
 
-        await client.query(
-            `
-                INSERT INTO installedplugin (niicuserdid, blockmoduleid)
-                VALUES ($1::BIGINT, $2::BIGINT)
-            `,
-            [user.rows[0].id, blockmodule.rows[0].id]
-        );
+    try {
+        await DatabaseService.instance().installMod(ids.userId, ids.blockModuleId)
         res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (e) {
         console.error(e);
@@ -155,26 +124,15 @@ modulesRouter.put("/:blockmoduleid/:userid", async (req, res) => {
 
 // Uninstall plugin
 modulesRouter.delete('/:blockmoduleid/:userid', async (req, res) => {
-    const client = await getClient();
+    const ids = getModIdAndUserId(req.params.blockmoduleid, req.params.userid);
+
+    if (!ids) {
+        res.sendStatus(StatusCodes.BAD_REQUEST);
+        return;
+    }
 
     try {
-        const blockmodule = await client.query(
-            'SELECT id FROM blockmodule WHERE id=$1::BIGINT',
-            [req.params.blockmoduleid]
-        );
-        const user = await client.query(
-            'SELECT id FROM niicuser WHERE id=$1::BIGINT',
-            [req.params.userid]
-        );
-
-        await client.query(`
-                    DELETE
-                    FROM installedplugin
-                    WHERE niicuserdid = $1::BIGINT
-                      AND blockmoduleid = $2::BIGINT
-            `,
-            [user.rows[0].id, blockmodule.rows[0].id]
-        );
+        await DatabaseService.instance().uninstallMod(ids.userId, ids.blockModuleId);
         res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (e) {
         console.error(e);
@@ -182,19 +140,25 @@ modulesRouter.delete('/:blockmoduleid/:userid', async (req, res) => {
     }
 });
 
+function getModIdAndUserId(blockModuleId: any, userId: any): {
+    blockModuleId: number,
+    userId: number,
+} | false {
+    if (!blockModuleId || !userId || !/\d+/.test(blockModuleId) || !/\d+/.test(userId)) {
+        return false;
+    }
+
+    return {
+        blockModuleId: +blockModuleId,
+        userId: +userId,
+    }
+}
+
 // Publish plugin
 modulesRouter.put("/publish", async (req, res) => {
     try {
         const token: string = req.body.token;
-        const client = await getClient();
-
-        await client.query(`
-                    UPDATE blockmodule
-                    SET published = true
-                    WHERE token = $1::varchar(40)
-            `,
-            [token]
-        );
+        await DatabaseService.instance().publishMod(token);
 
         res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (e) {
@@ -207,14 +171,7 @@ modulesRouter.put("/publish", async (req, res) => {
 modulesRouter.put("/unpublish", async (req, res) => {
     try {
         const token: string = req.body.token;
-        const client = await getClient();
-        await client.query(`
-                    UPDATE blockmodule
-                    SET published = false
-                    WHERE token = $1::varchar(40)
-            `,
-            [token]
-        );
+        await DatabaseService.instance().unpublishMod(token);
 
         res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (e) {
