@@ -1,15 +1,10 @@
-@domain=localhost
-@port=3000
-@host={{domain}}:{{port}}
-@pref=http://{{host}}/api
-
-@baseAet = {{pref}}/aets
+@baseAets = {{host}}/api/aet
 
 ### get all AETs
-GET {{baseAet}}
+GET {{baseAets}}
 
 ### edit AET
-PUT {{baseAet}}/32
+PUT {{baseAets}}/32
 Content-Type: application/json
 
 {
@@ -23,10 +18,10 @@ Content-Type: application/json
 }
 
 ### delete AET
-DELETE {{baseAet}}/32
+DELETE {{baseAets}}/32
 
 ### add AET
-POST {{baseAet}}/
+POST {{baseAets}}/
 Content-Type: application/json
 
 {
