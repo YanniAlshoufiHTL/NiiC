@@ -1,7 +1,7 @@
-const els = [];
+const elements = [];
 
 for (let i = 0; i < 7; i++) {
-    els.push(`
+    elements.push(`
                     <div class="niic-calendar-aet-zone niic-calendar-aet-zone-${i}"
                         ondragover="allowDrop(event)"
                         ondrop="drop(event)"
@@ -20,10 +20,10 @@ function allowDrop(ev: DragEvent) {
 async function drop(ev: DragEvent) {
     const data = ev.dataTransfer?.getData("Title");
     if (data) {
-        const el: HTMLElement | null = document.getElementById(data);
+        const element: HTMLElement | null = document.getElementById(data);
 
-        if (el && ev.target && ev.target instanceof HTMLElement) {
-            ev.target.appendChild(el);
+        if (element && ev.target && ev.target instanceof HTMLElement) {
+            ev.target.appendChild(element);
 
             const splitId = ev.target.id.split("-");
             const idx = +splitId[splitId.length - 1];
@@ -32,7 +32,7 @@ async function drop(ev: DragEvent) {
             tmpDate.setDate(tmpDate.getDate() + idx);
             tmpDate.setTime(tmpDate.getTime() + (1 /*hours*/) * 60 * 60 * 1000);
 
-            const idSplit = el.id.split("-");
+            const idSplit = element.id.split("-");
             const id = +idSplit[idSplit.length - 1];
 
             const aetIdx = aets.findIndex(x => x.id === id);
@@ -46,5 +46,5 @@ async function drop(ev: DragEvent) {
 
 const calMain = document.querySelector(".niic-calendar-main");
 if (calMain) {
-    calMain.innerHTML = els.join("\n");
+    calMain.innerHTML = elements.join("\n");
 }

@@ -17,8 +17,8 @@ async function updateAet_http(aet: NiicAet) {
     });
 
     if (response.status !== 204 /* NO CONTENT */) {
-        alert(response.status);
-        alert(await response.text());
+        console.error(response.status);
+        console.error(await response.text());
         return;
     }
 }

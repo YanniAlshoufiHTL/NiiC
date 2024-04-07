@@ -1,6 +1,6 @@
 async function deleteAet_http() {
     const promptEl: HTMLElement | null = document.querySelector(".niic-aet-input-prompt");
-    const id = promptEl && promptEl.dataset.id && /^\d+$/.test(promptEl.dataset.id)
+    const id = promptEl && promptEl.dataset.id && CheckingHelpers.isStringANumber(promptEl.dataset.id)
         ? +promptEl.dataset.id
         : false;
 
@@ -28,3 +28,4 @@ async function deleteAet_http() {
 
     hideAetInputPrompt();
 }
+

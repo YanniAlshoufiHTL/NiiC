@@ -1,12 +1,7 @@
-@domain=localhost
-@port=3000
-@host={{domain}}:{{port}}
-@pref=http://{{host}}/api
-
-@baseUsers = {{pref}}/users
+@baseUsers = {{host}}/login
 
 ### get aet
-POST {{baseUsers}}/login
+POST {{baseUsers}}
 Content-Type: application/json
 
 {
