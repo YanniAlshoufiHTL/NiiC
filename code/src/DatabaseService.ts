@@ -404,7 +404,7 @@ export class DatabaseService {
      * @param userId The ID of the user.
      * @param modId The ID of the module.
      */
-    public async installPlugin(userId: number, modId: number) {
+    public async installMod(userId: number, modId: number) {
         const client = await this.client();
         await client.query(
             `
@@ -420,7 +420,7 @@ export class DatabaseService {
      * @param userId The ID of the user.
      * @param modId The ID of the module.
      */
-    public async uninstallPlugin(userId: number, modId: number) {
+    public async uninstallMod(userId: number, modId: number) {
         const client = await this.client();
         await client.query(
             `
@@ -503,16 +503,18 @@ export class DatabaseService {
     private async setAets() {
         if (this._aets === undefined) {
             const client = await this.client();
-            const res = await client.query(`SELECT id,
-                                                   name,
-                                                   description,
-                                                   date,
-                                                   timebegin,
-                                                   timeend,
-                                                   color,
-                                                   type,
-                                                   calendarid
-                                            FROM aet`);
+            const res = await client.query(`
+                SELECT id,
+                       name,
+                       description,
+                       date,
+                       timebegin,
+                       timeend,
+                       color,
+                       type,
+                       calendarid
+                FROM aet
+            `);
 
             this._aets = [];
             res.rows.forEach(row => {

@@ -19,7 +19,7 @@ aetRouter.get("/", async (_, res) => {
 
 aetRouter.post("/", async (req, res) => {
     try {
-        const aetNoId = bodyToAetNoId(req.body);
+        const aetNoId = convertBodyToAetNoId(req.body);
         const calendarId = getCalendarIdFromBody(req.body);
 
         if (!aetNoId || !calendarId) {
@@ -61,7 +61,7 @@ aetRouter.put("/:id", async (req, res) => {
         return;
     }
 
-    const aetNoId = bodyToAetNoId(req.body);
+    const aetNoId = convertBodyToAetNoId(req.body);
 
     if (aetNoId === false) {
         console.log("Invalid body: ", req.body)
@@ -95,7 +95,7 @@ aetRouter.delete("/:id", async (req, res) => {
 
 aetRouter.post('/', async (req, res) => {
     try {
-        const aetNoId = bodyToAetNoId(req.body);
+        const aetNoId = convertBodyToAetNoId(req.body);
         const calendarId = getCalendarIdFromBody(req.body);
 
         if (!aetNoId || !calendarId) {
@@ -155,7 +155,7 @@ function getCalendarIdFromBody(body: any): number | false{
     return false;
 }
 
-function bodyToAetNoId(body: any): NiicAetNoId | false {
+function convertBodyToAetNoId(body: any): NiicAetNoId | false {
     const isNumberString = (str: string) => /^\d+$/.test(str); // TODO change to function Lawand's implementing
     const stringTypeString = "string";
 

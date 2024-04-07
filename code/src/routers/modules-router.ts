@@ -114,7 +114,7 @@ modulesRouter.put("/:blockmoduleid/:userid", async (req, res) => {
     }
 
     try {
-        await DatabaseService.instance().installPlugin(ids.userId, ids.blockModuleId)
+        await DatabaseService.instance().installMod(ids.userId, ids.blockModuleId)
         res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (e) {
         console.error(e);
@@ -132,7 +132,7 @@ modulesRouter.delete('/:blockmoduleid/:userid', async (req, res) => {
     }
 
     try {
-        await DatabaseService.instance().uninstallPlugin(ids.userId, ids.blockModuleId);
+        await DatabaseService.instance().uninstallMod(ids.userId, ids.blockModuleId);
         res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (e) {
         console.error(e);
