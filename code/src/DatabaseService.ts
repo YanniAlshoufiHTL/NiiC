@@ -35,6 +35,7 @@ export class DatabaseService {
      */
     private _mods: NiicBlockModule[] | undefined = undefined;
 
+
     // region Singleton
 
     private static _instance: DatabaseService | undefined = undefined;
@@ -56,75 +57,6 @@ export class DatabaseService {
 
     // endregion
 
-    /**
-     * Sets the `_aets` field to the current AETs in the database if not yet set.
-     * @private
-     */
-    private async setAets() {
-        if (this._aets === undefined) {
-            const client = await this.client();
-            const res = await client.query(`SELECT id,
-                                                   name,
-                                                   description,
-                                                   date,
-                                                   timebegin,
-                                                   timeend,
-                                                   color,
-                                                   type,
-                                                   calendarid
-                                            FROM aet`);
-
-            this._aets = [];
-            res.rows.forEach(row => {
-                this._aets!.push({
-                    id: row.id,
-                    title: row.name,
-                    description: row.description,
-                    date: new Date(Date.parse(row.date)),
-                    startTime: +row.timebegin,
-                    endTime: +row.timeend,
-                    color: row.color,
-                    type: row.type,
-                });
-            });
-        }
-    }
-
-    /**
-     * Sets the `_modules` field to the current modules in the database if not yet set.
-     * @private
-     */
-    private async setMods() {
-        if (this._mods === undefined) {
-            const client = await this.client();
-            const res = await client.query(`
-                SELECT id,
-                       token,
-                       title,
-                       description,
-                       html,
-                       css,
-                       js,
-                       published
-                FROM blockmodule
-            `);
-
-            this._mods = [];
-            res.rows.forEach(row => {
-                this._mods!.push({
-                    id: +row.id,
-                    token: row.token,
-                    title: row.title,
-                    description: row.description,
-                    type: "blm",
-                    html: row.html,
-                    css: row.css,
-                    js: row.js,
-                    published: row.published
-                });
-            });
-        }
-    }
 
     /**
      * Adds an AET to the database and caches it locally.
@@ -382,6 +314,158 @@ export class DatabaseService {
     }
 
     /**
+     * Gets all aets from a calendar via the calendar's ID.
+     * @param calendarId The ID of the calendar.
+     */
+    public async getAetsFromCalendarId(calendarId: number): Promise<NiicAet[]> {
+        const client = await this.client();
+        const res = await client.query(
+            `
+                SELECT id,
+                       name,
+                       description,
+                       date,
+
+                       timebegin,
+                       timeend,
+
+                       type,
+
+                       color
+                FROM aet
+                WHERE calendarid = $1::bigint
+            `,
+            [calendarId]
+        );
+
+        return res.rows.map(rows => ({
+            id: +rows.id,
+            title: rows.name,
+            description: rows.description,
+            date: new Date(rows.date),
+
+            startTime: +rows.timebegin,
+            endTime: +rows.timeend,
+
+            type: rows.type,
+
+            color: rows.color
+        }));
+    }
+
+    /**
+     * Gets a user with username and id from a username.
+     * @param username The username of the user..
+     */
+    public async getUser(username: string): Promise<{
+        id: number,
+        username: string,
+    } | false> {
+        const client = await this.client();
+        const res = await client.query(
+            `
+                SELECT id, username
+                FROM niicuser
+                WHERE username = $1::varchar
+            `,
+            [username]
+        );
+
+        if (res.rows.length < 1) {
+            return false;
+        }
+
+        return {
+            id: +res.rows[0].id,
+            username: res.rows[0].username,
+        };
+    }
+
+    /**
+     * Gets a calendar ID from a user ID.
+     * @param userId The ID of the user.
+     */
+    public async getCalendarId(userId: number): Promise<number | false> {
+        const client = await this.client();
+        const res = await client.query(
+            `
+                SELECT id
+                FROM calendar
+                WHERE niicuserid = $1::bigint
+            `,
+            [userId]
+        );
+
+        return +res.rows[0].id;
+    }
+
+    /**
+     * Installs a plugin for a user.
+     * @param userId The ID of the user.
+     * @param modId The ID of the module.
+     */
+    public async installPlugin(userId: number, modId: number) {
+        const client = await this.client();
+        await client.query(
+            `
+                INSERT INTO installedplugin (niicuserdid, blockmoduleid)
+                VALUES ($1::bigint, $2::bigint)
+            `,
+            [userId, modId]
+        );
+    }
+
+    /**
+     * Uninstalls a plugin for a user.
+     * @param userId The ID of the user.
+     * @param modId The ID of the module.
+     */
+    public async uninstallPlugin(userId: number, modId: number) {
+        const client = await this.client();
+        await client.query(
+            `
+                DELETE
+                FROM installedplugin
+                WHERE niicuserdid = $1::BIGINT
+                  AND blockmoduleid = $2::BIGINT
+            `,
+            [userId, modId]
+        );
+    }
+
+    /**
+     * Publishes a module by token.
+     * @param token The token of the module.
+     */
+    public async publishMod(token: string) {
+        const client = await this.client();
+        await client.query(
+            `
+                UPDATE blockmodule
+                SET published = true
+                WHERE token = $1::varchar(40)
+            `,
+            [token]
+        );
+    }
+
+    /**
+     * Unpublishes a module by token.
+     * @param token The token of the module.
+     */
+    public async unpublishMod(token: string) {
+        const client = await this.client();
+        await client.query(
+            `
+                UPDATE blockmodule
+                SET published = false
+                WHERE token = $1::varchar(40)
+            `,
+            [token]
+        );
+    }
+
+    /**
      * Prints all AETs in the database to the console.
      * If the AETs are cached, it uses the cached version.
      */
@@ -389,7 +473,6 @@ export class DatabaseService {
         await this.setAets();
         console.log(this._aets);
     }
-
 
     /**
      * The local client used for the database interactions.
@@ -413,4 +496,73 @@ export class DatabaseService {
         return this._client;
     }
 
+    /**
+     * Sets the `_aets` field to the current AETs in the database if not yet set.
+     * @private
+     */
+    private async setAets() {
+        if (this._aets === undefined) {
+            const client = await this.client();
+            const res = await client.query(`SELECT id,
+                                                   name,
+                                                   description,
+                                                   date,
+                                                   timebegin,
+                                                   timeend,
+                                                   color,
+                                                   type,
+                                                   calendarid
+                                            FROM aet`);
+
+            this._aets = [];
+            res.rows.forEach(row => {
+                this._aets!.push({
+                    id: row.id,
+                    title: row.name,
+                    description: row.description,
+                    date: new Date(Date.parse(row.date)),
+                    startTime: +row.timebegin,
+                    endTime: +row.timeend,
+                    color: row.color,
+                    type: row.type,
+                });
+            });
+        }
+    }
+
+    /**
+     * Sets the `_modules` field to the current modules in the database if not yet set.
+     * @private
+     */
+    private async setMods() {
+        if (this._mods === undefined) {
+            const client = await this.client();
+            const res = await client.query(`
+                SELECT id,
+                       token,
+                       title,
+                       description,
+                       html,
+                       css,
+                       js,
+                       published
+                FROM blockmodule
+            `);
+
+            this._mods = [];
+            res.rows.forEach(row => {
+                this._mods!.push({
+                    id: +row.id,
+                    token: row.token,
+                    title: row.title,
+                    description: row.description,
+                    type: "blm",
+                    html: row.html,
+                    css: row.css,
+                    js: row.js,
+                    published: row.published
+                });
+            });
+        }
+    }
 }

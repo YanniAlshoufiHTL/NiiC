@@ -8,8 +8,8 @@ async function addAetAndGetId_http(aet: NiicAetNoId): Promise<number> {
             "title": aet.title,
             "description": aet.description,
             "date": aet.date,
-            "startTime": aet.startTime,
-            "endTime": aet.endTime,
+            "startTime": Math.round(aet.startTime),
+            "endTime": Math.round(aet.endTime),
             "type": aet.type,
             "color": aet.color,
             "calendarId": 1
