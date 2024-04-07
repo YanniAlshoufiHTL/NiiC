@@ -156,7 +156,7 @@ function getCalendarIdFromBody(body: any): number | false{
 }
 
 function convertBodyToAetNoId(body: any): NiicAetNoId | false {
-    const isNumberString = (str: string) => /^\d+$/.test(str); // TODO change to function Lawand's implementing
+    const isNumberString = (str: string) => /^\d+$/.test(str);
     const stringTypeString = "string";
 
     if (
