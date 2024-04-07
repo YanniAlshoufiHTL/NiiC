@@ -4,12 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="../styles/generate-token.css">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>NiiC – Profile</title>
+
+    <script src="../out/moduleRequests_http/getModules_http.js"></script>
+    <script src="../out/fe-repos/block-modules.js"></script>
+
     <script src="../out/webcomps/SideBar.js" defer></script>
+    <script src="../out/webcomps/PluginListing.js" defer></script>
+
+    <title>NiiC – Store</title>
 </head>
 <body>
-<niic-sidebar></niic-sidebar>
-<h1>Profile</h1>
+<niic-sidebar id="sidebar"></niic-sidebar>
+
+<div class="niic-profile-bg-gradient-shadow"></div>
+
+<div class="niic-profile-navigation">
+    <p class="niic-profile-navigation-go-back">&#8592; Go back</p>
+
+    <div class="niic-profile-inner-navigation">
+        <p>Edit Profile</p>
+        <p>Notification</p>
+        <p>Language and Region</p>
+        <p>Shortcuts</p>
+        <p class="niic-profile-inner-navigation-this-sidebar-option">Token Generation</p>
+        <p>Plugins</p>
+
+    </div>
+</div>
+
+<div class="niic-profile-barrier-line"></div>
+
+<div class="niic-plugin-store-main-container">
+    <img class="niic-plugin-store-bg-image" src="/img/niic-bg-block-module-area.png" alt="Background">
+
+    <div class="niic-plugin-store-content-container">
+        <h1 class="niic-profile-generation-token-title">Generate Token</h1>
+
+        <div class="niic-profile-token-generation-generated-Token">
+            <input class="niic-profile-token-generation-generated-token-input" style="flex: 2;" value="Generated Token" readonly>
+            <button class="niic-profile-token-generation-generate-button" onclick="generateToken_http()">Generate Token</button>
+            <img class="niic-profile-token-generation-copy-image" src="../img/generateToken.svg">
+        </div>
+
+        <div class="niic-profile-token-generation-kindOfPlugin">
+            <p class="niic-profile-token-generation-kindOfPlugin-title">Kind of plugin</p>
+            <div class="niic-profile-token-generation-kindOfPlugin-form">
+                <form>
+                    <div class="radios">
+                        <label>
+                            <input type="radio" name="moduleType" value="blm"/>
+                            Block Module
+                        </label>
+
+                        <label>
+                            <input type="radio" name="moduleType" value="bgm"/>
+                            Background Module
+                        </label>
+
+                        <label>
+                            <input type="radio" name="moduleType" value="dtm"/>
+                            Data Module
+                        </label>
+
+                        <label>
+                            <input type="radio" name="moduleType" value="mbd"/>
+                            Module Bundle
+                        </label>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="niic-profile-token-generation-ReadAndWriteAccess-OverrideToken">
+            <div class="niic-profile-token-generation-ReadAndWriteAccess">
+                <p class="niic-profile-token-generation-ReadAndWriteAccess-title">Read and write access</p>
+
+                <div class="niic-profile-token-generation-ReadAndWriteAccess-rec-title">
+                    <p>others with read/write rights</p>
+                </div>
+
+                <div class="niic-profile-token-generation-ReadAndWriteAccess-rec-users">
+
+                </div>
+
+            </div>
+
+            <div class="niic-profile-token-generation-OverrideToken">
+                <p class="niic-profile-token-generation-OverrideToken-title">Optional: Override your old token</p>
+                <div class="niic-profile-token-generation-OverrideToken-OverRideTokenCheck">
+                    <input type="checkbox" id="overrideToken">
+                    <label for="overrideToken">Do you want to override an old token?</label><br>
+                </div>
+
+                <div class=niic-profile-token-generation-OverrideToken-OldToken>
+                    <p>Old Token</p>
+                    <input class="niic-profile-token-generation-OverrideToken-OldToken-input" value="old Token">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const radios = document.querySelectorAll("input");
+    for (const radio of radios) {
+        radio.addEventListener("click", () => {
+            for (const r of radios) {
+                if (r.checked === true) {
+                    r.classList.add("selected-radio");
+                } else {
+                    r.classList.remove("selected-radio");
+                }
+            }
+        });
+    }
+</script>
+
+
 </body>
 </html>
