@@ -1,13 +1,13 @@
 async function generateToken_http() {
 
-    const pluginType: HTMLInputElement | null = document.querySelector(".niic-profile-token-generation-kindOfPlugin-form");
+    const pluginType: HTMLInputElement | null = document.querySelector(".niic-profile-token-generation-kind_of_plugin-form");
 
     const write: HTMLInputElement | null = document.querySelector("");
     const read: HTMLInputElement | null = document.querySelector("");
 
     const checkbox : HTMLInputElement | null = <HTMLInputElement> document.getElementById("overrideToken");
     if(checkbox.checked) {
-        const oldToken: HTMLInputElement | null = document.querySelector(".niic-profile-token-generation-OverrideToken-OldToken-input");
+        const oldToken: HTMLInputElement | null = document.querySelector(".niic-profile-token-generation-override-token-old-token-input");
     }
 
     const response = await fetch(`/api/tokens/`, {
