@@ -1,14 +1,31 @@
 async function generateToken_http() {
 
-    const pluginType: HTMLInputElement | null = document.querySelector(".niic-profile-token-generation-kind_of_plugin-form");
+    const pluginTypeInput: HTMLInputElement | null = document.querySelector(".selected-radio");
+    const oldTokenInput: HTMLInputElement | null = document.querySelector(".niic-profile-token-generation-override-token-old-token-input");
+    const liElements = document.querySelectorAll(".niic-profile-token-generation-read-and-write-access-rec-users-list-item");
 
-    const write: HTMLInputElement | null = document.querySelector("");
-    const read: HTMLInputElement | null = document.querySelector("");
+    let isAtHeader = true;
+    for (const el of liElements) {
+        if (isAtHeader) {
+            isAtHeader = false;
+            continue;
+        }
 
-    const checkbox : HTMLInputElement | null = <HTMLInputElement> document.getElementById("overrideToken");
-    if(checkbox.checked) {
-        const oldToken: HTMLInputElement | null = document.querySelector(".niic-profile-token-generation-override-token-old-token-input");
+        const children = el.children;
+        const name = children[0].innerHTML;
+        const isWriteChecked = (children[1] as HTMLInputElement).checked;
+        const isReadChecked = (children[2] as HTMLInputElement).checked;
+        // TODO finish
     }
+
+    if (pluginTypeInput?.value !== "blm") {
+        alert("At the moment, only block moduls are allowed.");
+        return;
+    }
+
+    const oldTokenValue = oldTokenInput !== null && oldTokenInput.disabled === false
+        ? oldTokenInput.value
+        : null;
 
     const response = await fetch(`/api/tokens/`, {
         method: "PUT",
@@ -17,14 +34,18 @@ async function generateToken_http() {
         },
         body:
             JSON.stringify({
-                "type": "blm",
-                "write": [5, 2, 10],
-                "read": [1, 59, 100],
-                "oldToken": "blm--R--W-12345"
+                "type": pluginTypeInput?.value,
+                "userId": 1,
+                "write": [],
+                "read": [],
+                "oldToken": oldTokenValue,
             })
     });
 
-    if(response.status !== 204){
+    const generatedTokenInput: HTMLInputElement | null = document.querySelector(".niic-profile-token-generation-generated-token-input");
+    generatedTokenInput!.value = await response.text();
+
+    if (response.status !== 200 && response.status !== 400 && response.status !== 201) {
         alert(response.status);
         alert(await response.text());
         return;

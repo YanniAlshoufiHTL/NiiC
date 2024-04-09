@@ -9,6 +9,7 @@
 
     <script src="../out/moduleRequests_http/getModules_http.js"></script>
     <script src="../out/fe-repos/block-modules.js"></script>
+    <script src="../out/generateToken_http/generateToken_http.js"></script>
 
     <script src="../out/webcomps/SideBar.js" defer></script>
     <script src="../out/webcomps/PluginListing.js" defer></script>
@@ -48,7 +49,7 @@
             <button class="niic-profile-token-generation-generate-button" onclick="generateToken_http()">Generate
                 Token
             </button>
-            <img class="niic-profile-token-generation-copy-image" src="../img/generateToken.svg">
+            <img class="niic-profile-token-generation-copy-image" src="../img/generateToken.svg" onclick="copyTokenInputValue()">
         </div>
 
         <div class="niic-profile-token-generation-kind_of_plugin">
@@ -169,7 +170,7 @@
     function addUserPrompt() {
         const username = prompt("Please enter the username of the user you want to add to the list.", "here");
 
-        if (!username) {
+        if(!username){
             return;
         }
 
@@ -194,6 +195,12 @@
                 }
             }
         });
+    }
+
+    async function copyTokenInputValue() {
+        const inputElement = document.querySelector(".niic-profile-token-generation-generated-token-input");
+        await navigator.clipboard.writeText(inputElement?.value);
+        alert("Copied successfully! :)");
     }
 </script>
 

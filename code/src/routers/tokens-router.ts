@@ -7,30 +7,31 @@ export const tokensRouter = express.Router();
 
 tokensRouter.put("/", async (req, res) => {
     const body: TokenGenerationReq = req.body;
-    const token: string = generateToken(body);
     try {
-        if (body.oldToken === null || body.oldToken === undefined || body.oldToken.length === 0) {
-            await DatabaseService.instance().addMod({
+        if(body.type !== undefined) {
+            const token: string = generateToken(body);
+            if (body.oldToken === null || body.oldToken === undefined || body.oldToken.length === 0) {
+                await DatabaseService.instance().addMod({
+                    token,
+                    title: "",
+                    type: "blm",
+                    html: null,
+                    js: null,
+                    css: null,
+                    description: null,
+                    published: false,
+                })
+
+                res.status(StatusCodes.CREATED).send(token);
+                return;
+            }
+
+            await DatabaseService.instance().updateModToken(
+                body.oldToken,
                 token,
-                title: "",
-                type: "blm",
-                html: null,
-                js: null,
-                css: null,
-                description: null,
-                published: false,
-            })
-
-            res.status(StatusCodes.CREATED).send(token);
-            return;
+            )
+            res.status(StatusCodes.OK).send(token);
         }
-
-        await DatabaseService.instance().updateModToken(
-            body.oldToken,
-            token,
-        )
-        res.status(StatusCodes.OK).send(token);
-
     } catch (e) {
         console.error(e);
         res.sendStatus(StatusCodes.BAD_REQUEST);
@@ -38,14 +39,11 @@ tokensRouter.put("/", async (req, res) => {
 });
 
 function generateToken(token: TokenGenerationReq): string {
-    return generateTokenString(token, Math.floor(Math.random() * 1000000));
-}
-
-function generateTokenString(token: TokenGenerationReq, randomNumber: number): string {
     return token.type +
+        "-" + token.userId.toString() +
         "-R-" + replaceAllCommasWithHyphen(token.read.toString()) +
         "-W-" + replaceAllCommasWithHyphen(token.write.toString()) +
-        "-" + randomNumber.toString();
+        "-" + Math.floor(Math.random() * 1000000);
 }
 
 function replaceAllCommasWithHyphen(str: string): string {
