@@ -16,17 +16,19 @@ async function onLoginSubmit(event: Event) {
         body: JSON.stringify({"username": nameInput.value.trim()})
     });
 
-    if (response.status != 200) {
+    if (response.status !== 200) {
         alert("User could not be logged in");
         return;
     }
 
     const body: {
+        id: number,
         username: string,
         aets: NiicAet[]
     } = await response.json();
 
     localStorage.setItem("aets", JSON.stringify(body.aets));
+    localStorage.setItem("userId", body.id.toString());
 
     window.open('/sites/calendar.html', '_self');
 }

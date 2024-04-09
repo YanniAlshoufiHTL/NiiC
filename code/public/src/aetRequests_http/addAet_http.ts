@@ -25,9 +25,5 @@ async function addAetAndGetId_http(aet: NiicAetNoId): Promise<number> {
     }
 
     const responseData = await response.json();
-    const id: number = responseData.id;
-
-    console.log(id);
-
-    return id;
+    return responseData.id;
 }

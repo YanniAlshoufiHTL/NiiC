@@ -16,10 +16,10 @@ async function getModulesAndSetInLocalStorage_http() {
 }
 
 function onModulesLoaded(callback: () => void) {
-    const interval = setInterval(() => {
+    const intervalForPublishedModules = setInterval(() => {
         if (modulesLoaded) {
             callback();
-            clearInterval(interval);
+            clearInterval(intervalForPublishedModules);
         }
     }, 100);
 }
