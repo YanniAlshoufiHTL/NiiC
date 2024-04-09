@@ -1,0 +1,432 @@
+body {
+    background: #32A38E;
+    width: 100%;
+    height: 100%;
+}
+
+.niic-navigation {
+    z-index: 10;
+}
+
+
+.niic-profile-bg-gradient-shadow {
+    box-sizing: border-box;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: linear-gradient(139.07deg, rgba(0, 0, 0, 0) 13.67%, rgba(90, 4, 200, 0.58) 80.22%);
+}
+
+.niic-profile-navigation {
+    position: fixed;
+    top: 7%;
+    left: 4%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+
+    .niic-profile-navigation-go-back {
+        font-family: system-ui, sans-serif;
+        font-size: 2rem;
+        font-weight: 600;
+
+        color: #FFFFFF;
+    }
+
+    .niic-profile-inner-navigation {
+        display: flex;
+        flex-direction: column;
+        gap: 35px;
+
+        font-family: system-ui, sans-serif;
+        color: #FFFFFF;
+        font-weight: 400;
+        font-size: 1.3rem;
+
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+
+        > * {
+            cursor: pointer;
+        }
+
+        .niic-profile-inner-navigation-this-sidebar-option {
+            font-weight: bolder;
+            font-style: italic;
+        }
+    }
+}
+
+.niic-profile-generation-token-title {
+    text-align: center;
+
+    font-family: system-ui, sans-serif;
+
+    font-weight: 400;
+    font-size: 30px;
+
+    color: #FFFFFF;
+}
+
+
+.niic-plugin-store-main-container {
+    position: absolute;
+    right: 150px;
+    top: 5%;
+
+    width: 58%;
+    height: 90%;
+
+    overflow: hidden;
+
+    .niic-plugin-store-bg-image {
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 150%;
+    }
+
+    .niic-profile-token-generation-generated-Token {
+        position: relative;
+        width: 85%;
+        left: 7.5%;
+
+        display: flex;
+
+        box-sizing: border-box;
+        height: 72px;
+
+        background: #DDDDDD;
+
+        font-family: system-ui, sans-serif;
+        font-weight: 400;
+
+        border: none;
+    }
+
+    .niic-profile-token-generation-generated-token-input {
+        flex: 2;
+        padding-left: 2%;
+
+        font-family: system-ui, sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+
+        color: #000000;
+    }
+
+    .niic-profile-token-generation-generate-button {
+        flex: 1;
+        height: 72px;
+        background: #18333E;
+        cursor: pointer;
+
+        border: none;
+
+        font-family: system-ui, sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+
+        color: #FFFFFF;
+    }
+
+    .niic-profile-token-generation-copy-image {
+        cursor: pointer;
+        position: absolute;
+        right: 35%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .niic-profile-token-generation-kind_of_plugin {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+
+        .niic-profile-token-generation-kind_of_plugin-title {
+            margin-left: 7.5%;
+
+            font-family: system-ui, sans-serif;
+            font-size: 25px;
+
+            color: #FFFFFF;
+        }
+    }
+
+    .niic-profile-token-generation-ReadAndWriteAccess-override-token {
+        display: flex;
+        justify-content: space-between;
+        gap: 10%;
+
+        position: relative;
+        width: 85%;
+        height: 30%;
+        left: 7.5%;
+
+        margin-bottom: 12%;
+
+        .niic-profile-token-generation-read-and-write-access {
+            flex: 1;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 10px;
+
+            .niic-profile-token-generation-read-and-write-access-title {
+                flex: 1;
+
+                font-family: system-ui, sans-serif;
+                font-size: 25px;
+
+                color: #FFFFFF;
+            }
+
+
+            .niic-profile-token-generation-read-and-write-access-rec {
+                flex: 10;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+
+                overflow: hidden;
+
+                .niic-profile-token-generation-read-and-write-access-rec-title {
+                    flex: 1;
+
+                    width: 100%;
+                    height: 7%;
+
+                    background: #18333E;
+                    border-radius: 3px;
+
+                    font-family: system-ui, sans-serif;
+                    font-size: 20px;
+
+                    color: #FFFFFF;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .niic-profile-token-generation-read-and-write-access-rec-users {
+                    flex: 5;
+
+                    width: 100%;
+                    background: #D9D9D9;
+
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+
+                    padding-top: 10px;
+                    padding-bottom: 5px;
+
+                    max-height: 70%;
+
+                    .niic-profile-token-generation-read-and-write-access-rec-users-list {
+                        overflow: auto;
+                        max-height: 70%;
+                    }
+
+                    .niic-profile-token-generation-read-and-write-access-rec-users-list-item {
+                        display: flex;
+                        font-family: system-ui, sans-serif;
+                        font-size: 1.3rem;
+
+                        > *:nth-child(1) {
+                            flex: 10;
+                            color: #000000;
+                            padding-left: 10px;
+                            font-size: 1.5rem;
+                        }
+
+                        > *:nth-child(2),
+                        > *:nth-child(3) {
+                            text-align: center;
+                            flex: 1;
+                            cursor: pointer;
+                        }
+
+                        input[type=checkbox] {
+                            align-self: center;
+                            justify-self: center;
+
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+
+                    > ul {
+                        list-style-type: none;
+                    }
+
+                    .niic-profile-token-generation-read-and-write-access-rec-users-btn {
+                        align-self: center;
+                        width: 50%;
+
+                        padding: 2px;
+                        font-size: 2rem;
+                        font-family: system-ui, sans-serif;
+
+                        background: #18333E;
+                        border-radius: 3px;
+                        border: none;
+
+                        color: #FFFFFF;
+
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+
+        .niic-profile-token-generation-override-token {
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10%;
+
+            .niic-profile-token-generation-override-token-title {
+                font-family: system-ui, sans-serif;
+                font-size: 25px;
+
+                color: #FFFFFF;
+            }
+
+            .niic-profile-token-generation-override-token-over-ride-token-check {
+                display: flex;
+                align-items: center;
+
+                gap: 20px;
+
+                > input {
+                    scale: 1.5;
+                    translate: 30% 0;
+                    background: #F4F0F0;
+                    border: none;
+                }
+
+                > label {
+
+                    font-family: system-ui, sans-serif;
+                    font-size: 20px;
+
+                    color: #FFFFFF;
+                }
+            }
+
+            .niic-profile-token-generation-override-token-old-token {
+                display: flex;
+                flex-direction: column;
+
+                font-family: system-ui, sans-serif;
+                font-size: 18px;
+
+                color: #FFFFFF;
+
+                .niic-profile-token-generation-override-token-old-token-input {
+                    width: 100%;
+                    height: 40px;
+
+                    border: 1px solid #000000;
+                    padding-left: 10px;
+                }
+            }
+        }
+    }
+
+    .niic-plugin-store-content-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+
+        overflow: auto;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+}
+
+/*
+The div that contains all radios.
+*/
+.radios {
+    display: flex;
+    justify-content: space-between;
+
+    position: relative;
+    left: 7.5%;
+
+    width: 85%;
+
+    label {
+        font-family: system-ui, sans-serif;
+        font-size: 15px;
+
+        color: #FFFFFF;
+
+    }
+}
+
+/*
+The label in our case IS the button. It contains the
+input which is the tiny radio button.
+*/
+.radios label {
+    font-size: 1.5rem;
+
+    font-family: system-ui sans-serif;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    cursor: pointer;
+    background: #18333E;
+    color: white;
+
+    padding: 1rem .8rem;
+    border-radius: 3px;
+    box-sizing: border-box;
+
+    transition: padding ease .1s;
+
+    min-height: 46px;
+}
+
+
+.radios label:hover {
+    background-color: #304a5d;
+}
+
+/*
+Hide the inputs which are the radio button.
+*/
+.radios input {
+    display: none;
+}
+
+/*
+Select the label that has an element with the selector
+".selected-radio"
+*/
+.radios label:has(.selected-radio) {
+    background-color: #003d52;
+}
+
+
+
+
