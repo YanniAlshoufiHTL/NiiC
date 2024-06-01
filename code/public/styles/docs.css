@@ -1,0 +1,104 @@
+body {
+    background-image: url("../img/niic-bg-docs-main-container.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    width: 100vw;
+    height: 100dvh;
+}
+
+*:has(> .niic-docs-sections) {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: 30vw;
+    height: 70dvh;
+
+    font-family: Imprima, system-ui, sans-serif;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    justify-content: center;
+
+    padding-left: max(10px, 2vw);
+
+    > h1 {
+        font-size: 300%;
+    }
+
+    .niic-docs-sections {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        list-style-position: outside;
+
+        > li {
+            h1 {
+                display: inline;
+
+                a {
+                    color: white;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+}
+
+.niic-docs-main {
+    position: absolute;
+    top: 0;
+    right: 80px;
+
+    box-sizing: border-box;
+    padding: 0 2%;
+
+    padding-bottom: 20%;
+
+    width: 60%;
+    height: 100dvh;
+    overflow-y: auto;
+    background-color: #1F424F;
+    color: white;
+
+    font-family: Imprima, system-ui, sans-serif;
+
+    h1 {
+        font-size: 300%;
+        margin: 50px 0;
+        color: #5F9DB4;
+    }
+
+    h2 {
+        font-size: 200%;
+        margin: 20px 0;
+    }
+
+    h3 {
+        font-size: 150%;
+        margin-top: 20px;
+    }
+
+    p {
+        line-height: 1.5;
+    }
+
+    p,
+    li {
+        font-size: 110%;
+        margin: 10px 0;
+    }
+
+    a {
+        color: white;
+        text-underline-offset: 3px;
+    }
+
+    ul {
+        list-style-position: inside;
+    }
+}

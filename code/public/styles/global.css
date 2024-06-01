@@ -1,8 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Imprima&display=swap');
+
 * {
     margin: 0;
     padding: 0;
 }
 
+html, body {
+    font-size: 100%;
+}
+
 :root {
     --max-width: calc(100% - 81px);
+}
+
+.niic-call-to-action-btn {
+    background-color: #18333E;
+    color: white;
+    font-family: Imprima, sans-serif;
+    font-size: 110%;
+
+    text-decoration: none;
+
+    border: none;
+    border-radius: 10px;
+
+    padding: 15px;
+    cursor: pointer;
+
+    transition: scale .05s ease-in;
+
+    &:hover {
+        scale: 110%;
+    }
+
+    &:active {
+        scale: 99%;
+    }
 }
