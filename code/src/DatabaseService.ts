@@ -1,4 +1,4 @@
-import {Client} from "pg";
+import { Client, Pool, PoolClient } from "pg";
 import NiicAet from "./be-models/NiicAet";
 import * as dotenv from "dotenv";
 import NiicAetNoId from "./be-models/NiicAetNoId";
@@ -20,7 +20,7 @@ export class DatabaseService {
      * Should never be used directly, use the `client` method instead.
      * @private
      */
-    private _client: Client | undefined = undefined;
+    private _client: PoolClient | undefined = undefined;
 
     /**
      * The AETs in the database.
@@ -99,6 +99,7 @@ export class DatabaseService {
             type,
             color,
         });
+        await this.closeClient();
         return id;
     }
 
@@ -128,6 +129,8 @@ export class DatabaseService {
                     id,
                     ...mod,
                 });
+
+                await this.closeClient();
                 return id;
         }
 
@@ -144,6 +147,7 @@ export class DatabaseService {
         await this.setAets();
         const idx = this._aets!.findIndex(aet => aet.id === id);
         this._aets!.splice(idx, 1);
+        await this.closeClient();
     }
 
     /**
@@ -160,6 +164,7 @@ export class DatabaseService {
         const idx = this._mods!
             .findIndex(mod => (typeof idOrToken === "number" ? mod.id : mod.token) === idOrToken);
         this._mods!.splice(idx, 1);
+        await this.closeClient();
     }
 
     /**
@@ -187,6 +192,7 @@ export class DatabaseService {
             id,
             ...aetNoId,
         };
+        await this.closeClient();
     }
 
 
@@ -215,6 +221,7 @@ export class DatabaseService {
             id: +res.rows[0].id,
             ...moduleNoId
         }
+        await this.closeClient();
     }
 
     /**
@@ -237,6 +244,7 @@ export class DatabaseService {
         await this.setMods();
         const idx = this._mods!.findIndex(m => m.id === id);
         this._mods![idx].token = newToken;
+        await this.closeClient();
     }
 
     /**
@@ -255,6 +263,7 @@ export class DatabaseService {
             FROM blockmodule
             where published = true
         `);
+        await this.closeClient();
 
         return res.rows
             .map<NiicPublishedModule>(mod => {
@@ -294,8 +303,10 @@ export class DatabaseService {
             [userId]
         );
 
+        await this.closeClient();
+
         return res.rows
-            .map<NiicBlockModuleFe>(mod => {
+            .map((mod: NiicBlockModuleFe) => {
                 return {
                     ...mod
                 };
@@ -311,6 +322,7 @@ export class DatabaseService {
         for (const aet of this._aets!) {
             aets.push({...aet});
         }
+        await this.closeClient();
         return aets;
     }
 
@@ -338,6 +350,7 @@ export class DatabaseService {
             `,
             [calendarId]
         );
+        await this.closeClient();
 
         return res.rows.map(rows => ({
             id: +rows.id,
@@ -371,6 +384,7 @@ export class DatabaseService {
             `,
             [username]
         );
+        await this.closeClient();
 
         if (res.rows.length < 1) {
             return false;
@@ -396,6 +410,7 @@ export class DatabaseService {
             `,
             [userId]
         );
+        await this.closeClient();
 
         return +res.rows[0].id;
     }
@@ -414,6 +429,7 @@ export class DatabaseService {
             `,
             [userId, modId]
         );
+        await this.closeClient();
     }
 
     /**
@@ -432,6 +448,7 @@ export class DatabaseService {
             `,
             [userId, modId]
         );
+        await this.closeClient();
     }
 
     /**
@@ -448,6 +465,7 @@ export class DatabaseService {
             `,
             [token]
         );
+        await this.closeClient();
     }
 
     /**
@@ -464,6 +482,7 @@ export class DatabaseService {
             `,
             [token]
         );
+        await this.closeClient();
     }
 
     /**
@@ -479,9 +498,9 @@ export class DatabaseService {
      * The local client used for the database interactions.
      * @private
      */
-    private async client(): Promise<Client> {
+    private async client(): Promise<PoolClient> {
         if (this._client === undefined) {
-            this._client = new Client({
+            const client = new Pool({
                 database: process.env.DB_DB,
                 user: process.env.DB_USER,
                 password: process.env.DB_PASS,
@@ -490,11 +509,24 @@ export class DatabaseService {
                 ssl: true,
             });
 
-            await this._client.connect();
+            this._client = await client.connect();
             console.log("Connected to database");
         }
 
         return this._client;
+    }
+
+    /**
+     * Closes the local client used for the database interactions.
+     * @private
+     */
+    private async closeClient(): Promise<void> {
+        if (this._client === undefined) {
+            return;
+        }
+
+        this._client.release();
+        this._client = undefined;
     }
 
     /**
@@ -517,6 +549,7 @@ export class DatabaseService {
                        calendarid
                 FROM aet
             `);
+            await this.closeClient();
 
             this._aets = [];
             res.rows.forEach(row => {
@@ -552,6 +585,7 @@ export class DatabaseService {
                        published
                 FROM blockmodule
             `);
+            await this.closeClient();
 
             this._mods = [];
             res.rows.forEach(row => {
@@ -570,6 +604,12 @@ export class DatabaseService {
         }
     }
 
+    /**
+     * Adds a user to the database
+     * @param email The email of the user
+     * @param name The name of the user
+     * @param password The password of the user
+     */
     public async addUser(email: string, name: string, password: string) {
         const client = await this.client();
         await client.query(
@@ -577,8 +617,13 @@ export class DatabaseService {
              VALUES ($1, $2, $3,$4)`,
             [email, name, password, true]
         );
+        await this.closeClient();
     }
 
+    /**
+     * Deletes a user from the database
+     * @param id The id of the user
+     */
     public async deleteUser(id: number) {
         const client = await this.client();
         await client.query(`
@@ -586,9 +631,14 @@ export class DatabaseService {
             FROM niicuser
             WHERE id = $1
         `, [id])
-
+        await this.closeClient();
     }
 
+    /**
+     * Logs the user in
+     * @param username The username of the user
+     * @param password The password of the user
+     */
     public async logInUser(username: string, password: string) {
         const client = await this.client();
         const result = await client.query(`SELECT *
@@ -604,16 +654,28 @@ export class DatabaseService {
             }
         }
 
+        await this.closeClient();
     }
 
+    /**
+     * Logs a user out
+     * @param id The id of the user
+     */
     public async logOutUser(id: number) {
         const client = await this.client();
         await client.query(`UPDATE niicuser
                             SET isloggedin = false
                             WHERE id = $1`, [id]);
-
+        await this.closeClient();
     }
 
+    /**
+     * Updates user in database
+     * @param email The email of the user
+     * @param name The name of the user
+     * @param password The password of the user
+     * @param id The id of the user
+     */
     public async updateUser(email: string, name: string, password: string, id: number) {
         const client = await this.client();
 
@@ -622,5 +684,7 @@ export class DatabaseService {
                                 username=$2,
                                 password=$3
                             WHERE id = $4`, [email, name, password, id]);
+
+        await this.closeClient();
     }
 }
