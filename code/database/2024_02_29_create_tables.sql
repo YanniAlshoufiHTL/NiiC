@@ -1,7 +1,15 @@
+DROP TABLE installedplugin;
+DROP TABLE aet;
+DROP TABLE calendar;
+DROP TABLE niicuser;
+
 CREATE TABLE niicuser
 (
-    id       SERIAL PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL
+    id         SERIAL PRIMARY KEY,
+    username   VARCHAR(255) UNIQUE NOT NULL,
+    email      TEXT                NOT NULL UNIQUE,
+    password   TEXT                NOT NULL UNIQUE,
+    isloggedin BOOLEAN             NOT NULL
 );
 
 CREATE TABLE calendar
@@ -20,8 +28,8 @@ CREATE TABLE aet
     timebegin   NUMERIC      NOT NULL CHECK ( timebegin >= 0 AND timebegin <= 24 AND timebegin <= timeend ),
     timeend     NUMERIC      NOT NULL CHECK ( timeend >= 0 AND timeend <= 24 AND timebegin <= timeend ),
     color       VARCHAR(7)   NOT NULL CHECK ( color ~* '^#[a-f0-9]{6}$'
-) DEFAULT '#23414b',
-    calenderid  BIGINT       NOT NULL REFERENCES calendar
+        ) DEFAULT '#23414b',
+    calendarid  BIGINT       NOT NULL REFERENCES calendar
 );
 
 CREATE TABLE blockmodule

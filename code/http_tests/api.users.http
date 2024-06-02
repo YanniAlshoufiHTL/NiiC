@@ -7,3 +7,47 @@ Content-Type: application/json
 {
   "username": "yanni"
 }
+
+
+### add user
+
+POST {{host}}/api/users
+Content-Type: application/json
+
+{
+    "email": "yadeb@lala.com",
+    "name": "ok",
+    "password": "asdasda"
+}
+
+### edit user
+PUT {{host}}/api/users/1
+Content-Type: application/json
+
+{
+   "email": "yadeb@lala.com",
+    "name": "lala",
+    "password": "asdasda"
+}
+
+
+### delete user
+
+DELETE {{host}}/api/users/1
+
+
+### log out
+
+PUT {{host}}/api/users/logout/2
+
+
+### log in
+
+POST {{host}}/api/users/login
+Content-Type: application/json
+
+{
+  "email": "asdasd@gmail.com",
+  "name": "ok",
+  "password": "asdasda"
+}
