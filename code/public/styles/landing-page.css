@@ -1,0 +1,126 @@
+body {
+    width: 100vw;
+    height: 100dvh;
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.niic-landing-bg-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+
+    background: #32A38E;
+}
+
+.niic-landing-bg-shadow {
+    box-sizing: border-box;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: linear-gradient(139.07deg, rgba(0, 0, 0, 0) 13.67%, rgba(90, 4, 200, 0.58) 80.22%);
+}
+
+.niic-landing-main-container {
+    position: relative;
+
+    background: #648794;
+    background-image: url("../img/niic-bg-landing-main-container.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    min-width: 80%;
+    aspect-ratio: 2 / 1.2;
+
+    z-index: 1;
+
+    display: flex;
+    padding: 5%;
+    box-sizing: border-box;
+}
+
+.niic-landing-main-left {
+    box-sizing: border-box;
+}
+
+.niic-landing-main-right {
+    box-sizing: border-box;
+}
+
+.niic-landing-main-media {
+    background: #18333E;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position-y: center;
+    background-position-x: center;
+}
+
+.niic-landing-main-text {
+    color: white;
+    font-family: Imprima, sans-serif;
+    padding: 0 5%;
+}
+
+.niic-landing-main-text-content {
+    box-sizing: border-box;
+
+    h1 {
+        font-size: 32pt;
+        margin-bottom: 25px;
+    }
+
+    p {
+        font-size: 16pt;
+        word-wrap: break-word;
+        margin-bottom: 10px;
+    }
+}
+
+.niic-landing-main-navigation {
+    position: absolute;
+    height: 15px;
+    gap: 10px;
+    right: 0;
+    bottom: 0;
+    padding-right: 20px;
+    padding-bottom: 10px;
+
+    display: flex;
+    justify-content: space-evenly;
+
+    > span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        > .item-label {
+            border-radius: 5px;
+            background-color: white;
+
+            height: 100%;
+            aspect-ratio: 1.8 / 1;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+    }
+
+    & .item-label:has(.item:checked):after {
+        content: "";
+        display: block;
+        background-color: #476A75;
+        height: 70%;
+        aspect-ratio: 1.8 / 1;
+        border-radius: 5px;
+    }
+}

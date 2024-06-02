@@ -6,10 +6,28 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>NiiC – Docs</title>
+
+    <link rel="stylesheet" href="../styles/docs.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+
     <script src="../out/webcomps/SideBar.js" defer type="module"></script>
+    <script src="../out/docs/docs.js" defer></script>
 </head>
 <body>
 <niic-sidebar></niic-sidebar>
-<h1>Docs</h1>
+
+<main class="niic-docs-main"></main>
+
+<aside>
+    <h1>Sections</h1>
+    <ol class="niic-docs-sections">
+    </ol>
+</aside>
+
+<script>hljs.highlightAll();</script>
 </body>
 </html>
