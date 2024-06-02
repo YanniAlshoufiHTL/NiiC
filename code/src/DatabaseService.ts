@@ -1,4 +1,4 @@
-import { Client } from "pg";
+import {Client} from "pg";
 import NiicAet from "./be-models/NiicAet";
 import * as dotenv from "dotenv";
 import NiicAetNoId from "./be-models/NiicAetNoId";
@@ -6,6 +6,7 @@ import NiicBlockModule from "./be-models/NiicBlockModule";
 import NiicBlockModuleNoId from "./be-models/NiicBlockModuleNoId";
 import NiicPublishedModule from "./be-models/NiicPublishedModule";
 import NiicBlockModuleFe from "./be-models/NiicBlockModuleFe";
+import bcrypt = require("bcrypt");
 
 dotenv.config({path: __dirname + "/../vars/.env"});
 
@@ -105,7 +106,7 @@ export class DatabaseService {
      * Adds a module to the database and caches it locally.
      * @param mod
      * @returns {Promise<number | undefined>} The ID of the module added.
-     */
+     `     */
     public async addMod(mod: NiicBlockModuleNoId): Promise<number | undefined> {
         const client = await this.client();
 
@@ -512,6 +513,7 @@ export class DatabaseService {
                        timeend,
                        color,
                        type,
+
                        calendarid
                 FROM aet
             `);
@@ -566,5 +568,59 @@ export class DatabaseService {
                 });
             });
         }
+    }
+
+    public async addUser(email: string, name: string, password: string) {
+        const client = await this.client();
+        await client.query(
+            `INSERT INTO niicuser (email, username, password, isloggedin)
+             VALUES ($1, $2, $3,$4)`,
+            [email, name, password, true]
+        );
+    }
+
+    public async deleteUser(id: number) {
+        const client = await this.client();
+        await client.query(`
+            DELETE
+            FROM niicuser
+            WHERE id = $1
+        `, [id])
+
+    }
+
+    public async logInUser(username: string, password: string) {
+        const client = await this.client();
+        const result = await client.query(`SELECT *
+                                           FROM niicuser
+                                           where username = $1`, [username]);
+        if (result.rows.length > 0) {
+            let valid = bcrypt.compareSync(password, result.rows[0].password);
+            if (valid) {
+                await client.query(`
+                    UPDATE niicuser
+                    SET isloggedin = true
+                    WHERE username = $1`, [username]);
+            }
+        }
+
+    }
+
+    public async logOutUser(id: number) {
+        const client = await this.client();
+        await client.query(`UPDATE niicuser
+                            SET isloggedin = false
+                            WHERE id = $1`, [id]);
+
+    }
+
+    public async updateUser(email: string, name: string, password: string, id: number) {
+        const client = await this.client();
+
+        await client.query(`UPDATE niicuser
+                            SET email=$1,
+                                username=$2,
+                                password=$3
+                            WHERE id = $4`, [email, name, password, id]);
     }
 }

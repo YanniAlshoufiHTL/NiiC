@@ -15,6 +15,7 @@ app.use("/", express.static("public"));
 app.use("/login", loginRouter);
 app.use("/api/tokens", tokensRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/users/login", usersRouter);
 app.use("/api/cals", calRouter);
 app.use("/api/aets", aetRouter);
 app.use("/api/store", storeRouter);
