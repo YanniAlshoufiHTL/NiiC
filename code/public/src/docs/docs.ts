@@ -10,11 +10,11 @@ const sections: Section[] = [
         <h2>Overview</h2>
 
         <p>
-        As you know, <a href="#">NiiC</a> is modular in nature. This means that you can create your own modules—AKA plugins—for yourself and other people to use. You can then publish the plugins on the <a href="#">plugin store</a>.
+        As you know, <a href="/">NiiC</a> is modular in nature. This means that you can create your own modules—AKA plugins—for yourself and other people to use. You can then publish the plugins on the <a href="/sites/store.html">plugin store</a>.
         </p>
 
         <p>
-        The plugins are <a href="#">HTML</a>, <a href="#">CSS</a>, and <a href="#">JavaScript</a> projects behind the scenes. These are uploaded to the calendar server. As a developer, you have to pass a token and the files (as strings) to the <a href="#">NiiC Rest API (NRA.)</a> The API then evaluates the plugin based on the <a href="#">token</a> & plugin type.
+        The plugins are HTML, CSS, and JavaScript projects behind the scenes. These are uploaded to the calendar server. As a developer, you have to pass a token and the files (as strings) to the <a href="#How-to-use-the-Rust-Interface?">NiiC Rest API (NRA.)</a> The API then evaluates the plugin based on the <a href="#What-are-tokens-and-why-do-you-need-them?">token</a> & plugin type.
         </p>
         `,
     },
@@ -24,11 +24,11 @@ const sections: Section[] = [
         <h2>Prerequisite</h2> 
 
         <p>
-        As mentioned in the <a href="#">Overview</a>, the plugins require HTML, CSS, and JavaScript. Thus, to make your own plugin, you’ll need knowledge of these technologies.
+        As mentioned in the <a href="#Welcome-to-module-documentation!">Overview</a>, the plugins require HTML, CSS, and JavaScript. Thus, to make your own plugin, you’ll need knowledge of these technologies.
         </p>
 
         <p>
-        Additionally, you will have to use either our <a href="#">Rust Interface (RI)</a> (recommended) or the NiiC <a href="#">Rest API (NRA)</a> directly.
+        Additionally, you will have to use either our <a href="#How-to-use-the-Rust-Interface?">Rust Interface (RI)</a> (recommended) or the NiiC <a href="#How-to-use-the-Rust-Interface?">Rest API (NRA)</a> directly.
         <p>
         `
     },
@@ -42,22 +42,22 @@ const sections: Section[] = [
         </p>
         
         <ul>
-            <li>the <a href="#">kind of plugin</a> (background module, block module, ETC,)</li>
-            <li>the <a href="#">plugin ID</a>,</li>
-            <li>the <a href="#">read/write access</a> to the plugin,</li>
-            <li>the <a href="#">purpose</a> of the plugin (testing, public use, commercial use,)</li>
-            <li>the <a href="#">maker</a> of the plugin (person who generated the token.)</li>
+            <li>the kind of plugin (background module, block module, ETC,)</li>
+            <li>the plugin ID,</li>
+            <li>the read/write access to the plugin,</li>
+            <li>the purpose of the plugin (testing, public use, commercial use,)</li>
+            <li>the maker of the plugin (person who generated the token.)</li>
         </ul>
         
         <p>
-        To generate a token, you go to your <a href="#">Profile Settings > Generate Token</a> and choose the corresponding plugin options.
+        To generate a token, you go to your <a href="/sites/profile.html">Profile Settings > Generate Token</a> and choose the corresponding plugin options.
         </p>
         
         <p>
-        When developing your plugin, you will have to provide the token either directly to the <a href="#">NRA</a> or to the <a href="#">RI</a> which does that for you. The token is needed when you create the plugin and if you want to update its files.
+        When developing your plugin, you will have to provide the token either directly to the REST api or to the <a href="#How-to-use-the-Rust-Interface?"></a> which does that for you. The token is needed when you create the plugin and if you want to update its files.
         </p>
         
-        <p>Here is an example use of a token through the <a href="#">RI</a>.</p>
+        <p>Here is an example use of a token through the <a href="#How-to-use-the-Rust-Interface?"></a>.</p>
         
         <pre>
             <code>
@@ -98,17 +98,17 @@ fn main() {
         content: `
         <h2>Plugin Data</h2>
         
-        <p>The biggest decider for how a plugin is structured is the <a href="#">kind of the plugin</a>, of which there are four. When you create a plugin, you have to decide for one.</p>
+        <p>The biggest decider for how a plugin is structured is the kind of the plugin, of which there are four. When you create a plugin, you have to decide for one.</p>
         
-        <p>Additionally, a plugin has an <a href="#">ID</a> that uniquely identifies it. Each plugin is designated a <a href="#">group of people who have read/write access to it</a>. A plugin also has a purpose which informs the <a href="#">NRA</a> about the plugin’s usage (e.g. testing or publishing), <a href="#">a list of authors</a>, a <a href="#">token maker</a>, an optional <a href="#">description</a>, a title for the <a href="#">plugin store</a>, a <a href="#">version</a>, a list of files (as strings) which contain the plugin’s source code, and a <a href="#">license</a>.</p>
+        <p>Additionally, a plugin has an ID that uniquely identifies it. Each plugin is designated a group of people who have read/write access to it. A plugin also has a purpose which informs the NRA about the plugin’s usage (e.g. testing or publishing), a list of authors, a token maker, an optional description, a title for the <a href="/sites/store.html">plugin store</a>, a version, a list of files (as strings) which contain the plugin’s source code, and a license.</p>
         
         <h2>Security Measures</h2>
         
-        <p>Users of NiiC can activate and deactivate plugins from the <a href="#">plugin store</a>. If your plugin happens to make the calendar unusable, users can utilize the so-called <a href="#">secure mode</a> which allows them to access the pure calendar where all plugins are deactivated. There, they can deactivate any plugin.</p>
+        <p>Users of NiiC can activate and deactivate plugins from the <a href="/sites/store.html">plugin store</a>. If your plugin happens to make the calendar unusable, users can utilize the so-called secure mode which allows them to access the pure calendar where all plugins are deactivated. There, they can deactivate any plugin.</p>
         
         <h2>Plugin ID</h2>
         
-        <p>The plugin ID is a serial number that uniquely identifies each plugin. The development <a href="#">token</a>, you generate contains the plugin ID.</p>
+        <p>The plugin ID is a serial number that uniquely identifies each plugin. The development token, you generate contains the plugin ID.</p>
         
         <h2>Authors vs Plugin Maker</h2>
         
@@ -116,7 +116,7 @@ fn main() {
         
         <h2>Read and Write Access</h2>
         
-        <p>By default, all <a href="#">authors</a> and the <a href="#">maker</a> of the token have read and write access to the plugin and nobody else can even view it. You can still provide or take away read or write access from any NiiC user explicitly when generating the <a href="#">token</a>.</p>
+        <p>By default, all authors and the maker of the token have read and write access to the plugin and nobody else can even view it. You can still provide or take away read or write access from any NiiC user explicitly when generating the token.</p>
         
         <h2>Versioning</h2>
         
@@ -135,9 +135,9 @@ fn main() {
         <p>For block modules, you need the following source code:</p>
         
         <ul>
-        <li>an <a href="#">HTML</a> string (displayed in block,) </li>
-        <li>an optional <a href="#">JavaScript</a> string,</li>
-        <li>an optional <a href="#">CSS</a> string (restricted for block.)</li>
+        <li>an HTML string (displayed in block,) </li>
+        <li>an optional JavaScript string,</li>
+        <li>an optional CSS string (restricted for block.)</li>
         </ul>
         
         <h3>Background Modules</h3>
@@ -147,16 +147,16 @@ fn main() {
         <p>For background modules, you need the following source code:</p>
         
         <ul>
-        <li>an <a href="#">HTML</a> string (appended to calendar body,)</li>
-        <li>an optional <a href="#">JavaScript</a> string,</li>
-        <li>an optional <a href="#">CSS</a> string (apply everywhere.)</li>
+        <li>an HTML string (appended to calendar body,)</li>
+        <li>an optional JavaScript string,</li>
+        <li>an optional CSS string (apply everywhere.)</li>
         </ul>
         
         <h3>Data Modules</h3>
         
-        <p>Some plugins don’t change the UI but rather extend the capabilities of the base calendar. These plugins use data modules that are capable of adding fields to <a href="#">Appointments, Events, & Tasks (AETs)</a>, <a href="#">Calendar Views</a>, <a href="#">Calendar Settings</a>, and <a href="#">Profile Settings</a>. These fields can be customized and styled as you wish with a sensible set of default styles and <a href="#">components</a> provided by us, such as <a href="#">multi-selects</a> and <a href="#">check boxes</a>.</p>
+        <p>Some plugins don’t change the UI but rather extend the capabilities of the base calendar. These plugins use data modules that are capable of adding fields to Appointments, Events, & Tasks (AETs), Calendar Views, <a href="/sites/profile.html">Calendar Settings</a>, and <a href="/sites/profile.html">Profile Settings</a>. These fields can be customized and styled as you wish with a sensible set of default styles and components provided by us, such as multi-selects and check boxes.</p>
         
-        <p>Data-module development is a bit different. You set the field information using the <a href="#">NRA</a> directly or using the <a href="#">RI</a> (recommended.)</p>
+        <p>Data-module development is a bit different. You set the field information using the REST api directly or using the <a href="#How-to-use-the-Rust-Interface?"></a> (recommended.)</p>
         
         <p>Here is an example for a multi-select rating system.</p>
         
@@ -198,14 +198,14 @@ conn.establish();
         <p>Because of this dynamic, no source code is required. Depending on the configuration, you might still want to use:</p>
         
         <ul>
-        <li>an <a href="#">HTML</a> string,</li>
-        <li>a <a href="#">JavaScript</a> string,</li>
-        <li>a <a href="#">CSS</a> string.</li>
+        <li>an HTML string,</li>
+        <li>a JavaScript string,</li>
+        <li>a CSS string.</li>
         </ul>
         
         <h3>Module Bundles</h3>
         
-        <p>For cases where you want to include the functionality of multiple plugins or maybe just have many possible <a href="#">blocks</a> to pick from, you can use module bundles. As the name suggests, these allow you to combine bundles into one.</p>
+        <p>For cases where you want to include the functionality of multiple plugins or maybe just have many possible blocks to pick from, you can use module bundles. As the name suggests, these allow you to combine bundles into one.</p>
         
         <p>You can bundle plugins that you have access to—which allows you to share database values between them—or even ones that you do not have access to.</p>
         
@@ -239,12 +239,12 @@ conn.establish();
         <p>For shared functionality between plugins, you might use:</p>
         
         <ul>
-        <li>an <a href="#">HTML</a> string,</li>
-        <li>a <a href="#">JavaScript</a> string,</li>
-        <li>a <a href="#">CSS</a> string.</li>
+        <li>an HTML string,</li>
+        <li>a JavaScript string,</li>
+        <li>a CSS string.</li>
         </ul>
         
-        <p>The plugins can check for the existence of shared files using the <a href="#">NiiC JavaScript library (NJL)</a>.</p>
+        <p>The plugins can check for the existence of shared files using the <a href="#How-to-use-the-NiiC-UI-Libraries?">NiiC JavaScript library (NJL)</a>.</p>
         `,
     },
     {
@@ -252,9 +252,9 @@ conn.establish();
         content: `
         <h2>Rust Interface (RI)</h2>
         
-        <p>Using the <a href="#">NRA</a> can get very tedious, so we have provided a Rust Interface to deal with it for you. It also does all the necessary data checks for you and you do not need to rewrite your code to update, you can just use the code for creating the plugin.</p>
+        <p>Using the REST api can get very tedious, so we have provided a Rust Interface to deal with it for you. It also does all the necessary data checks for you and you do not need to rewrite your code to update, you can just use the code for creating the plugin.</p>
         
-        <p>For further information about the RI, visit the <a href="#">designated GitHub page</a>.</p>
+        <p>For further information about the RI, visit the <a href="https://github.com/YanniAlshoufiHTL/NiiC-Api">designated GitHub page</a>.</p>
         
         <h2>Creating or Updating Plugin</h2>
         
@@ -326,7 +326,7 @@ let result: Result<NiicNraResponse, NiicConnectionError> =
         
         <ul>
         <li>the NiiC JavaScript Library (NJL,)</li>
-        <li>the <a href="#">NiiC CSS Library (NCL,)</a></li>
+        <li>the NiiC CSS Library (NCL,)</li>
         <li>and the NiiC Web Component Library (NWL.)</li>
         </ul>
         
