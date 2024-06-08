@@ -15,15 +15,9 @@
     width: 100vw;
     height: 100dvh;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
     background: #ffffffa0;
 
     .niic-aet-input-prompt {
-        position: relative;
-
         > .niic-aet-input-prompt-exit {
             position: absolute;
             right: 2px;
@@ -38,6 +32,10 @@
                 color: #dea4ff;
             }
         }
+
+        position: relative;
+        left: 50%;
+        top: 50%;
 
         display: flex;
         flex-direction: column;
