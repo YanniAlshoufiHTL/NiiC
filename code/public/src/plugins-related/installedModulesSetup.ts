@@ -1,12 +1,20 @@
-onInstalledModulesLoaded(() => {
+onInstalledModulesLoaded(updateInstalledModulesUi);
+
+function updateInstalledModulesUi() {
+    const oldPluginListings = document.querySelectorAll("niic-plugin-listing");
+
     const pluginListing = document.createElement('niic-plugin-listing');
+
+    for (const oldListing of oldPluginListings) {
+        oldListing.remove();
+    }
 
     const storeMods = installedBlockModules
         .map(mod => {
             return {
                 id: mod.id,
                 title: mod.title ? mod.title : "No title",
-                description: mod.description  ? mod.description : "No description",
+                description: mod.description ? mod.description : "No description",
                 additionalText: [
                     mod.html ? "HTML" : null,
                     mod.css ? "CSS" : null,
@@ -24,4 +32,4 @@ onInstalledModulesLoaded(() => {
     document
         .querySelector(".niic-plugin-store-content-container")
         ?.appendChild(pluginListing);
-});
+}

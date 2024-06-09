@@ -52,7 +52,7 @@
         <div class="niic-plugin-store-controls-container">
             <label class="niic-plugin-store-search-label">
                 <input class="niic-plugin-store-search" type="text" placeholder="Search">
-                <img class="niic-plugin-store-search-icon" src="../img/search.png" alt="">
+                <img onclick="globalUserSearchInput = document.querySelector('.niic-plugin-store-search').value; updateInstalledModulesUi()" class="niic-plugin-store-search-icon" src="../img/search.png" alt="">
             </label>
 
             <button class="niic-plugin-store-navigation-btn">Filter</button>
