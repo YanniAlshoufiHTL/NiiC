@@ -81,6 +81,10 @@ body {
 
     overflow: hidden;
 
+    background-image: url("/img/niic-bg-block-module-area.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
     .niic-plugin-store-bg-image {
         position: absolute;
         left: 0;

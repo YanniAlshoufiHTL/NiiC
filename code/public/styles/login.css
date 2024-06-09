@@ -1,0 +1,164 @@
+body {
+    background: #32A38E;
+    width: 100%;
+    height: 100%;
+}
+
+.niic-navigation {
+    z-index: 10;
+}
+
+.niic-login-bg-gradient-shadow {
+    box-sizing: border-box;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: linear-gradient(139.07deg, rgba(0, 0, 0, 0) 13.67%, rgba(90, 4, 200, 0.58) 80.22%);
+}
+
+.niic-login-go-back-label {
+    position: fixed;
+    top: 7%;
+    left: 4%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    font-family: system-ui, sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+
+    color: #FFFFFF;
+}
+
+.niic-login-signIn-signUp-title {
+    font-family: system-ui, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    margin-bottom: 20px;
+
+    color: #FFFFFF;
+}
+
+.niic-login-signIn-signUp-label {
+    display: flex;
+    flex: 1;
+    position: relative;
+    max-width: 100%;
+    margin-bottom: 15px;
+
+    > input {
+        border-radius: 5px;
+        border: 1px solid black;
+        padding: 10px;
+        box-sizing: border-box;
+        font-size: 125%;
+        max-width: 100%;
+        max-height: 60px;
+        height: 50px;
+    }
+}
+
+.niic-login-forgot-pwd-text {
+    color: white;
+    font-family: system-ui, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    cursor: pointer;
+    margin-bottom: 16px;
+}
+
+.niic-login-signIn-SignUp-Button {
+    height: 49px;
+    background: #18333E;
+    cursor: pointer;
+
+    max-width: 265px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-family: system-ui, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+
+    color: #FFFFFF;
+}
+
+.niic-login-main-container {
+    position: absolute;
+    right: 20%;
+    top: 10%;
+
+    height: 80%;
+    aspect-ratio: 1.4 / 1;
+
+    overflow: hidden;
+
+    background-image: url("/img/niic-bg-block-module-area.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    padding-top: 5%;
+    box-sizing: border-box;
+    gap: 50px;
+
+    .niic-login-title {
+        text-align: center;
+        font-family: system-ui, sans-serif;
+
+        font-weight: 400;
+        font-size: 45px;
+
+        color: #FFFFFF;
+
+        &:after {
+            content: "";
+            display: block;
+            width: 40%;
+            height: 3px;
+
+            position: relative;
+            top: 10px;
+            left: 50%;
+            translate: -50% 0;
+            background-color: white;
+        }
+    }
+
+    .niic-login-signIn-signUp {
+        display: flex;
+        justify-content: center;
+        gap: 80px;
+    }
+
+    .niic-login-signIn {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .niic-login-signIN-inputs-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .niic-login-signIn-action-container {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    .niic-login-signUp {
+        max-width: 265px;
+        display: flex;
+        flex-direction: column;
+    }
+}
