@@ -6,32 +6,63 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>NiiC – Home</title>
+    <link href="./styles/login.css" rel="stylesheet">
     <script src="./out/webcomps/SideBar.js" defer type="module"></script>
     <script src="./out/fe-repos/aets.js" defer></script>
     <script src="./out/login/loginSubmit.js" defer></script>
-
-    <style>
-        .center {
-            margin: 0;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            -ms-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-        }
-    </style>
 
 </head>
 <body>
 
     <niic-sidebar></niic-sidebar>
+    <div class="niic-login-bg-gradient-shadow"></div>
 
-    <div class="center">
+    <!--
         <form onsubmit="onLoginSubmit(event);">
             <input class="niic-login-form-name" type="text" id="username" username="username"><br><br>
             <input type="submit" value="Submit">
         </form>
-    </div>
+    -->
 
+    <p class="niic-login-go-back-label">&#8592; Go back</p>
+    <div class="niic-login-main-container">
+        <h1 class="niic-login-title">No ‘i’ in Cal!</h1>
+        <div class="niic-login-signIn-signUp">
+            <form action="" class="niic-login-signIn">
+                <div class="niic-login-signIN-inputs-container">
+                    <p class="niic-login-signIn-signUp-title">Sign In</p>
+                    <div style="margin-bottom: 25px">
+                        <label class="niic-login-signIn-signUp-label">
+                            <input required type="text" placeholder="email address">
+                        </label>
+                        <label class="niic-login-signIn-signUp-label">
+                            <input required type="text" placeholder="password">
+                        </label>
+                    </div>
+                </div>
+                <div class="niic-login-signIn-action-container">
+                    <p class="niic-login-forgot-pwd-text">Forgot your password?</p>
+                    <button class="niic-login-signIn-SignUp-Button">Sign In</button>
+                </div>
+            </form>
+
+            <form class="niic-login-signUp" action="">
+                <p class="niic-login-signIn-signUp-title">Sign Up</p>
+                <label class="niic-login-signIn-signUp-label">
+                    <input required type="text" placeholder="username">
+                </label>
+                <label class="niic-login-signIn-signUp-label">
+                    <input required type="text" placeholder="email address">
+                </label>
+                <label class="niic-login-signIn-signUp-label">
+                    <input required type="text" placeholder="password">
+                </label>
+                <label class="niic-login-signIn-signUp-label">
+                    <input required type="text" placeholder="repeat password">
+                </label>
+                <button class="niic-login-signIn-SignUp-Button">Sign Up</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

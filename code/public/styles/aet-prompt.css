@@ -160,5 +160,40 @@
                 transform: scale(0.98);
             }
         }
+        .niic-aet-input-prompt-save-delete-input{
+            display: flex;
+            flex-direction: row;
+            max-height: 75px;
+            gap: 5px;
+        }
     }
+}
+
+.niic-aet-input-prompt-save-input {
+    flex: 2;
+    padding: 10px 0;
+    border: none;
+
+    background: lightseagreen;
+    color: white;
+    font-size: 1.1rem;
+
+    cursor: pointer;
+
+    max-height: 50px;
+
+}
+
+.niic-aet-input-prompt-delete-input{
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+
+    background: red;
+    color: white;
+    font-size: 1.1rem;
+
+    cursor: pointer;
+
+    max-height: 50px;
 }
