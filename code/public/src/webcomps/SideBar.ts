@@ -41,7 +41,10 @@ class SideBar extends HTMLElement {
                     right: 0;
                     background-color: #24424b;
                     width: 81px;
-                    height: 100dvh;
+                    height: 100vh;
+                    box-sizing: border-box;
+                    padding-bottom: 5%;
+                    padding-top: 5%;
                     
                     >.niic-icon-container {
                         width: 81px;
