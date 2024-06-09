@@ -1,5 +1,13 @@
-onModulesLoaded(() => {
+onModulesLoaded(updateStoreModulesUi);
+
+function updateStoreModulesUi() {
+    const oldPluginListings = document.querySelectorAll("niic-plugin-listing");
+
     const pluginListing = document.createElement('niic-plugin-listing');
+
+    for (const oldListing of oldPluginListings) {
+        oldListing.remove();
+    }
 
     const installedModulesLoadedTmpInterval = setInterval(() => {
         if (installedModulesLoaded) {
@@ -16,11 +24,11 @@ onModulesLoaded(() => {
                 })
 
             pluginListing.setAttribute('data-mods', JSON.stringify(storeMods));
-            document
-                .querySelector(".niic-plugin-store-content-container")
+
+            document.querySelector(".niic-plugin-store-content-container")
                 ?.appendChild(pluginListing);
 
             clearInterval(installedModulesLoadedTmpInterval);
         }
     }, 100);
-});
+}
