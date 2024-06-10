@@ -396,6 +396,51 @@ export class DatabaseService {
         };
     }
 
+    public async userWithUsernameExists(username: string): Promise<boolean | string> {
+        const client = await this.client();
+        try {
+            const res = await client.query(
+                `
+                    SELECT count(*) as count
+                    FROM niicuser
+                    WHERE username = $1
+                `,
+                [username]
+            );
+            return (+res.rows[0]["count"]) > 0;
+        } catch (e) {
+            return "Could not run query!";
+        } finally {
+            await this.closeClient();
+        }
+    }
+
+    /**
+     * Gets the ids of users via their usernames.
+     * @param usernames The usernames
+     */
+    public async getIdsOfUsernames(usernames: string[]): Promise<number[] | Error> {
+        const client = await this.client();
+        const paramList = usernames.map((_, i) => `$${i + 1}`).join(",");
+
+        try {
+            const res = await client.query(
+                `
+                    SELECT id
+                    FROM niicuser
+                    WHERE username IN (${paramList})
+                `,
+                usernames
+            );
+            return (res.rows.map(x => +x.id));
+        } catch (e) {
+            console.log(e)
+            return new Error(`Something went wrong: ${e}`);
+        } finally {
+            await this.closeClient();
+        }
+    }
+
     /**
      * Gets a calendar ID from a user ID.
      * @param userId The ID of the user.
@@ -614,7 +659,7 @@ export class DatabaseService {
         const client = await this.client();
         await client.query(
             `INSERT INTO niicuser (email, username, password, isloggedin)
-             VALUES ($1, $2, $3,$4)`,
+             VALUES ($1, $2, $3, $4)`,
             [email, name, password, true]
         );
         await this.closeClient();
