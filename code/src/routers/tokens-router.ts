@@ -9,7 +9,15 @@ tokensRouter.put("/", async (req, res) => {
     const body: TokenGenerationReq = req.body;
     try {
         if(body.type !== undefined) {
-            const token: string = generateToken(body);
+            const token = await generateToken(body);
+
+            if (token instanceof Error) {
+                res
+                    .status(StatusCodes.BAD_REQUEST)
+                    .send(token.message);
+                return;
+            }
+
             if (body.oldToken === null || body.oldToken === undefined || body.oldToken.length === 0) {
                 await DatabaseService.instance().addMod({
                     token,
@@ -38,11 +46,22 @@ tokensRouter.put("/", async (req, res) => {
     }
 });
 
-function generateToken(token: TokenGenerationReq): string {
+async function generateToken(token: TokenGenerationReq): Promise<string | Error> {
+    const idsOfUsersWithReadAccess = await DatabaseService.instance().getIdsOfUsernames(token.read);
+    const idsOfUsersWithWriteAccess = await DatabaseService.instance().getIdsOfUsernames(token.write);
+
+    if (idsOfUsersWithReadAccess instanceof Error) {
+        return idsOfUsersWithReadAccess;
+    }
+
+    if (idsOfUsersWithWriteAccess instanceof Error) {
+        return idsOfUsersWithWriteAccess;
+    }
+
     return token.type +
         "-" + token.userId.toString() +
-        "-R-" + replaceAllCommasWithHyphen(token.read.toString()) +
-        "-W-" + replaceAllCommasWithHyphen(token.write.toString()) +
+        "-R-" + replaceAllCommasWithHyphen(idsOfUsersWithReadAccess.toString()) +
+        "-W-" + replaceAllCommasWithHyphen(idsOfUsersWithWriteAccess.toString()) +
         "-" + Math.floor(Math.random() * 1000000);
 }
 
