@@ -1,4 +1,4 @@
-import { Client, Pool, PoolClient } from "pg";
+import {Client, Pool, PoolClient} from "pg";
 import NiicAet from "./be-models/NiicAet";
 import * as dotenv from "dotenv";
 import NiicAetNoId from "./be-models/NiicAetNoId";
@@ -84,8 +84,8 @@ export class DatabaseService {
         const client = await this.client();
         const res = await client.query(`
             INSERT INTO aet (name, description, date, timebegin, timeend, type, color, calendarid)
-            VALUES ($1::varchar, $2::text, $3::date, $4::numeric, $5::numeric, $6::varchar, $7::varchar, $8::bigint)
-            RETURNING id;
+            VALUES ($1::varchar, $2::text, $3::date, $4::numeric, $5::numeric, $6::varchar, $7::varchar,
+                    $8::bigint) RETURNING id;
         `, [title, description, date, startTime, endTime, type, color, calendarId]);
         const id = +res.rows[0].id;
         await this.setAets();
@@ -116,8 +116,7 @@ export class DatabaseService {
                 const res = await client.query(
                     `
                         INSERT INTO blockmodule (token, title, description, html, css, js, published)
-                        VALUES ($1::varchar, $2::varchar, $3::text, $4::text, $5::text, $6::text, false)
-                        RETURNING id;
+                        VALUES ($1::varchar, $2::varchar, $3::text, $4::text, $5::text, $6::text, false) RETURNING id;
                     `,
                     [mod.token, mod.title, mod.description, mod.html, mod.css, mod.js]
                 );
@@ -177,13 +176,13 @@ export class DatabaseService {
         const client = await this.client();
         await client.query(`
             UPDATE aet
-            SET name        = $1::varchar,
-                description = $2::text,
-                date        = $3::date,
-                timebegin   = $4::numeric,
-                timeend     = $5::numeric,
-                type        = $6::varchar,
-                color       = $7::varchar
+            SET name = $1::varchar,
+                description = $2::text
+              , date = $3:: date
+              , timebegin = $4:: numeric
+              , timeend = $5:: numeric
+              , type = $6:: varchar
+              , color = $7:: varchar
             WHERE id = $8::bigint;
         `, [aetNoId.title, aetNoId.description, aetNoId.date, aetNoId.startTime, aetNoId.endTime, aetNoId.type, aetNoId.color, id]);
         await this.setAets();
@@ -205,13 +204,13 @@ export class DatabaseService {
         const client = await this.client();
         const res = await client.query(`
                     UPDATE blockmodule
-                    SET title       = $1::varchar,
-                        description = $2::varchar,
-                        html        = $3::text,
-                        css         = $4::text,
-                        js          = $5::text
-                    WHERE token = $6::varchar
-                    RETURNING id
+                    SET title = $1::varchar,
+                        description = $2:: varchar
+                      , html = $3::text
+                      , css = $4::text
+                      , js = $5::text
+                    WHERE token = $6:: varchar
+                        RETURNING id
             `,
             [moduleNoId.title, moduleNoId.description, moduleNoId.html, moduleNoId.css, moduleNoId.js, moduleNoId.token]
         );
@@ -235,8 +234,8 @@ export class DatabaseService {
         const res = await client.query(`
                     UPDATE blockmodule
                     SET token = $2::varchar
-                    WHERE token = $1::varchar
-                    RETURNING *
+                    WHERE token = $1:: varchar
+                        RETURNING *
             `,
             [oldToken, newToken]
         );
@@ -336,15 +335,7 @@ export class DatabaseService {
             `
                 SELECT id,
                        name,
-                       description,
-                       date,
-
-                       timebegin,
-                       timeend,
-
-                       type,
-
-                       color
+                       description, date, timebegin, timeend, type, color
                 FROM aet
                 WHERE calendarid = $1::bigint
             `,
@@ -369,7 +360,7 @@ export class DatabaseService {
 
     /**
      * Gets a user with username and id from a username.
-     * @param username The username of the user..
+     * @param username The username of the user.
      */
     public async getUser(username: string): Promise<{
         id: number,
@@ -539,14 +530,7 @@ export class DatabaseService {
             const res = await client.query(`
                 SELECT id,
                        name,
-                       description,
-                       date,
-                       timebegin,
-                       timeend,
-                       color,
-                       type,
-
-                       calendarid
+                       description, date, timebegin, timeend, color, type, calendarid
                 FROM aet
             `);
             await this.closeClient();
@@ -610,15 +594,42 @@ export class DatabaseService {
      * @param name The name of the user
      * @param password The password of the user
      */
-    public async addUser(email: string, name: string, password: string) {
+    public async addUser(name: string, password: string) {
         const client = await this.client();
         await client.query(
-            `INSERT INTO niicuser (email, username, password, isloggedin)
-             VALUES ($1, $2, $3,$4)`,
-            [email, name, password, true]
+            `INSERT INTO niicuser (username, password, isloggedin)
+             VALUES ($1, $2, $3)`,
+            [name, bcrypt.hashSync(password, 10), true]
         );
+
+        const user = await this.getUser(name);
+
+        if (!user) {
+            throw new Error("Something wild went wrong");
+            return;
+        }
+
+        await this.closeClient();
+        await this.createCalendar(user!.id);
+    }
+
+    /**
+     * Creates a calendar for a specified user.
+     * @param userId The id of the user
+     */
+
+    public async createCalendar(userId: number) {
+
+        const client = await this.client();
+        await client.query(
+            `INSERT INTO calendar (niicuserid)
+             VALUES ($1)`,
+            [userId]
+        );
+
         await this.closeClient();
     }
+
 
     /**
      * Deletes a user from the database
@@ -635,26 +646,33 @@ export class DatabaseService {
     }
 
     /**
-     * Logs the user in
+     * Checks whether or not the user should be logged in.
      * @param username The username of the user
      * @param password The password of the user
      */
-    public async logInUser(username: string, password: string) {
+    public async shouldLogIn(username: string, password: string): Promise<boolean | Error> {
         const client = await this.client();
-        const result = await client.query(`SELECT *
-                                           FROM niicuser
-                                           where username = $1`, [username]);
-        if (result.rows.length > 0) {
-            let valid = bcrypt.compareSync(password, result.rows[0].password);
-            if (valid) {
-                await client.query(`
-                    UPDATE niicuser
-                    SET isloggedin = true
-                    WHERE username = $1`, [username]);
-            }
-        }
 
-        await this.closeClient();
+        try {
+            const result = await client.query(
+                `
+                    SELECT password
+                    FROM niicuser
+                    WHERE username = $1
+                `,
+                [username]
+            );
+
+            if (result.rows.length < 1) {
+                return new Error("Something went wrong!");
+            }
+
+            return bcrypt.compareSync(password, result.rows[0].password)
+        } catch (e) {
+            return new Error(`Something went wrong: ${e}`);
+        } finally {
+            await this.closeClient();
+        }
     }
 
     /**

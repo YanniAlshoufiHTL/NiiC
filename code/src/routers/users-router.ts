@@ -4,32 +4,7 @@ import bcrypt= require('bcrypt')
 import {OK, StatusCodes} from "http-status-codes";
 
 
-
 export const usersRouter = express.Router();
-
-usersRouter.post("/", async (req, res) => {
-    let email= req.body.email;
-    let name = req.body.name;
-    try {
-        await DatabaseService.instance().addUser(email, name, bcrypt.hashSync(req.body.password,10));
-        res.sendStatus(StatusCodes.OK);
-    }catch (err){
-        res.sendStatus(StatusCodes.BAD_REQUEST);
-        console.log(err);
-    }
-
-
-})
-
-usersRouter.put("/:id", async (req, res) => {
-    try {
-        await DatabaseService.instance().updateUser(req.body.email,req.body.name,bcrypt.hashSync(req.body.password,10),+req.params.id);
-        res.sendStatus(StatusCodes.OK);
-    }catch (err){
-        res.sendStatus(StatusCodes.BAD_REQUEST);
-        console.log(err);
-    }
-})
 
 usersRouter.delete("/:id", async (req, res) => {
     const id= +req.params.id;
@@ -52,7 +27,7 @@ usersRouter.put("/logout/:id", async (req, res) => {
 })
 usersRouter.post("/login", async (req, res) => {
     try {
-        await DatabaseService.instance().logInUser(req.body.name,req.body.password);
+        await DatabaseService.instance().shouldLogIn(req.body.name,req.body.password);
         res.sendStatus(StatusCodes.OK);
     }catch (err){
         res.sendStatus(StatusCodes.BAD_REQUEST);
