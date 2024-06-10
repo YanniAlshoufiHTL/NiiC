@@ -1,0 +1,30 @@
+@baseLogin = {{host}}/login/
+
+### signIn user
+POST {{baseLogin}}
+Content-Type: application/json
+
+{
+    "username": "clemens",
+    "password": "clemens1234"
+}
+
+### signUp user with invalid Data
+POST {{baseLogin}}/sign-up
+Content-Type: application/json
+
+{
+  "username": "testUser1",
+  "password": "1234",
+  "repeatPassword": "123"
+}
+
+### signUp user with valid Data
+POST {{baseLogin}}/sign-up
+Content-Type: application/json
+
+{
+  "username": "yanni",
+  "password": "yanni123",
+  "repeatPassword": "yanni123"
+}

@@ -1,14 +1,14 @@
-DROP TABLE installedplugin;
-DROP TABLE aet;
-DROP TABLE calendar;
-DROP TABLE niicuser;
+DROP TABLE IF EXISTS installedplugin;
+DROP TABLE IF EXISTS aet;
+DROP TABLE IF EXISTS calendar;
+DROP TABLE IF EXISTS niicuser;
+DROP TABLE IF EXISTS blockmodule;
 
 CREATE TABLE niicuser
 (
     id         SERIAL PRIMARY KEY,
     username   VARCHAR(255) UNIQUE NOT NULL,
-    email      TEXT                NOT NULL UNIQUE,
-    password   TEXT                NOT NULL UNIQUE,
+    password   TEXT                NOT NULL,
     isloggedin BOOLEAN             NOT NULL
 );
 

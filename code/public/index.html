@@ -9,7 +9,7 @@
     <link href="./styles/login.css" rel="stylesheet">
     <script src="./out/webcomps/SideBar.js" defer type="module"></script>
     <script src="./out/fe-repos/aets.js" defer></script>
-    <script src="./out/login/loginSubmit.js" defer></script>
+    <script src="./out/logInSignUp/LoginInSignIn.js" defer></script>
 
 </head>
 <body>
@@ -19,7 +19,7 @@
 
     <!--
         <form onsubmit="onLoginSubmit(event);">
-            <input class="niic-login-form-name" type="text" id="username" username="username"><br><br>
+            <input class="niic-logInSignUp-form-name" type="text" id="username" username="username"><br><br>
             <input type="submit" value="Submit">
         </form>
     -->
@@ -28,39 +28,36 @@
     <div class="niic-login-main-container">
         <h1 class="niic-login-title">No ‘i’ in Cal!</h1>
         <div class="niic-login-signIn-signUp">
-            <form action="" class="niic-login-signIn">
+            <form onsubmit="onLoginSubmit(event)" class="niic-login-signIn">
                 <div class="niic-login-signIN-inputs-container">
                     <p class="niic-login-signIn-signUp-title">Sign In</p>
                     <div style="margin-bottom: 25px">
                         <label class="niic-login-signIn-signUp-label">
-                            <input required type="text" placeholder="email address">
+                            <input class="niic-login-signIn-input-username" required type="text" placeholder="username">
                         </label>
                         <label class="niic-login-signIn-signUp-label">
-                            <input required type="text" placeholder="password">
+                            <input class="niic-login-signIn-input-password" required type="password" placeholder="password">
                         </label>
                     </div>
                 </div>
                 <div class="niic-login-signIn-action-container">
                     <p class="niic-login-forgot-pwd-text">Forgot your password?</p>
-                    <button class="niic-login-signIn-SignUp-Button">Sign In</button>
+                    <button type="submit" class="niic-login-signIn-SignUp-Button">Sign In</button>
                 </div>
             </form>
 
-            <form class="niic-login-signUp" action="">
+            <form onsubmit="onSignUpSubmit(event)" class="niic-login-signUp">
                 <p class="niic-login-signIn-signUp-title">Sign Up</p>
                 <label class="niic-login-signIn-signUp-label">
-                    <input required type="text" placeholder="username">
+                    <input class="niic-login-signUp-input-username" required type="text" placeholder="username">
                 </label>
                 <label class="niic-login-signIn-signUp-label">
-                    <input required type="text" placeholder="email address">
+                    <input class="niic-login-signUp-input-password" required type="password" placeholder="password">
                 </label>
                 <label class="niic-login-signIn-signUp-label">
-                    <input required type="text" placeholder="password">
+                    <input class="niic-login-signUp-input-repeatedPassword" required type="password" placeholder="repeat password">
                 </label>
-                <label class="niic-login-signIn-signUp-label">
-                    <input required type="text" placeholder="repeat password">
-                </label>
-                <button class="niic-login-signIn-SignUp-Button">Sign Up</button>
+                <button type="submit" class="niic-login-signIn-SignUp-Button">Sign Up</button>
             </form>
         </div>
     </div>
