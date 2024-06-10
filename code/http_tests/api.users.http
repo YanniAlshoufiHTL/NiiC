@@ -10,7 +10,9 @@ Content-Type: application/json
 
 
 ### add user
+GET {{host}}/api/users
 
+###
 POST {{host}}/api/users
 Content-Type: application/json
 
