@@ -9,4 +9,6 @@ interface NiicAetNoId {
     type: "appointment" | "event" | "task";
 
     color: string;
+
+    calendarId: number;
 }

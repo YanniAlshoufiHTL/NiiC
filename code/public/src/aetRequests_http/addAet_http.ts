@@ -1,4 +1,12 @@
 async function addAetAndGetId_http(aet: NiicAetNoId): Promise<number> {
+    const calendarId = localStorage.getItem("calendarId");
+
+    if (calendarId === null || /\d+/.test(calendarId) === false) {
+        alert("You are not logged in correctly!");
+        window.open("/", "_self");
+        return -1;
+    }
+
     const response = await fetch("/api/aets", {
         method: "POST",
         headers: {
@@ -12,7 +20,7 @@ async function addAetAndGetId_http(aet: NiicAetNoId): Promise<number> {
             "endTime": aet.endTime,
             "type": aet.type,
             "color": aet.color,
-            "calendarId": 1
+            "calendarId": +calendarId,
         })
     });
 

@@ -2,7 +2,6 @@ import express from "express";
 import * as dotenv from "dotenv";
 import { StatusCodes } from "http-status-codes";
 import { DatabaseService } from "../DatabaseService";
-import bcrypt from "bcrypt";
 
 import jwt from "jsonwebtoken";
 import NiicAet from "../be-models/NiicAet";
@@ -43,13 +42,13 @@ loginRouter.post('/', async (req, res) => {
     const calendarId = await DatabaseService.instance().getCalendarId(user.id);
 
     if (!calendarId) {
-        res.sendStatus(StatusCodes.BAD_REQUEST);
+        res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
         return;
     }
 
     const aets = await DatabaseService.instance().getAetsFromCalendarId(calendarId);
     const minutes = 30;
-    const expiresAt = new Date(Date.now() + minutes * 60000);
+    const expiresAt = new Date(Date.now() + minutes * 60_000);
     const secretKey = process.env.SECRET_KEY;
 
     if(!secretKey) {
@@ -66,7 +65,7 @@ loginRouter.post('/', async (req, res) => {
     );
 
     res.status(StatusCodes.OK)
-        .json({id: user.id, username, aets, jwt: token});
+        .json({id: user.id, username, aets, jwt: token, calendarId});
 })
 
 loginRouter.post('/sign-up', async (req, res) => {
@@ -89,8 +88,15 @@ loginRouter.post('/sign-up', async (req, res) => {
             return;
         }
 
+        const calendarId = await DatabaseService.instance().getCalendarId(user.id);
+
+        if (!calendarId) {
+            res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+            return;
+        }
+
         const minutes = 30;
-        const expiresAt = new Date(Date.now() + minutes * 60000);
+        const expiresAt = new Date(Date.now() + minutes * 60_000);
         const secretKey = process.env.SECRET_KEY;
 
         if(!secretKey) {
@@ -108,7 +114,7 @@ loginRouter.post('/sign-up', async (req, res) => {
 
         const aets: NiicAet[] = [];
 
-        res.status(StatusCodes.OK).json({id: user.id, username, aets, jwt: token});
+        res.status(StatusCodes.OK).json({id: user.id, username, aets, jwt: token, calendarId});
 
     } catch (e) {
         res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);

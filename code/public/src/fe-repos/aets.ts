@@ -13,6 +13,7 @@ function setAets() {
                 startTime: +x.startTime,
                 endTime: +x.endTime,
                 color: x.color,
+                calendarId: x.calendarId,
             };
             return tmp;
         });

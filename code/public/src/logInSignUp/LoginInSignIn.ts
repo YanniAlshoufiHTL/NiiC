@@ -26,18 +26,19 @@ async function onLoginSubmit(event: Event) {
         id: number,
         username: string,
         aets: NiicAet[],
-        jwt: string
+        jwt: string,
+        calendarId: number,
     } = await response.json();
 
     localStorage.setItem("aets", JSON.stringify(body.aets));
     localStorage.setItem("userId", body.id.toString());
     localStorage.setItem("jwt", body.jwt);
+    localStorage.setItem("calendarId", body.calendarId.toString());
 
     window.open('/sites/calendar.html', '_self');
 }
 
-async function onSignUpSubmit(event: Event){
-  
+async function onSignUpSubmit(event: Event) {
     event.preventDefault();
 
     const nameInput: HTMLInputElement | null = document.querySelector(".niic-login-signUp-input-username");
@@ -67,12 +68,14 @@ async function onSignUpSubmit(event: Event){
             id: number,
             username: string,
             aets: NiicAet[],
-            jwt: string
+            jwt: string,
+            calendarId: number,
         } = await response.json();
 
         localStorage.setItem("aets", JSON.stringify(body.aets));
         localStorage.setItem("userId", body.id.toString());
         localStorage.setItem("jwt", body.jwt);
+        localStorage.setItem("calendarId", body.calendarId.toString());
     }
     else{
         alert("passwords need to be equal");

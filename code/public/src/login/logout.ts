@@ -24,6 +24,7 @@ async function logoutUser() {
     localStorage.removeItem("installedBlockModules");
     localStorage.removeItem("userId");
     localStorage.removeItem("username");
+    localStorage.removeItem("calendarId");
 
     window.open("/", "_self");
 }

@@ -98,6 +98,7 @@ export class DatabaseService {
             endTime,
             type,
             color,
+            calendarId,
         });
         await this.closeClient();
         return id;
@@ -335,7 +336,12 @@ export class DatabaseService {
             `
                 SELECT id,
                        name,
-                       description, date, timebegin, timeend, type, color
+                       description, 
+                       date, 
+                       timebegin, 
+                       timeend, 
+                       type, 
+                       color
                 FROM aet
                 WHERE calendarid = $1::bigint
             `,
@@ -354,7 +360,9 @@ export class DatabaseService {
 
             type: rows.type,
 
-            color: rows.color
+            color: rows.color,
+
+            calendarId,
         }));
     }
 
@@ -575,7 +583,13 @@ export class DatabaseService {
             const res = await client.query(`
                 SELECT id,
                        name,
-                       description, date, timebegin, timeend, color, type, calendarid
+                       description, 
+                       date, 
+                       timebegin, 
+                       timeend, 
+                       color, 
+                       type, 
+                       calendarid
                 FROM aet
             `);
             await this.closeClient();
@@ -591,6 +605,7 @@ export class DatabaseService {
                     endTime: +row.timeend,
                     color: row.color,
                     type: row.type,
+                    calendarId: row.calendarId,
                 });
             });
         }
