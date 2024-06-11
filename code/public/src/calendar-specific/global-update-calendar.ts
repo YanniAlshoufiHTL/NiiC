@@ -128,7 +128,7 @@ function updateCalendarTimesAndGetHeightEach(): string {
         for (let i = 0; i < 24; i++) {
             const p = document.createElement("p");
 
-            p.style.height = `calc(${window.innerHeight - 130}px / 23)`;
+            p.style.height = `calc(${window.innerHeight - 130}px / 24)`;
             p.textContent = `${i}`.padStart(2, '0');
 
             timesDiv.appendChild(p);

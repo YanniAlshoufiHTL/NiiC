@@ -1,7 +1,6 @@
 let installedModulesLoaded = false;
 
 async function getInstalledModulesAndSetInLocalStorage_http(userId: number) {
-    console.log(userId)
     const res = await fetch(`/api/modules/${userId}`);
 
     if (res.status !== 200) {
