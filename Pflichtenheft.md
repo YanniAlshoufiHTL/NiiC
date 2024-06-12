@@ -418,66 +418,42 @@ search for specific plugins as well, like data module for example.
 
 ## 4. Nicht-funktionale Anforderungen
 
-Nicht-funktionale Anforderungen beschreiben Anforderungen an das System, die nicht-fachlicher Natur
-sind, jedoch entscheidend zur Anwendbarkeit des Systems beitragen. Sie definieren beispielsweise
-Qualitätsanforderungen, Sicherheitsanforderungen oder Performanceanforderungen.
-
-Nicht-funktionale Anforderungen definieren grundlegende Eigenschaften eines Systems, die im
-Architekturentwurf berücksichtigt werden müssen. Da diese Anforderungen auch die Entwicklungskosten
-beeinflussen (können), müssen sie messbar beschrieben werden.
-
-- FALSCH: Das System muss schnell sein.
-- RICHTIG: Daten müssen spätestens innerhalb von 500 ms zurückgegeben werden.
-
-Zur einfachen Strukturierung der Anforderungen werden diejenigen Anforderungen, die nicht eindeutig
-zu den funktionalen Anforderungen gehören, den nicht-funktionalen Anforderungen zugeordnet.
-
-Hier ein Überblick über mögliche nicht-funktionale Anforderungen:
-
 ### `Usability`: Benutzbarkeitsanforderung
 
-- Wie muss die Software beschaffen sein, damit die Zielgruppe gerne damit arbeitet?
-- Beispiel:
-    - Die Software soll dem Erscheinungsbild anderer Produkte des Herstellers entsprechen.
+- Nothing is required (idk)
 
 ### `Efficiency`: Effizienzanforderung
 
-- Hier geht es sowohl um Laufzeit- als auch um Speichereffizienz. Was wird unter dem sparsamen
-  Einsatz dieser Ressourcen verstanden?
-- Beispiel:
-    - Die Berechnung darf nicht länger als 0,25 Sekunden dauern.
+- No effeciency requirements
 
 ### `Maintenance`: Wartbarkeits- und Portierbarkeitsanforderung
-
-- Welcher Grad an Änderbarkeit wird gefordert? Hier werden, soweit wie möglich, kommende Anpassungen
-  und Erweiterungen vorhergesehen.
-- Beispiel:
-    - Das Produkt soll später auch in englischer Sprache verfügbar sein.
-
+- The mobile design is missing but it will be soon available for all devices
+- A lot of features are missing, so stay updated to see what is coming.
 ### `Security`: Sicherheitsanforderung
 
-- Zu den Sicherheitsanforderungen gehören die Aspekte Vertraulichkeit, Datenintegrität und
-  Verfügbarkeit.
-    - Wie sehr müssen die Daten vor dem Zugriff durch Dritte geschützt werden?
-    - Ist es entscheidend, die Korrektheit der erfassten Daten und ihre Konsistenz zu gewährleisten?
-    - Dürfen Systemausfälle vorkommen?
-- Beispiel:
-    - Das System muss gewährleisten, dass Daten nie verändert werden können.
+- Our system is highly secure, when it comes to our users privacy.
+  But make sure that you do not forget your password.In case of a system breakdown
+  nothing much can happen, as pretty much everything is saved in our database.
 
 ### `Legal`: Gesetzliche Anforderung
-
-- Welche Standards und Gesetze müssen beachtet werden?
-- Beispiel:
-    - Das Produkt muss die ISO 9000 Norm erfüllen.
+- No legal arrangements required
 
 ## 5. Mengengerüst
 
 Zur Abschätzung der aufkommenden Datenmengen und damit verbunden der notwendigen Infrastruktur, um
 die nötige Performance zu erzielen, ist ein Mengengerüst zu erstellen. Mögliche Fragestellungen:
 
-- Wieviele User werden erwartet?
-- Wieviele Daten pro User werden erwartet?
-- Mit welcher Anfrage-Frequenz wird gerechnet?
+- How many users are we expecting?
+- We are counting with up to 5,000 users for now, 
+  though we are constantly trying to develop
+  with guard rails in place for unexpected growth
+- how many Daten per users are we awaiting?
+  For now, we do not have a good system in place for measuring data consumption.
+  Next year, we will be thinking more about performance as we switch to ASP.NET.
+- With which inquiry-frequenz are we calculating?
+- Answering this requires extensive research. This too will be delved into in more details next year. 
+  For now, we are trying to get a good feature set up and running,
+  more or less as a prove of concept.
 
 ## 6. Systemarchitektur
 
