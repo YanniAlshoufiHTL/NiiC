@@ -42,6 +42,15 @@ function hideAetInputPrompt() {
     }
 
     aetInputPromptBg.classList.add("hidden");
+
+    const aetPositioningContainer = document.querySelector(".niic-aet-input-prompt") as HTMLElement | undefined;
+
+    if (aetPositioningContainer !== undefined) {
+        aetPositioningContainer.style.left = `50%`;
+        aetPositioningContainer.style.top = `50%`;
+        aetPositioningContainer.style.position = "relative";
+        aetPositioningContainer.style.translate = "-50% -50%";
+    }
 }
 
 
@@ -86,8 +95,16 @@ function promptForTimeWithCheck(message: string, defaultTime: string, falseTries
         : promptForTimeWithCheck(message, defaultTime, falseTriesCount + 1);
 }
 
-function showAetEditPrompt(id: number) {
-    const aetInputPromptBg = document.querySelector(".niic-aet-input-prompt-container");
+let xOnClient = 0;
+let yOnClient = 0;
+
+document.addEventListener("mousemove", e => {
+    xOnClient = e.clientX;
+    yOnClient = e.clientY;
+});
+
+function showAetEditPrompt(shouldUseCursor: boolean, id: number) {
+    const aetInputPromptBg = document.querySelector(".niic-aet-input-prompt-container") as HTMLElement | undefined;
 
     if (!aetInputPromptBg) {
         console.error("Could not show prompt container because element doesn't seem to exist.");
@@ -95,6 +112,25 @@ function showAetEditPrompt(id: number) {
     }
 
     aetInputPromptBg.classList.remove("hidden");
+
+    console.log(shouldUseCursor)
+    if (shouldUseCursor) {
+        const aetPositioningContainer = document.querySelector(".niic-aet-input-prompt") as HTMLElement | undefined;
+
+        if (aetPositioningContainer !== undefined) {
+            aetPositioningContainer.style.left = `${xOnClient}px`;
+            aetPositioningContainer.style.top = `${yOnClient}px`;
+            aetPositioningContainer.style.position = "absolute";
+
+            const xOffset = xOnClient <= window.screen.width / 2 ? "0" : "-100%";
+            const yOffset = yOnClient <= window.screen.height / 2 ? "0" : "-100%";
+
+            aetPositioningContainer.style.translate = `${xOffset} ${yOffset}`;
+
+            console.log(aetPositioningContainer.style.left)
+            console.log(aetPositioningContainer.style.top)
+        }
+    }
 
     const aetInputPrompt: HTMLElement | null = aetInputPromptBg.querySelector(".niic-aet-input-prompt");
 
