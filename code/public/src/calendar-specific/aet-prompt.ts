@@ -239,7 +239,16 @@ function getAetNoIdFromPrompt(): {
     color: string,
     startTime: number,
     endTime: number,
+    calendarId: number,
 } | false {
+    const calendarId = localStorage.getItem("calendarId");
+
+    if (calendarId === null || /\d+/.test(calendarId) === false) {
+        alert("You are not logged in correctly!");
+        window.open("/", "_self");
+        return false;
+    }
+
     const {title, description, date, timeStr, type, color} = getRawAetPromptValues();
 
     if (!title || description === undefined || description === null || !date || !timeStr || !type || !color ||
@@ -267,6 +276,7 @@ function getAetNoIdFromPrompt(): {
         color,
         startTime,
         endTime,
+        calendarId: +calendarId,
     };
 }
 

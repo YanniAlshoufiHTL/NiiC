@@ -1,3 +1,6 @@
+const searchedMod= document.querySelector(".niic-plugin-store-search") as HTMLInputElement;
+let globalUserSearchInput= "";
+const search= false;
 class PluginListing extends HTMLElement {
     constructor() {
         super();
@@ -19,7 +22,16 @@ class PluginListing extends HTMLElement {
             ? "Uninstall"
             : "Install";
 
-        const modsHtml = mods.map(mod => `
+        if (searchedMod){
+            globalUserSearchInput= searchedMod.value;
+        }
+
+        const modsHtml = mods
+            .filter(x => {
+                const userInp = globalUserSearchInput.trim();
+                return userInp === "" || x.title.toLowerCase().includes(userInp.toLowerCase()) || (x.description?.toLowerCase().includes(userInp.toLowerCase()) ?? false);
+            })
+            .map(mod => `
                 <div class="niic-plugin-item">
                     <p class="niic-plugin-item-name">${mod.title}</p>
                     <p class="niic-plugin-item-creator">${mod.additionalText}</p>

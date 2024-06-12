@@ -11,4 +11,6 @@ interface NiicAet {
     type: "appointment" | "event" | "task";
 
     color: string;
+
+    calendarId: number;
 }

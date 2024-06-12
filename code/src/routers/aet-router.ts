@@ -93,42 +93,42 @@ aetRouter.delete("/:id", async (req, res) => {
     }
 });
 
-aetRouter.post('/', async (req, res) => {
-    try {
-        const aetNoId = convertBodyToAetNoId(req.body);
-        const calendarId = getCalendarIdFromBody(req.body);
-
-        if (!aetNoId || !calendarId) {
-            console.error("Invalid body: ", req.body)
-            res.sendStatus(StatusCodes.BAD_REQUEST);
-            return;
-        }
-
-        const id = await DatabaseService.instance().addAet(
-            calendarId,
-            aetNoId.title,
-            aetNoId.description,
-            aetNoId.date,
-            aetNoId.startTime,
-            aetNoId.endTime,
-            aetNoId.type,
-            aetNoId.color
-        );
-
-        if (id === undefined) {
-            res.sendStatus(StatusCodes.BAD_REQUEST);
-            return;
-        }
-
-        res
-            .status(StatusCodes.CREATED)
-            .send({id});
-    } catch (e) {
-        res.sendStatus(StatusCodes.BAD_REQUEST);
-    }
-
-
-})
+// aetRouter.post('/', async (req, res) => {
+//     try {
+//         const aetNoId = convertBodyToAetNoId(req.body);
+//         const calendarId = getCalendarIdFromBody(req.body);
+//
+//         if (!aetNoId || !calendarId) {
+//             console.error("Invalid body: ", req.body)
+//             res.sendStatus(StatusCodes.BAD_REQUEST);
+//             return;
+//         }
+//
+//         const id = await DatabaseService.instance().addAet(
+//             calendarId,
+//             aetNoId.title,
+//             aetNoId.description,
+//             aetNoId.date,
+//             aetNoId.startTime,
+//             aetNoId.endTime,
+//             aetNoId.type,
+//             aetNoId.color
+//         );
+//
+//         if (id === undefined) {
+//             res.sendStatus(StatusCodes.BAD_REQUEST);
+//             return;
+//         }
+//
+//         res
+//             .status(StatusCodes.CREATED)
+//             .send({id});
+//     } catch (e) {
+//         res.sendStatus(StatusCodes.BAD_REQUEST);
+//     }
+//
+//
+// })
 
 /**
  * Returns the ID from the given string or -1 if invalid.
@@ -151,6 +151,12 @@ function getCalendarIdFromBody(body: any): number | false {
 
         return +body.calendarId;
     }
+    else if (typeof body.calendarid === "number" || typeof body.calendarId === "number") {
+        if (body.calendarid) {
+            return body.calendarid;
+        }
+        return body.calendarId;
+    }
 
     return false;
 }
@@ -160,18 +166,19 @@ function convertBodyToAetNoId(body: any): NiicAetNoId | false {
 
     if (
         body.title && typeof body.title === stringTypeString &&
-        body.description && typeof body.description === stringTypeString &&
-        body.date && typeof body.date === stringTypeString &&
-        body.startTime &&
-        body.endTime &&
+        body.description !== undefined && body.description !== null && typeof body.description === stringTypeString &&
+        (body.date && typeof body.date === stringTypeString || body.date instanceof Date) &&
+        body.startTime !== undefined && body.startTime !== null &&
+        body.endTime !== undefined && body.endTime !== null &&
         body.type && typeof body.type === stringTypeString &&
         body.color && typeof body.color === stringTypeString &&
+        body.calendarId !== undefined && body.calendarId !== null &&
+        (typeof body.calendarId === stringTypeString && /\d+/.test(body.calendarId) || typeof body.calendarId === "number" ) &&
 
         !isNaN(Date.parse(body.date)) &&
         (body.type === "event" || body.type === "appointment" || body.type === "task") &&
         /^#(\d|[a-f]){6}$/.test(body.color)
     ) {
-
         return {
             title: body.title,
             description: body.description,
@@ -179,7 +186,8 @@ function convertBodyToAetNoId(body: any): NiicAetNoId | false {
             startTime: +body.startTime,
             endTime: +body.endTime,
             type: body.type,
-            color: body.color
+            color: body.color,
+            calendarId: +body.calendarId
         };
     }
 

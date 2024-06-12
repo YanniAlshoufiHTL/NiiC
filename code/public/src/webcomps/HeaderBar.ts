@@ -20,7 +20,7 @@ class HeaderBar extends HTMLElement {
                 }
                 
                 .niic-header {
-                    z-index: 0;
+                    z-index: 1;
                     position: sticky;
                     top: 0;
                     left: 0;
