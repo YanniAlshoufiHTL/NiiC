@@ -1,8 +1,22 @@
 let installedModulesLoaded = false;
 
 async function getInstalledModulesAndSetInLocalStorage_http(userId: number) {
-    console.log(userId)
-    const res = await fetch(`/api/modules/${userId}`);
+
+    const jwt = localStorage.getItem("jwt");
+
+    if(jwt === null) {
+        alert("You are not logged in correctly!");
+        window.open("/", "_self");
+        return;
+    }
+
+    const res = await fetch(`/api/modules/${userId}`, {
+        method: "GET",
+            headers: {
+            "Authorization": `Bearer ${jwt}`,
+        },
+    });
+
 
     if (res.status !== 200) {
         console.error("Failed to fetch modules");

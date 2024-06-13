@@ -395,6 +395,35 @@ export class DatabaseService {
         };
     }
 
+    /**
+     * Gets a userId with the calendar ID.
+     * returns -1 if an error occurs
+     * @param username
+     */
+
+    public async getUserIdWithCalendarId(calendarId: number): Promise<number> {
+        if(calendarId === 0){
+            return -1;
+        }
+        try{
+            const client = await this.client();
+            const res = await client.query(
+                `
+                    SELECT niicuserid
+                    FROM calendar
+                    WHERE id = $1::bigint
+                `,
+                [calendarId]
+            );
+            await this.closeClient();
+            return +res.rows[0].niicuserid;
+        } catch (e){
+            return -1;
+        }finally {
+            await this.closeClient();
+        }
+    }
+
     public async userWithUsernameExists(username: string): Promise<boolean | string> {
         const client = await this.client();
         try {
@@ -421,13 +450,14 @@ export class DatabaseService {
     public async getIdsOfUsernames(usernames: string[]): Promise<number[] | Error> {
         const client = await this.client();
         const paramList = usernames.map((_, i) => `$${i + 1}`).join(",");
+        const listToLookIn = paramList.length === 0 ? "('NO USER')" : `(${paramList})`;
 
         try {
             const res = await client.query(
                 `
                     SELECT id
                     FROM niicuser
-                    WHERE username IN (${paramList})
+                    WHERE username IN ${listToLookIn}
                 `,
                 usernames
             );

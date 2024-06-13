@@ -2,12 +2,22 @@ import express from "express";
 import TokenGenerationReq from "../be-models/TokenGenerationReq";
 import {StatusCodes} from "http-status-codes";
 import {DatabaseService} from "../DatabaseService";
+import {isAuthenticated, checkIfUserAuthenticatedWithId} from "../middleware/auth-handlers";
+import jwt from "jsonwebtoken";
 
 export const tokensRouter = express.Router();
 
-tokensRouter.put("/", async (req, res) => {
+tokensRouter.put("/", isAuthenticated, async (req, res) => {
     const body: TokenGenerationReq = req.body;
     try {
+        if(body.userId === undefined) {
+            res.sendStatus(StatusCodes.BAD_REQUEST);
+            return;
+        }
+        if(!await checkIfUserAuthenticatedWithId(+body.userId, req, res)){
+            return;
+        }
+
         if(body.type !== undefined) {
             const token = await generateToken(body);
 

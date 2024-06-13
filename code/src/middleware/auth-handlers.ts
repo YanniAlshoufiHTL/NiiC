@@ -16,5 +16,16 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
     } catch (err) {
         res.status(401).send(`Please authenticate! ${err}`);
     }
+}
 
+export const checkIfUserAuthenticatedWithId = async (userId: number, req: Request, res: Response) : Promise<boolean> => {
+    const secretKey = process.env.SECRET_KEY as string;
+    const token = req.header("Authorization")?.replace("Bearer ", "") as string;
+    const payload = jwt.verify(token, secretKey) as { user: number };
+    if (payload.user !== userId){
+        res.sendStatus(401);
+        return false;
+    }
+
+    return true;
 }

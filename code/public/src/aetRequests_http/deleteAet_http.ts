@@ -9,8 +9,20 @@ async function deleteAet_http() {
         return;
     }
 
+
+    const jwt = localStorage.getItem("jwt");
+
+    if(jwt === null) {
+        alert("You are not logged in correctly!");
+        window.open("/", "_self");
+        return -1;
+    }
+
     const response = await fetch(`/api/aets/${id}`, {
         method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${jwt}`,
+        },
     });
 
 

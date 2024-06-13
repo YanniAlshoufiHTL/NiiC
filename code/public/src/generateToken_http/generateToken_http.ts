@@ -27,10 +27,19 @@ async function generateToken_http() {
         ? oldTokenInput.value
         : null;
 
+    const jwt = localStorage.getItem("jwt");
+
+    if(jwt === null) {
+        alert("You are not logged in correctly!");
+        window.open("/", "_self");
+        return;
+    }
+
     const response = await fetch(`/api/tokens/`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${jwt}`,
         },
         body:
             JSON.stringify({
@@ -45,7 +54,13 @@ async function generateToken_http() {
     const generatedTokenInput: HTMLInputElement | null = document.querySelector(".niic-profile-token-generation-generated-token-input");
     generatedTokenInput!.value = await response.text();
 
-    if (response.status !== 200 && response.status !== 400 && response.status !== 201) {
+    if(response.status === 401){
+        alert("You are not logged in correctly!");
+        logoutUser();
+        return;
+    }
+
+    if (response.status !== 200 && response.status !== 201) {
         alert(response.status);
         alert(await response.text());
         return;

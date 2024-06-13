@@ -6,7 +6,18 @@ async function installModule_http(modId: number) {
         return;
     }
 
+    const jwt = localStorage.getItem("jwt");
+
+    if(jwt === null) {
+        alert("You are not logged in correctly!");
+        window.open("/", "_self");
+        return;
+    }
+
     await fetch(`/api/modules/${modId}/${userId}`, {
-        method: "PUT"
+        method: "PUT",
+        headers: {
+            "Authorization": `Bearer ${jwt}`,
+        }
     });
 }

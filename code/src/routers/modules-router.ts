@@ -2,11 +2,12 @@ import express from "express";
 import NiicBlockModuleNoId from "../be-models/NiicBlockModuleNoId";
 import { StatusCodes } from "http-status-codes";
 import { DatabaseService } from "../DatabaseService";
+import {checkIfUserAuthenticatedWithId, isAuthenticated} from "../middleware/auth-handlers";
 export const modulesRouter = express.Router();
 
 
 // Create new block module
-modulesRouter.post('/', async (req, res) => {
+modulesRouter.post('/', isAuthenticated, async (req, res) => {
     let modRequestCastTry: NiicBlockModuleNoId | null = null;
     try {
         modRequestCastTry = req.body;
@@ -34,7 +35,7 @@ modulesRouter.post('/', async (req, res) => {
 });
 
 // Edit block module
-modulesRouter.put('/', async (req, res) => {
+modulesRouter.put('/', isAuthenticated, async (req, res) => {
     let modRequestCastTry: NiicBlockModuleNoId | null = null;
     try {
         modRequestCastTry = req.body;
@@ -48,8 +49,7 @@ modulesRouter.put('/', async (req, res) => {
     modRequest.type = "blm";
 
     try {
-        await
-            DatabaseService.instance().updateMod(modRequest);
+        await DatabaseService.instance().updateMod(modRequest);
 
         res.sendStatus(StatusCodes.NO_CONTENT);
     } catch (e) {
@@ -59,7 +59,7 @@ modulesRouter.put('/', async (req, res) => {
 });
 
 // Get all published block modules
-modulesRouter.get("/", async (_, res) => {
+modulesRouter.get("/", isAuthenticated, async (_, res) => {
     try {
         const mods = await DatabaseService.instance().getPublishedMods();
         res
@@ -72,11 +72,15 @@ modulesRouter.get("/", async (_, res) => {
 })
 
 // Get all installed plugins for user
-modulesRouter.get("/:userId", async (req, res) => {
+modulesRouter.get("/:userId", isAuthenticated, async (req, res) => {
     const userId: number = +req.params.userId;
 
     if (userId !== 0 && !userId) {
         res.sendStatus(StatusCodes.BAD_REQUEST);
+        return;
+    }
+
+    if(!await checkIfUserAuthenticatedWithId(userId, req, res)){
         return;
     }
 
@@ -92,7 +96,7 @@ modulesRouter.get("/:userId", async (req, res) => {
 });
 
 // Delete block module
-modulesRouter.delete('/:token', async (req, res) => {
+modulesRouter.delete('/:token', isAuthenticated, async (req, res) => {
     const token: string = req.params.token;
 
     try {
@@ -106,10 +110,15 @@ modulesRouter.delete('/:token', async (req, res) => {
 });
 
 // Install plugin
-modulesRouter.put("/:blockmoduleid/:userid", async (req, res) => {
+modulesRouter.put("/:blockmoduleid/:userid", isAuthenticated, async (req, res) => {
     const ids = getModIdAndUserId(req.params.blockmoduleid, req.params.userid);
+
     if (!ids) {
         res.sendStatus(StatusCodes.BAD_REQUEST);
+        return;
+    }
+
+    if(!await checkIfUserAuthenticatedWithId(ids.userId, req, res)){
         return;
     }
 
@@ -123,11 +132,15 @@ modulesRouter.put("/:blockmoduleid/:userid", async (req, res) => {
 });
 
 // Uninstall plugin
-modulesRouter.delete('/:blockmoduleid/:userid', async (req, res) => {
+modulesRouter.delete('/:blockmoduleid/:userid', isAuthenticated, async (req, res) => {
     const ids = getModIdAndUserId(req.params.blockmoduleid, req.params.userid);
 
     if (!ids) {
         res.sendStatus(StatusCodes.BAD_REQUEST);
+        return;
+    }
+
+    if(!await checkIfUserAuthenticatedWithId(ids.userId, req, res)){
         return;
     }
 
@@ -155,7 +168,7 @@ function getModIdAndUserId(blockModuleId: any, userId: any): {
 }
 
 // Publish plugin
-modulesRouter.put("/publish", async (req, res) => {
+modulesRouter.put("/publish", isAuthenticated, async (req, res) => {
     try {
         const token: string = req.body.token;
         await DatabaseService.instance().publishMod(token);
@@ -168,7 +181,7 @@ modulesRouter.put("/publish", async (req, res) => {
 });
 
 // Unpulbish plugin
-modulesRouter.put("/unpublish", async (req, res) => {
+modulesRouter.put("/unpublish", isAuthenticated, async (req, res) => {
     try {
         const token: string = req.body.token;
         await DatabaseService.instance().unpublishMod(token);

@@ -7,10 +7,19 @@ async function updateAet_http(aet: NiicAet) {
         return -1;
     }
 
+    const jwt = localStorage.getItem("jwt");
+
+    if(jwt === null) {
+        alert("You are not logged in correctly!");
+        window.open("/", "_self");
+        return;
+    }
+
     const response = await fetch(`/api/aets/${aet.id}`, {
         method: "PUT",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${jwt}`,
         },
         body: JSON.stringify({
             "title": aet.title,
