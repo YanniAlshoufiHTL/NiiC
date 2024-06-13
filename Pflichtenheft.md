@@ -418,42 +418,44 @@ search for specific plugins as well, like data module for example.
 
 ## 4. Nicht-funktionale Anforderungen
 
-### `Usability`: Benutzbarkeitsanforderung
+### Usability
 
-- Nothing is required (idk)
+- No usability requirements.
 
-### `Efficiency`: Effizienzanforderung
+### Efficiency
 
-- No effeciency requirements
+- The calendar must have fast input feedback. This means that client-first and front-end caching
+  are essential.
 
-### `Maintenance`: Wartbarkeits- und Portierbarkeitsanforderung
-- The mobile design is missing but it will be soon available for all devices
-- A lot of features are missing, so stay updated to see what is coming.
-### `Security`: Sicherheitsanforderung
+### Maintenance
 
-- Our system is highly secure, when it comes to our users privacy.
-  But make sure that you do not forget your password.In case of a system breakdown
-  nothing much can happen, as pretty much everything is saved in our database.
+- No maintenance requirements.
 
-### `Legal`: Gesetzliche Anforderung
-- No legal arrangements required
+### Security
+
+- Users' password should be stored as hash values.
+- No unauthenticated access is allowed.
+
+### Legal
+
+- No legal requirements.
 
 ## 5. Mengengerüst
 
-Zur Abschätzung der aufkommenden Datenmengen und damit verbunden der notwendigen Infrastruktur, um
-die nötige Performance zu erzielen, ist ein Mengengerüst zu erstellen. Mögliche Fragestellungen:
+### How many users are we expecting?
 
-- How many users are we expecting?
-- We are counting with up to 5,000 users for now, 
-  though we are constantly trying to develop
-  with guard rails in place for unexpected growth
-- how many Daten per users are we awaiting?
-  For now, we do not have a good system in place for measuring data consumption.
-  Next year, we will be thinking more about performance as we switch to ASP.NET.
-- With which inquiry-frequenz are we calculating?
-- Answering this requires extensive research. This too will be delved into in more details next year. 
-  For now, we are trying to get a good feature set up and running,
-  more or less as a prove of concept.
+We are counting with up to 5,000 users for now, though we are constantly trying to develop
+with guard rails in place for unexpected growth
+
+# How much data is expected on our network?
+
+For now, not much. We are developing for a moderate amount of data but we will focus more on
+performance during and after the rewrite to F#/C#.
+
+# What data frequency are we expecting?
+
+We do not know this at the moment. More research will go into answering this question during and
+after the rewrite to F#/C#.
 
 ## 6. Systemarchitektur
 
@@ -468,4 +470,4 @@ die nötige Performance zu erzielen, ist ein Mengengerüst zu erstellen. Möglic
 ### 6.2 Datenmodell
 
 - Relational database
-![](diagrams/MVP_ERD.drawio.svg)
+  ![](diagrams/MVP_ERD.drawio.svg)
