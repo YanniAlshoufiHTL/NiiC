@@ -35,7 +35,15 @@ async function addAetAndGetId_http(aet: NiicAetNoId): Promise<number> {
 
     if (response === null) {
         alert("Response was null");
+        return -1;
     }
+
+    if (response.status === 401) {
+        alert("Not authorized.");
+        logoutUser();
+        return -1;
+    }
+
 
     if (response.status !== 201) {
         alert("Invalid, Status Code: " + response.status);

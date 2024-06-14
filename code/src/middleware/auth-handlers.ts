@@ -1,5 +1,5 @@
 import {NextFunction, Response, Request} from "express";
-import jwt, {Secret} from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
     const secretKey = process.env.SECRET_KEY;

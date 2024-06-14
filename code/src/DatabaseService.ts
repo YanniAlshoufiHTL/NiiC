@@ -405,6 +405,7 @@ export class DatabaseService {
         if(calendarId === 0){
             return -1;
         }
+
         try{
             const client = await this.client();
             const res = await client.query(
@@ -415,7 +416,6 @@ export class DatabaseService {
                 `,
                 [calendarId]
             );
-            await this.closeClient();
             return +res.rows[0].niicuserid;
         } catch (e){
             return -1;

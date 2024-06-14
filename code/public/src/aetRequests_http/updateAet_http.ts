@@ -33,6 +33,12 @@ async function updateAet_http(aet: NiicAet) {
         })
     });
 
+    if (response.status === 401) {
+        alert("Not authorized.");
+        logoutUser();
+        return -1;
+    }
+
     if (response.status !== 204 /* NO CONTENT */) {
         console.error(response.status);
         console.error(await response.text());

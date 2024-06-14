@@ -25,6 +25,12 @@ async function deleteAet_http() {
         },
     });
 
+    if (response.status === 401) {
+        alert("Not authorized.");
+        logoutUser();
+        return -1;
+    }
+
 
     if (response.status !== 204) {
         alert("We apologize, AET could not be deleted, response code:" + response.status);
