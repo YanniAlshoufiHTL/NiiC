@@ -1,7 +1,6 @@
 let installedModulesLoaded = false;
 
 async function getInstalledModulesAndSetInLocalStorage_http(userId: number) {
-
     const jwt = localStorage.getItem("jwt");
 
     if(jwt === null) {
@@ -16,6 +15,12 @@ async function getInstalledModulesAndSetInLocalStorage_http(userId: number) {
             "Authorization": `Bearer ${jwt}`,
         },
     });
+
+    if (res.status === 401) {
+        alert("You are not logged in.");
+        window.open("/", "_self");
+        return;
+    }
 
 
     if (res.status !== 200) {

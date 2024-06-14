@@ -17,6 +17,12 @@ async function getModulesAndSetInLocalStorage_http() {
         },
     });
 
+    if (res.status === 401) {
+        alert("You are not logged in.");
+        window.open("/", "_self");
+        return;
+    }
+
     if (res.status !== 200) {
         console.error("Failed to fetch modules");
         return;

@@ -14,10 +14,16 @@ async function installModule_http(modId: number) {
         return;
     }
 
-    await fetch(`/api/modules/${modId}/${userId}`, {
+    const res = await fetch(`/api/modules/${modId}/${userId}`, {
         method: "PUT",
         headers: {
             "Authorization": `Bearer ${jwt}`,
         }
     });
+
+    if (res.status === 401) {
+        alert("You are not logged in.");
+        window.open("/", "_self");
+        return;
+    }
 }
