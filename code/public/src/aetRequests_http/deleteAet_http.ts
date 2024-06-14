@@ -9,9 +9,27 @@ async function deleteAet_http() {
         return;
     }
 
+
+    const jwt = localStorage.getItem("jwt");
+
+    if(jwt === null) {
+        alert("You are not logged in correctly!");
+        window.open("/", "_self");
+        return -1;
+    }
+
     const response = await fetch(`/api/aets/${id}`, {
         method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${jwt}`,
+        },
     });
+
+    if (response.status === 401) {
+        alert("Not authorized.");
+        logoutUser();
+        return -1;
+    }
 
 
     if (response.status !== 204) {

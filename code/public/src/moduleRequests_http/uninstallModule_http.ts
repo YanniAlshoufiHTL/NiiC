@@ -6,7 +6,24 @@ async function uninstallModule_http(modId: number) {
         return;
     }
 
-    await fetch(`/api/modules/${modId}/${userId}`, {
-        method: "DELETE"
+    const jwt = localStorage.getItem("jwt");
+
+    if(jwt === null) {
+        alert("You are not logged in correctly!");
+        window.open("/", "_self");
+        return -1;
+    }
+
+    const res = await fetch(`/api/modules/${modId}/${userId}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${jwt}`,
+        }
     });
+
+    if (res.status === 401) {
+        alert("You are not logged in.");
+        window.open("/", "_self");
+        return;
+    }
 }

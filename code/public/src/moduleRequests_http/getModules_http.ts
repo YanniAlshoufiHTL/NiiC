@@ -1,7 +1,27 @@
 let modulesLoaded = false;
 
 async function getModulesAndSetInLocalStorage_http() {
-    const res = await fetch("/api/modules/");
+
+    const jwt = localStorage.getItem("jwt");
+
+    if(jwt === null) {
+        alert("You are not logged in correctly!");
+        window.open("/", "_self");
+        return;
+    }
+
+    const res = await fetch("/api/modules/", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${jwt}`,
+        },
+    });
+
+    if (res.status === 401) {
+        alert("You are not logged in.");
+        window.open("/", "_self");
+        return;
+    }
 
     if (res.status !== 200) {
         console.error("Failed to fetch modules");

@@ -3,6 +3,7 @@ import express from "express";
 import { StatusCodes } from "http-status-codes";
 import NiicAetNoId from "../be-models/NiicAetNoId";
 import { DatabaseService } from "../DatabaseService";
+import { checkIfUserAuthenticatedWithId, isAuthenticated } from "../middleware/auth-handlers";
 
 export const aetRouter = express.Router();
 
@@ -17,7 +18,7 @@ aetRouter.get("/", async (_, res) => {
     }
 });
 
-aetRouter.post("/", async (req, res) => {
+aetRouter.post("/", isAuthenticated, async (req, res) => {
     try {
         const aetNoId = convertBodyToAetNoId(req.body);
         const calendarId = getCalendarIdFromBody(req.body);
@@ -25,6 +26,17 @@ aetRouter.post("/", async (req, res) => {
         if (!aetNoId || !calendarId) {
             console.error("Invalid body: ", req.body)
             res.sendStatus(StatusCodes.BAD_REQUEST);
+            return;
+        }
+
+        const userId = await DatabaseService.instance().getUserIdWithCalendarId(calendarId);
+
+        if (userId === -1) {
+            res.sendStatus(StatusCodes.UNAUTHORIZED);
+            return;
+        }
+
+        if (!await checkIfUserAuthenticatedWithId(userId, req, res)) {
             return;
         }
 
@@ -44,8 +56,7 @@ aetRouter.post("/", async (req, res) => {
             return;
         }
 
-        res.
-            status(StatusCodes.CREATED)
+        res.status(StatusCodes.CREATED)
             .send({id: result});
     } catch (e) {
         console.error("Error while adding AET:", e);
@@ -54,7 +65,7 @@ aetRouter.post("/", async (req, res) => {
 });
 
 
-aetRouter.put("/:id", async (req, res) => {
+aetRouter.put("/:id", isAuthenticated, async (req, res) => {
     const id = getId(req.params.id);
     if (id === -1) {
         res.sendStatus(StatusCodes.BAD_REQUEST);
@@ -65,19 +76,22 @@ aetRouter.put("/:id", async (req, res) => {
 
     if (aetNoId === false) {
         console.error("Invalid body: ", req.body)
-        res.sendStatus(StatusCodes.BAD_REQUEST);
+        res
+            .sendStatus(StatusCodes.BAD_REQUEST);
         return;
     }
 
     try {
         await DatabaseService.instance().updateAet(id, aetNoId);
-        res.sendStatus(StatusCodes.NO_CONTENT);
+        res
+            .sendStatus(StatusCodes.NO_CONTENT);
     } catch (e) {
-        res.sendStatus(StatusCodes.BAD_REQUEST);
+        res
+            .sendStatus(StatusCodes.BAD_REQUEST);
     }
 });
 
-aetRouter.delete("/:id", async (req, res) => {
+aetRouter.delete("/:id", isAuthenticated, async (req, res) => {
     const id = getId(req.params.id);
     if (id === -1) {
         res.sendStatus(StatusCodes.BAD_REQUEST);
@@ -150,8 +164,7 @@ function getCalendarIdFromBody(body: any): number | false {
         }
 
         return +body.calendarId;
-    }
-    else if (typeof body.calendarid === "number" || typeof body.calendarId === "number") {
+    } else if (typeof body.calendarid === "number" || typeof body.calendarId === "number") {
         if (body.calendarid) {
             return body.calendarid;
         }
@@ -173,7 +186,7 @@ function convertBodyToAetNoId(body: any): NiicAetNoId | false {
         body.type && typeof body.type === stringTypeString &&
         body.color && typeof body.color === stringTypeString &&
         body.calendarId !== undefined && body.calendarId !== null &&
-        (typeof body.calendarId === stringTypeString && /\d+/.test(body.calendarId) || typeof body.calendarId === "number" ) &&
+        (typeof body.calendarId === stringTypeString && /\d+/.test(body.calendarId) || typeof body.calendarId === "number") &&
 
         !isNaN(Date.parse(body.date)) &&
         (body.type === "event" || body.type === "appointment" || body.type === "task") &&
