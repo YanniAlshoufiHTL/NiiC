@@ -1,5 +1,5 @@
 :root {
-    --niic-calendar-body-height: calc(100dvh - 130px);
+    --niic-calendar-body-height: calc(100dvh - 150px);
     --niic-calendar-aside-width: 296px;
 }
 
@@ -49,6 +49,21 @@
     height: var(--niic-calendar-body-height);
     width: 20px;
     font-family: system-ui, sans-serif;
+
+    > p {
+        position: relative;
+
+        &:not(:first-child):after {
+            content: '';
+            display: block;
+            position: relative;
+            bottom: 50%;
+            left: 3ch;
+            height: 1px;
+            width: calc(100vw - var(--niic-calendar-aside-width) - 81px - 3ch);
+            background-color: black;
+        }
+    }
 }
 
 .niic-calendar-main {
@@ -56,7 +71,7 @@
 
     display: flex;
 
-    &> * {
+    & > * {
         flex: 1;
 
         display: flex;
@@ -71,10 +86,9 @@
 
 .niic-calendar-aet-zone {
     height: var(--niic-calendar-body-height);
-
     max-width: 400px;
 
-    &> * {
+    & > * {
         display: block;
 
         min-width: 10px;

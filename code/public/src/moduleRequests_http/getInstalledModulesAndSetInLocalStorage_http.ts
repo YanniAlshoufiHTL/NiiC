@@ -22,7 +22,6 @@ async function getInstalledModulesAndSetInLocalStorage_http(userId: number) {
         return;
     }
 
-
     if (res.status !== 200) {
         console.error("Failed to fetch modules");
         return;

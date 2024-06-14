@@ -43,7 +43,7 @@ function getAetDiv(aet: NiicAet, timeHeight: string): HTMLDivElement {
     div.innerText = aet.title;
     div.draggable = true;
     div.id = `niic-calendar-aet-${aet.id}`;
-    div.onclick = () => showAetEditPrompt(aet.id);
+    div.onclick = () => showAetEditPrompt(true, aet.id);
     div.style.background = aet.color;
     div.style.border = `1px solid color-mix(in srgb, ${aet.color}, #333333)`;
     div.ondragstart = ev => {
@@ -56,7 +56,7 @@ function getAetDiv(aet: NiicAet, timeHeight: string): HTMLDivElement {
 
 function updateAetListsOfAside() {
     const getItemsHtml = (arr: NiicAet[]) =>
-        arr.map(x => `<li onclick="showAetEditPrompt(${x.id})">${x.title}</li>`).join("\n");
+        arr.map(x => `<li onclick="showAetEditPrompt(false, ${x.id})">${x.title}</li>`).join("\n");
 
     const listTasks: TitledSearchList | null = document.querySelector(".niic-calendar-aside-list-tasks");
     if (listTasks) {
@@ -128,7 +128,7 @@ function updateCalendarTimesAndGetHeightEach(): string {
         for (let i = 0; i < 24; i++) {
             const p = document.createElement("p");
 
-            p.style.height = `calc(${window.innerHeight - 130}px / 23)`;
+            p.style.height = `calc(${window.innerHeight - 130}px / 24)`;
             p.textContent = `${i}`.padStart(2, '0');
 
             timesDiv.appendChild(p);

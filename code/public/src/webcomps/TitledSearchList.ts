@@ -11,7 +11,9 @@ class TitledSearchList extends HTMLElement {
                     <img src="/img/loop.svg" alt="Loop Icon">
                 </span>
                 <ul class="niic-titled-search-list-ul">
-                    ${this.dataset.html ? this.dataset.html : this.innerHTML}
+                    ${this.dataset.html !== undefined && this.dataset.html !== null 
+                        ? this.dataset.html 
+                        : this.innerHTML}
                 </ul>
             </div>
             

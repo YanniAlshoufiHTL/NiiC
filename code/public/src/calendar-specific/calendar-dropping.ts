@@ -37,7 +37,28 @@ async function drop(ev: DragEvent) {
 
             const aetIdx = aets.findIndex(x => x.id === id);
             aets[aetIdx].date = tmpDate;
+
+            const headerEl = document.querySelector(".niic-header-list") as HTMLElement;
+            const elHeight = window.innerHeight - headerEl.offsetHeight - 20;
+
+            const offsetInEl = ev.clientY - headerEl.offsetHeight;
+            let finalHours: number = offsetInEl / elHeight * 24;
+
+            const timeDelta = aets[aetIdx].endTime - aets[aetIdx].startTime;
+
+            if (finalHours < 0) {
+                finalHours = 0;
+            }
+
+            if (finalHours + timeDelta > 24) {
+                finalHours = 24 - timeDelta;
+            }
+
+            aets[aetIdx].startTime = finalHours;
+            aets[aetIdx].endTime = finalHours + timeDelta;
+
             await updateAet_http(aets[aetIdx]);
+            globalUpdateCalendar();
             localStorage.setItem("aets", JSON.stringify(aets));
         }
     }
