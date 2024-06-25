@@ -24,7 +24,10 @@
 <div class="niic-plugin-store-bg-gradient-shadow"></div>
 
 <div class="niic-plugin-store-navigation">
-    <p class="niic-plugin-store-go-back-label">&#8592; Go back</p>
+    <p class="niic-plugin-store-go-back-label"
+       onmousedown="window.open('/sites/calendar.html', '_self')">
+        &#8592; Go back
+    </p>
 
     <div class="niic-plugin-store-inner-navigation">
         <p class="niic-plugin-store-sidebar-option"
@@ -54,9 +57,6 @@
                 <input class="niic-plugin-store-search" type="text" placeholder="Search">
                 <img onclick="globalUserSearchInput = document.querySelector('.niic-plugin-store-search').value; updateInstalledModulesUi()" class="niic-plugin-store-search-icon" src="../img/search.png" alt="">
             </label>
-
-            <button class="niic-plugin-store-navigation-btn">Filter</button>
-            <button class="niic-plugin-store-navigation-btn">Date</button>
         </div>
     </div>
 </div>

@@ -7,8 +7,7 @@ class TitledSearchList extends HTMLElement {
         this.innerHTML = `
             <div class="niic-titled-search-list-container">
                 <span class="niic-titled-search-list-bar">
-                    <h1>${this.dataset.title ? this.dataset.title : "Search"}</h1>
-                    <img src="/img/loop.svg" alt="Loop Icon">
+                    <h1>${this.dataset.title ? this.dataset.title : "No Title"}</h1>
                 </span>
                 <ul class="niic-titled-search-list-ul">
                     ${this.dataset.html !== undefined && this.dataset.html !== null 

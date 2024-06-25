@@ -36,10 +36,10 @@ class PluginListing extends HTMLElement {
                     <p class="niic-plugin-item-name">${mod.title}</p>
                     <p class="niic-plugin-item-creator">${mod.additionalText}</p>
                     <p class="niic-plugin-item-description">${mod.description ? mod.description : "No description."}</p>
-                    <button class="niic-plugin-item-module-type">${mod.type === "blm" ? "Block Module" :
-                        mod.type === "bgm" ? "Block Module" :
-                        mod.type === "dtm" ? "Data Module" :
-                            "Module Bundle"}
+                    <button class="niic-plugin-item-module-type">${mod.type === "blm" ? "Widget" :
+                        mod.type === "bgm" ? "Background Plugin" :
+                        mod.type === "dtm" ? "Data " :
+                            "Kit"}
                     </button>
                     <button class="niic-plugin-item-action-button" onclick="${ mode === 'Install' ? 'installModule(' : 'uninstallModule(' }${mod.id})">
                         ${mode}

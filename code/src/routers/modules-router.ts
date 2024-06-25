@@ -35,7 +35,7 @@ modulesRouter.post('/', isAuthenticated, async (req, res) => {
 });
 
 // Edit block module
-modulesRouter.put('/', isAuthenticated, async (req, res) => {
+modulesRouter.put('/', async (req, res) => {
     let modRequestCastTry: NiicBlockModuleNoId | null = null;
     try {
         modRequestCastTry = req.body;
@@ -96,7 +96,7 @@ modulesRouter.get("/:userId", isAuthenticated, async (req, res) => {
 });
 
 // Delete block module
-modulesRouter.delete('/:token', isAuthenticated, async (req, res) => {
+modulesRouter.delete('/:token', async (req, res) => {
     const token: string = req.params.token;
 
     try {
@@ -168,7 +168,7 @@ function getModIdAndUserId(blockModuleId: any, userId: any): {
 }
 
 // Publish plugin
-modulesRouter.put("/publish", isAuthenticated, async (req, res) => {
+modulesRouter.put("/publish", async (req, res) => {
     try {
         const token: string = req.body.token;
         await DatabaseService.instance().publishMod(token);
@@ -181,7 +181,7 @@ modulesRouter.put("/publish", isAuthenticated, async (req, res) => {
 });
 
 // Unpulbish plugin
-modulesRouter.put("/unpublish", isAuthenticated, async (req, res) => {
+modulesRouter.put("/unpublish", async (req, res) => {
     try {
         const token: string = req.body.token;
         await DatabaseService.instance().unpublishMod(token);
